@@ -1,0 +1,5 @@
+{
+	"target": {
+		"root": "./dist/develop"
+	}
+}
