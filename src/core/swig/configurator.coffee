@@ -6,7 +6,7 @@ path = require 'path'
 #
 # Project
 #
-debug = require('debug')('gremlinjs/core/swig/configurator')
+debug = require('debug')('gastropod/core/swig/configurator')
 
 
 class SwigConfigFactory

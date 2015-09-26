@@ -19,13 +19,13 @@ chalk = require 'chalk'
 Logger = require './core/logging/logger'
 load = require 'require-all'
 nconf = require 'nconf'
-debug = require('debug')('gremlinjs')
+debug = require('debug')('gastropod')
 
 
 ###*
- * Gremlin Class
+ * Gastropod Class
 ###
-class Gremlin
+class Gastropod
 
 	constructor: (options={})->
 		nconf.use 'memory'
@@ -39,7 +39,6 @@ class Gremlin
 
 		@gulp = gulp
 		@config = nconf.get()
-		@logger = new Logger('Gremlin')
 		@plugins = require './core/plugins'
 
 		@jobs = @register path.join __dirname, 'jobs'
@@ -63,4 +62,4 @@ class Gremlin
 		debug 'running tasks', tasks
 		@gulp.start(tasks)
 
-module.exports = Gremlin
+module.exports = Gastropod

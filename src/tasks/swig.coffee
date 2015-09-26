@@ -13,7 +13,7 @@ _ = require 'lodash'
 # Project
 #
 ErrorHandler = require '../core/logging/errors'
-debug = require('debug')('gremlinjs/tasks/pages')
+debug = require('debug')('gastropod/tasks/pages')
 ContextFactory = require '../core/swig/context'
 Configurator = require '../core/swig/configurator'
 Manifest = require '../core/assets/manifest'

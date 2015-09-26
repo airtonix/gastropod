@@ -1,0 +1,356 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"error",
+				"ErrorHandler"
+			],
+			[
+				"re",
+				"replacer"
+			],
+			[
+				"Te",
+				"TemplateContextFactory"
+			],
+			[
+				"pr",
+				"private_key"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 354.0,
+		"last_filter": "insta",
+		"selected_items":
+		[
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"ren",
+				"File: Rename"
+			],
+			[
+				"del",
+				"File: Delete"
+			],
+			[
+				"java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"html",
+				"HTMLPrettify"
+			],
+			[
+				"move",
+				"File: Move"
+			],
+			[
+				"add",
+				"Project: Add Folder"
+			],
+			[
+				"tabs",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"trail",
+				"Trailing Spaces: Delete Trailing Spaces"
+			],
+			[
+				"coffee",
+				"Coffee: Display JavaScript"
+			],
+			[
+				"coffe",
+				"Coffee: Display JavaScript"
+			],
+			[
+				"format",
+				"CodeFormatter: Format Code"
+			],
+			[
+				"fo",
+				"File: Open In Browser - Production Server"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"user",
+				"Preferences: Settings - User"
+			],
+			[
+				"pretti",
+				"HTMLPrettify"
+			],
+			[
+				"prett",
+				"HTMLPrettify: Set Keyboard Shortcuts"
+			],
+			[
+				"pretty",
+				"HTMLPrettify"
+			],
+			[
+				"installpac",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"project",
+				"Project: Save As"
+			],
+			[
+				"color",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"them",
+				"Themr: List themes"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 458.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)",
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/zenobius/Projects/Mine/gastropod"
+	],
+	"file_history":
+	[
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/swig.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/images.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/manifest.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/scss.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/fonts.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/clean.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/browserify.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/swig/configurator.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/index.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/bin/gremlin.js",
+		"/home/zenobius/Projects/Mine/gremlinjs/package.json",
+		"/home/zenobius/Projects/Mine/gremlinjs/config/default.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/assets/manifest/index.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/jobs/compile.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/scripts.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/pages.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/styles.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/logging/logger.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/jobs/server.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/jobs/watch.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/index.js",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/plugins/fingerprinter.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/plugins/index.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/plugins/fingerprinter.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/jobs/default.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/jobs/clean.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/swig/context.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/config.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/assets/manifest/hasher.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/assets/manifest.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/assets/replacer.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/assets/hasher.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/errors.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/lib/swig/index.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/lib/swig/context.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/lib/assets/fingerprinter.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/plugins/fingerprinterPlugin.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src/core/lib/swig/configurator.coffee",
+		"/home/zenobius/Projects/Mine/gremlinjs/src",
+		"/home/zenobius/Projects/Mine/simple-patternlab/index.js",
+		"/home/zenobius/Projects/Mine/ng-sheet/lib/document.coffee",
+		"/home/zenobius/Projects/Mine/ng-sheet/lib/sheet.coffee",
+		"/home/zenobius/Projects/Mine/ng-sheet/karma.conf.coffee",
+		"/home/zenobius/Projects/Mine/ng-sheet/lib/ng-sheet.coffee",
+		"/home/zenobius/Projects/Mine/ng-sheet/package.json",
+		"/home/zenobius/Projects/Mine/ng-sheet/test/common.coffee",
+		"/home/zenobius/Projects/Mine/ng-sheet/test/service.spec.coffee",
+		"/home/zenobius/Projects/Mine/budget-cashflow/src/scripts/app.coffee",
+		"/home/zenobius/Projects/Mine/budget-cashflow/src/scripts/sheets/index.coffee",
+		"/home/zenobius/Projects/Mine/budget-cashflow/package.json",
+		"/home/zenobius/Projects/Mine/ng-sheet/ngSheet.js",
+		"/home/zenobius/Projects/Mine/tabletop/src/tabletop.js",
+		"/home/zenobius/Projects/Mine/tabletop/src/lib/worksheet.coffee",
+		"/home/zenobius/Projects/Mine/tabletop/src/lib/document.coffee",
+		"/home/zenobius/Projects/Mine/tabletop/src/tabletop.coffee",
+		"/home/zenobius/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/zenobius/.config/sublime-text-3/Packages/HTML-CSS-JS Prettify/Default (Linux).sublime-keymap",
+		"/home/zenobius/.config/sublime-text-3/Packages/HTML-CSS-JS Prettify/HTMLPrettify.sublime-settings",
+		"/home/zenobius/Projects/Mine/budget-cashflow/src/scripts/sheets/tabletop.coffee",
+		"/home/zenobius/.ssh/config"
+	],
+	"find":
+	{
+		"height": 30.0
+	},
+	"find_in_files":
+	{
+		"height": 158.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"gremlin",
+			"chalk",
+			"watch",
+			"$.util.colors",
+			"options"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 30.0
+	},
+	"input":
+	{
+		"height": 65.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.settings_documentation_panel":
+	{
+		"height": 110.0
+	},
+	"pinned_build_system": "",
+	"project": "project.sublime-project",
+	"replace":
+	{
+		"height": 56.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/Projects/Mine/budget-cashflow/budget-cashflow.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 271.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

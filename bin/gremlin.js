@@ -11,10 +11,10 @@ var path = require('path'),
  */
 require('coffee-script/register');
 var _ = require('lodash'),
-	Gremlin = require('../src'),
+	Gastropod = require('../src'),
 	Program = require('commander'),
 	nconf = require('nconf'),
-	debug = require('debug')('gremlinjs/bin');
+	debug = require('debug')('gastropod/bin');
 
 /**
  * Project
@@ -23,7 +23,7 @@ var pkg = require('../package.json');
 
 
 /**
- * Gremlin Command Line Tool
+ * Gastropod Command Line Tool
  */
 Program
 	.version(pkg.version)
@@ -60,11 +60,11 @@ Program
 		}
 
 		// initialise
-		debug('spawning a gremlin')
-		runner = new Gremlin()
+		debug('spawning a gastropod')
+		runner = new Gastropod()
 
 		// start
-		debug('starting the gremlin')
+		debug('starting the gastropod')
 		runner.run(tasks)
 	});
 

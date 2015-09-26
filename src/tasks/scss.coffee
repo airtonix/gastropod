@@ -14,7 +14,7 @@ _ = require 'lodash'
 #
 ErrorHandler = require '../core/logging/errors'
 Logger = require '../core/logging/logger'
-debug = require('debug')('gremlinjs/tasks/styles')
+debug = require('debug')('gastropod/tasks/styles')
 
 
 module.exports = (gulp, $, config)->
