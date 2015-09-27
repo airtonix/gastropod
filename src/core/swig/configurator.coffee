@@ -11,8 +11,6 @@ debug = require('debug')('gastropod/core/swig/configurator')
 
 
 class SwigConfigFactory
-	@defaults =
-		locals: {}
 
 	setup: (swig)=>
 		swig.setDefaults
