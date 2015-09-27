@@ -11,6 +11,7 @@ es = require('event-stream')
 swig = require('swig')
 clone = require('clone')
 gutil = require('gulp-util')
+debug = require('debug')('gastropod/core/plugins/swig')
 
 #
 # Project
@@ -48,8 +49,9 @@ module.exports = (options) ->
 			callback null, file
 
 		catch err
+			debug "PluginError", err
 			callback new PluginError('gulp-swig', err)
-			callback()
+			# callback()
 
 		return
 
