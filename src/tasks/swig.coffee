@@ -51,8 +51,7 @@ module.exports = (gulp, $, config)->
 		Context.add manifest: Manifest.db
 		Context.add templates: new Files(pattern='**', options=root)
 
-		SwigConfiguration = new Configurator
-			root: root
+		SwigConfiguration = new Configurator root: root
 
 		debug 'sources', sources
 		debug 'target', target
