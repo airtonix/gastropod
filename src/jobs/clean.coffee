@@ -16,10 +16,5 @@ _ = require 'lodash'
 
 module.exports = (gulp, $, config)->
 
-	gulp.task 'clean', [
-		'clean:scripts'
-		'clean:styles'
-		'clean:images'
-		'clean:fonts'
-		'clean:pages'
-	]
+	gulp.task 'clean', (done)->
+		$.runsequence 'clean:scripts', 'clean:styles', 'clean:images', 'clean:fonts', 'clean:pages', done

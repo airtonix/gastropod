@@ -47,21 +47,9 @@ Program
 			tasks = tasks.concat(otherTasks);
 		}
 
-		// load user supplied config
-		var config = {};
-		if (options.parent.config){
-			debug('attempting to load user config', options.parent.config);
-			try {
-				config = require(options.parent.config);
-			}catch(err){
-				debug('error loading userconfig', err);
-				config = {}
-			}
-		}
-
 		// initialise
 		debug('spawning a gastropod')
-		runner = new Gastropod()
+		runner = new Gastropod(options.parent)
 
 		// start
 		debug('starting the gastropod')

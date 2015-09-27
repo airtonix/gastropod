@@ -25,9 +25,10 @@ module.exports = (gulp, $, config)->
 	 * @return {[type]}        [description]
 	###
 	gulp.task 'fonts', (done)->
-		logger = new Logger('scripts')
+		logger = new Logger('fonts')
 		sources = [
-			path.join(config.source.root,
+			path.join(process.cwd(),
+					  config.source.root,
 					  config.source.fonts.internal,
 					  config.filters.fonts)
 
@@ -40,10 +41,12 @@ module.exports = (gulp, $, config)->
 
 		debug 'sources', sources
 		debug 'target', target
+		debug "Starting"
 
-		gulp.src sources
+		return gulp.src sources
 			.pipe logger.info '<%= file.relative %>'
 			.pipe $.plumber ErrorHandler('fonts')
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"

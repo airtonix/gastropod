@@ -14,60 +14,52 @@ _ = require 'lodash'
 #
 ErrorHandler = require '../core/logging/errors'
 Logger = require '../core/logging/logger'
-debug = require('debug')('gastropod/tasks/pages:swig')
+debug = require('debug')('gastropod/tasks/pages:jade')
 ContextFactory = require '../core/templates/context'
-Configurator = require '../core/swig/configurator'
 Manifest = require '../core/assets/manifest'
-Files = require '../core/utils/files'
+jade = require 'jade'
 
 module.exports = (gulp, $, config)->
-
 	###*
 	 * Templates
 	 * @param  {Function} done [description]
 	 * @return {[type]}        [description]
 	###
-	gulp.task 'swig', (done)->
-		logger = new Logger('pages:swig')
+	gulp.task 'jade', (done)->
+		logger = new Logger('pages:jade')
+		source = path.join(config.source.root,
+						   config.source.pages,
+						   config.filters.patterns)
 
-		root = path.join(config.source.root,
-						 config.source.patterns)
+		patterns = path.join(process.cwd(),
+							 config.source.root,
+						     config.source.patterns)
 
-		data = path.join(process.cwd(),
-						 config.source.root,
-						 config.source.data)
-		sources = [
-			path.join(config.source.root,
-					  config.source.pages,
-					  config.filters.all)
-
-			'!**/*.coffee'
-		]
+		globals = path.join(process.cwd(),
+							config.source.root,
+						    config.source.data)
 
 		target = path.join config.target.root, '/'
 
 		Context = new ContextFactory()
-		Context.add site: require data
+		Context.add require globals
 		Context.add manifest: Manifest.db
-		Context.add templates: new Files(pattern='**', options=root)
 
-		SwigConfiguration = new Configurator
-			root: root
-
-		debug 'sources', sources
+		debug 'source', source
 		debug 'target', target
+
 		debug "Starting"
 
-		return gulp.src sources
+		return gulp.src source
 			.pipe logger.info '<< <%= file.relative %>'
 			.pipe $.plumber ErrorHandler('pages')
 			.pipe $.frontMatter
 				property: 'meta'
 				remove: true
 			.pipe $.data Context.export
-			.pipe $.swig setup: SwigConfiguration.setup
+			.pipe $.jade basedir: patterns
 			.pipe gulp.dest target
-			.pipe logger.info '>> <%= file.relative %> [<%= file.size %>]'
 			.pipe $.browsersync.stream()
+			.pipe logger.info '>> <%= file.relative %> [<%= file.size %>]'
 			.on 'error', (err)-> debug err
 			.on 'end', ()-> debug "Finished"

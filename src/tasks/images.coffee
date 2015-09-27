@@ -35,11 +35,13 @@ module.exports = (gulp, $, config)->
 
 		debug 'source', source
 		debug 'target', target
+		debug "Starting"
 
-		gulp.src source, base: config.source.images
+		return gulp.src source, base: config.source.images
 			.pipe logger.info '<%= file.relative %>'
 			.pipe $.plumber ErrorHandler('images')
 			.pipe $.imagemin()
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"

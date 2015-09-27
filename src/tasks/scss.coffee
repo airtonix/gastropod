@@ -36,11 +36,14 @@ module.exports = (gulp, $, config)->
 
 		debug 'source', source
 		debug 'target', target
+		debug "Starting"
 
-		gulp.src source
-			.pipe logger.info '<%= file.relative %>'
+		return gulp.src source
+			.pipe logger.info '<< <%= file.relative %>'
 			.pipe $.plumber ErrorHandler('Styles')
 			.pipe $.sass(config.plugins.sass)
 			.pipe gulp.dest target
+			.pipe logger.info '>> <%= file.relative %> [<%= file.size %>]'
 			.pipe $.browsersync.stream()
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"

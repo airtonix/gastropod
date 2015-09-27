@@ -14,7 +14,7 @@ _ = require 'lodash'
 #
 ErrorHandler = require '../core/logging/errors'
 Logger = require '../core/logging/logger'
-debug = require('debug')('gastropod/tasks/scripts')
+debug = require('debug')('gastropod/tasks/scripts:browserify')
 
 
 module.exports = (gulp, $, config)->
@@ -25,20 +25,24 @@ module.exports = (gulp, $, config)->
 	 * @return {[type]}        [description]
 	###
 	gulp.task 'browserify', (done)->
-		logger = new Logger('scripts')
+		logger = new Logger('scripts:browserify')
 
 		source = path.join(config.source.root,
-							 config.source.scripts,
-							 config.filters.scripts.modules)
+						   config.source.scripts,
+						   config.filters.scripts.modules)
 
 		target = path.join(config.target.root,
 						   config.target.scripts)
 
+		debug "Starting"
+		debug " > source", source
+		debug " > target", target
 
-		gulp.src source
+		return gulp.src source
 			.pipe logger.info '<%= file.relative %>'
 			.pipe $.plumber ErrorHandler('scripts:browserify')
 			.pipe $.through.obj (file, env, next)->
+				debug 'processing %s', file
 				$.browserify(file.path, config.plugins.js.browserify)
 					.transform $.nghtml2js module: 'templates'
 					.bundle (err, results)->
@@ -51,6 +55,8 @@ module.exports = (gulp, $, config)->
 
 			.pipe $.rename
 				extname: '.js'
+			.pipe logger.info '<%= file.relative %> [<%= file.size %>]'
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"

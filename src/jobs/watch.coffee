@@ -9,15 +9,22 @@ path = require 'path'
 #
 _ = require 'lodash'
 
+#
+# Projects
+#
+ErrorHandler = require '../core/logging/errors'
+Logger = require '../core/logging/logger'
+debug = require('debug')('gastropod/jobs/watch')
+
+
 module.exports = (gulp, $, config)->
 
-	###*
-	 * [description]
-	 * @param  {Function} done [description]
-	 * @return {[type]}        [description]
-	###
 	gulp.task 'watch', (done)->
-		gulp.watch [
-			path.join(config.source.root,
-						config.filters.all)
-		], ['compile']
+		source = path.join(config.source.root,
+						   config.filters.all)
+
+		debug('watching', source)
+		gulp
+			.watch source, ['compile']
+			.on 'change', (file)->
+				debug 'changed', file

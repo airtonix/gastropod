@@ -17,4 +17,4 @@ module.exports = (gulp, $, config)->
 	 * @return {[type]} [description]
 	###
 	gulp.task 'server', (done)->
-		$.browsersync.init config.plugins.server
+		$.browsersync.init config.plugins.server, done

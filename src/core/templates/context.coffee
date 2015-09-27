@@ -8,7 +8,6 @@ path = require 'path'
 #
 _ = require 'lodash'
 
-
 ###*
  * [TemplateContexter description]
  * @param {[type]} file [description]
@@ -34,13 +33,11 @@ class TemplateContextFactory
 		filename = path.basename(file.relative, fileext)
 		filepath = path.join filebase, filename
 
-
 		try
 			delete require.cache[require.resolve(filepath)]
-			output = _.defaultsDeep({document: require(filepath)}, @data)
-
+			page = require filepath
+			output = _.merge({}, @data, { page: page })
 		catch err
-			console.log err
 
 		return output
 

@@ -26,6 +26,9 @@ module.exports = (gulp, $, config)->
 	###
 	gulp.task 'manifest', (done)->
 
+		# set the root for the manifest
+		manifest.option 'root', path.join config.target.root, config.target.static
+
 		sources = [
 				path.join(config.target.root
 						config.target.images
@@ -47,11 +50,13 @@ module.exports = (gulp, $, config)->
 
 		debug 'sources', sources
 		debug 'target', target
+		debug "Starting"
 
-		gulp.src sources, base: config.target.root
+		return gulp.src sources, base: config.target.root
 			.pipe $.plumber ErrorHandler('manifest')
 			.pipe $.clean()
 			.pipe $.fingerprinter().revision()
-			.pipe $.tap manifest.build
+			.pipe $.tap manifest.add
 			.pipe gulp.dest target
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"

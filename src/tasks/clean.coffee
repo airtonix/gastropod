@@ -26,12 +26,14 @@ module.exports = (gulp, $, config)->
 							 config.filters.scripts.all)
 
 		debug 'source', source
+		debug "Starting"
 
-		gulp.src source, read: false
+		return gulp.src source, read: false
 			.pipe logger.info '<%= file.relative %>'
 			.pipe $.plumber ErrorHandler('clean:scripts')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"
 
 
 	gulp.task 'clean:styles', (done)->
@@ -41,12 +43,14 @@ module.exports = (gulp, $, config)->
 							 config.filters.styles)
 
 		debug 'source', source
+		debug "Starting"
 
-		gulp.src source, read: false
+		return gulp.src source, read: false
 			.pipe logger.info '<%= file.relative %>'
 			.pipe $.plumber ErrorHandler('clean:styles')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"
 
 
 	gulp.task 'clean:images', (done)->
@@ -56,12 +60,14 @@ module.exports = (gulp, $, config)->
 							 config.filters.images)
 
 		debug 'source', source
+		debug "Starting"
 
-		gulp.src source, read: false
+		return gulp.src source, read: false
 			.pipe logger.info '<%= file.relative %>'
 			.pipe $.plumber ErrorHandler('clean:images')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"
 
 
 	gulp.task 'clean:fonts', (done)->
@@ -71,12 +77,14 @@ module.exports = (gulp, $, config)->
 							 config.filters.fonts)
 
 		debug 'source', source
+		debug "Starting"
 
-		gulp.src source, read: false
+		return gulp.src source, read: false
 			.pipe logger.info '<%= file.relative %>'
 			.pipe $.plumber ErrorHandler('clean:fonts')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"
 
 
 	gulp.task 'clean:pages', (done)->
@@ -86,9 +94,11 @@ module.exports = (gulp, $, config)->
 							 config.filters.patterns)
 
 		debug 'source', source
+		debug "Starting"
 
-		gulp.src source, read: false
+		return gulp.src source, read: false
 			.pipe logger.info '<%= file.relative %>'
 			.pipe $.plumber ErrorHandler('clean:pages')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
+			.on 'end', ()-> debug "Finished"

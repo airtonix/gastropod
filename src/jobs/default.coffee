@@ -16,4 +16,5 @@ module.exports = (gulp, $, config)->
 	 * @param  {Function} done [description]
 	 * @return {[type]}        [description]
 	###
-	gulp.task 'default', ['compile', 'server', 'watch']
+	gulp.task 'default', (done)->
+		$.runsequence 'compile', 'server', 'watch', done
