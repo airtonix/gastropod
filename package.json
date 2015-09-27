@@ -1,6 +1,6 @@
 {
   "name": "gastropod",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Opinionated patternlab workflow using gulp",
   "main": "index.js",
   "bin": {
