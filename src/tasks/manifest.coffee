@@ -14,6 +14,7 @@ _ = require 'lodash'
 #
 ErrorHandler = require '../core/logging/errors'
 manifest = require '../core/assets/manifest'
+Logger = require '../core/logging/logger'
 debug = require('debug')('gastropod/tasks/manifest')
 
 
@@ -25,6 +26,7 @@ module.exports = (gulp, $, config)->
 	 * @return {[type]}        [description]
 	###
 	gulp.task 'manifest', (done)->
+		logger = new Logger('manifest')
 
 		# set the root for the manifest
 		manifest.option 'root', path.join config.target.root, config.target.static
@@ -53,10 +55,12 @@ module.exports = (gulp, $, config)->
 		debug "Starting"
 
 		return gulp.src sources, base: config.target.root
+			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('manifest')
 			.pipe $.clean()
 			.pipe $.fingerprinter().revision()
 			.pipe $.tap manifest.add
 			.pipe gulp.dest target
+			.pipe logger.outgoing()
 			.on 'error', (err)-> debug err
 			.on 'end', ()-> debug "Finished"

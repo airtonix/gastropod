@@ -4,8 +4,8 @@ path = require 'path'
  * Asset Pipeline Spec
  * -------------------
  * @work_in_progress
- * Allows you to override the default order of
- * tasks for specific jobs
+ * - Allows you to override the default order of
+ *   tasks for specific jobs
  * - you could for example, change it to `['jade']`, or  `['handlebars']`
  *   But, you would of course be required to provide those tasks.
 ###
@@ -119,15 +119,17 @@ defaultPluginMinify =
 
 ###*
  * Browserify Settings
- * @type {Object}
+ * @affects task:browserify
 ###
 defaultPluginJs =
 	browserify:
 		debug: true
+		transforms:
+			nghtml2js: module: 'templates'
 
 ###*
  * node-sass
- * @type {Object}
+ * @affects task:scss
 ###
 defaultPluginSass =
 	errLogToConsole: true
@@ -138,7 +140,7 @@ defaultPluginSass =
 
 ###*
  * BrowserSync
- * @type {Object}
+ * @affects job:server
 ###
 defaultPluginServer =
 	open: false
@@ -155,6 +157,7 @@ module.exports =
 	source: defaultSource
 	target: defaultTarget
 	context: defaultContext
+	watch: false
 	plugins:
 		fingerprint: defaultPluginFingerPrinter
 		minify: defaultPluginMinify

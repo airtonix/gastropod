@@ -56,6 +56,12 @@ class Logger
 
 		util.log.apply util.log, bits
 
+	incoming: ()->
+		@through('info', "#{util.colors.white('<--')} <%= file.relative %>")
+
+	outgoing: ()->
+		@through('info', "#{util.colors.white('-->')} <%= file.relative %> [<%= file.size %>]")
+
 	info: (itemTemplate, collectionTemplate)->
 		@through('info', itemTemplate, collectionTemplate)
 

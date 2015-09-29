@@ -20,6 +20,8 @@ debug = require('debug')('gastropod/jobs/watch')
 module.exports = (gulp, $, config)->
 
 	gulp.task 'watch', (done)->
+		done() unless config.watch
+
 		source = path.join(config.source.root,
 						   config.filters.all)
 

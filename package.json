@@ -36,6 +36,7 @@
     "jade": "^1.11.0",
     "marked": "^0.3.5",
     "nconf": "^0.8.0",
+    "postmortem": "^0.1.8",
     "require-all": "^1.1.0",
     "shimbro": "0.0.11"
   },

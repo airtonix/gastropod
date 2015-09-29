@@ -44,9 +44,10 @@ module.exports = (gulp, $, config)->
 		debug "Starting"
 
 		return gulp.src sources
-			.pipe logger.info '<%= file.relative %>'
+			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('fonts')
 			.pipe gulp.dest target
+			.pipe logger.outgoing()
 			.pipe $.browsersync.stream()
 			.on 'error', (err)-> debug err
 			.on 'end', ()-> debug "Finished"

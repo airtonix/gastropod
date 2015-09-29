@@ -7,10 +7,13 @@ path = require('path')
 #
 # Framework
 #
-es = require('event-stream')
+_ = require 'lodash'
+through = require('through2')
 swig = require('swig')
 clone = require('clone')
 gutil = require('gulp-util')
+postmortem = require 'postmortem'
+deepmerge = require 'deepmerge'
 debug = require('debug')('gastropod/core/plugins/swig')
 
 #
@@ -21,47 +24,51 @@ PluginError = gutil.PluginError
 #
 # Exports
 #
-extend = (target) ->
-	sources = [].slice.call(arguments, 1)
-	sources.forEach (source) ->
-		for prop of source
-			if source.hasOwnProperty(prop)
-				target[prop] = source[prop]
-		return
-	target
 
 
-module.exports = (options) ->
 
-	gulpswig = (file, callback) ->
-		data = opts.data or {}
+module.exports = ($)->
 
-		if typeof data == 'function'
-			data = data(file)
+	debug 'exporting new '
 
-		if file.data
-			data = extend(file.data, data)
+	(options={}) ->
 
+		debug 'setting up swig instance'
+		if options.defaults
+			swig.setDefaults options.defaults
+
+		debug 'setting up swig instance'
 		try
-			tpl = swig.compile(String(file.contents), filename: file.path)
-			compiled = tpl(data)
-			file.contents = new Buffer(compiled)
-			callback null, file
-
+			options.setup?(swig)
 		catch err
-			debug "PluginError", err
-			callback new PluginError('gulp-swig', err)
-			# callback()
+			postmortem.prettyPrint err
 
-		return
+		streamFinish = (done)->
+			done()
 
-	'use strict'
-	opts = if options then clone(options) else {}
+		streamStart = (file, ext, done)->
 
-	if opts.defaults
-		swig.setDefaults opts.defaults
+			debug 'processing file', file.relative
 
-	if opts.setup and typeof opts.setup == 'function'
-		opts.setup swig
+			data = options.data or {}
 
-	es.map gulpswig
+			if _.isFuncion data
+				data = data file
+
+			if file.data
+				data = deepmerge {}, file.data, data
+
+			try
+				template = swig.compile(String(file.contents), filename: file.path)
+				compiled = template(data)
+				file.contents = new Buffer compiled
+				done null, file
+
+			catch err
+				postmortem.prettyPrint err
+				done()
+
+			return
+
+		debug 'exporting through stream'
+		return through.obj streamStart, streamFinish

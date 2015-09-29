@@ -19,7 +19,6 @@ $.runsequence = require 'run-sequence'
 $.browsersync = require('browser-sync').create()
 $.nghtml2js = require 'browserify-ng-html2js'
 $.del = require 'del'
-$.swig = require './swig'
 $.vinylPaths = require 'vinyl-paths'
 
 #
@@ -29,6 +28,7 @@ $.vinylPaths = require 'vinyl-paths'
 #
 # Custom Plugins
 $.fingerprinter = require('./fingerprinter')($)
+$.swig = require('./swig')($)
 
 debug 'loaded plugins', Object.keys $
 

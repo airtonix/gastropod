@@ -29,11 +29,11 @@ module.exports = (gulp, $, config)->
 		debug "Starting"
 
 		return gulp.src source, read: false
-			.pipe logger.info '<%= file.relative %>'
+			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('clean:scripts')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished"
+			.on 'end', ()-> debug "Finished: scripts"
 
 
 	gulp.task 'clean:styles', (done)->
@@ -46,11 +46,11 @@ module.exports = (gulp, $, config)->
 		debug "Starting"
 
 		return gulp.src source, read: false
-			.pipe logger.info '<%= file.relative %>'
+			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('clean:styles')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished"
+			.on 'end', ()-> debug "Finished: styles"
 
 
 	gulp.task 'clean:images', (done)->
@@ -63,11 +63,11 @@ module.exports = (gulp, $, config)->
 		debug "Starting"
 
 		return gulp.src source, read: false
-			.pipe logger.info '<%= file.relative %>'
+			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('clean:images')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished"
+			.on 'end', ()-> debug "Finished: images"
 
 
 	gulp.task 'clean:fonts', (done)->
@@ -80,11 +80,11 @@ module.exports = (gulp, $, config)->
 		debug "Starting"
 
 		return gulp.src source, read: false
-			.pipe logger.info '<%= file.relative %>'
+			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('clean:fonts')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished"
+			.on 'end', ()-> debug "Finished: fonts"
 
 
 	gulp.task 'clean:pages', (done)->
@@ -97,8 +97,8 @@ module.exports = (gulp, $, config)->
 		debug "Starting"
 
 		return gulp.src source, read: false
-			.pipe logger.info '<%= file.relative %>'
+			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('clean:pages')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished"
+			.on 'end', ()-> debug "Finished: pages"

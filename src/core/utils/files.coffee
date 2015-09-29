@@ -40,11 +40,11 @@ class Files
 			ignore: ignore
 
 		for item in globbed
-			debug 'caching reference to', item
 			if not Files.isDirectory path.join(root, item)
 				fileExt = path.extname(item)
 				fileKey = changeCase.camelCase path.basename(item, fileExt)
 				filePath = item.replace(/,/g, '/')
+				debug 'template:', fileKey, ' > ', filePath
 				output[fileKey] = filePath
 
 		return output

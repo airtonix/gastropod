@@ -7,15 +7,15 @@
 		},
 		{
 			"name": "Src",
-			"path": "./src"
+			"path": "src"
 		},
 		{
 			"name": "Config",
-			"path": "./config"
+			"path": "config"
 		},
 		{
 			"name": "Tests",
-			"path": "./test"
+			"path": "test"
 		}
 	]
 }

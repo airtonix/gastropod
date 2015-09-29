@@ -19,6 +19,7 @@ ContextFactory = require '../core/templates/context'
 Manifest = require '../core/assets/manifest'
 jade = require 'jade'
 
+
 module.exports = (gulp, $, config)->
 	###*
 	 * Templates
@@ -51,8 +52,8 @@ module.exports = (gulp, $, config)->
 		debug "Starting"
 
 		return gulp.src source
-			.pipe logger.info '<< <%= file.relative %>'
-			.pipe $.plumber ErrorHandler('pages')
+			.pipe logger.incoming()
+			.pipe $.plumber ErrorHandler('pages:jade')
 			.pipe $.frontMatter
 				property: 'meta'
 				remove: true
@@ -60,6 +61,6 @@ module.exports = (gulp, $, config)->
 			.pipe $.jade basedir: patterns
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
-			.pipe logger.info '>> <%= file.relative %> [<%= file.size %>]'
+			.pipe logger.outgoing()
 			.on 'error', (err)-> debug err
 			.on 'end', ()-> debug "Finished"

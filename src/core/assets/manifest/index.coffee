@@ -25,7 +25,7 @@ class Manifester
 			originalSplit = file.revPathOriginal.split(@options.root+'/')
 			original = originalSplit.length and originalSplit[1] or file.revPathOriginal
 
-		debug 'hashed:', original, current
+		debug 'hashed:', original, ' > ', current
 
 		@db[original] = current
 

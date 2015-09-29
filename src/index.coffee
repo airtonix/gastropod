@@ -57,10 +57,11 @@ class Gastropod
 		@gulp = gulp
 		@config = nconf.get()
 		@plugins = require './core/plugins'
-		debug @config
 
 		@jobs = @register path.join __dirname, 'jobs'
 		@tasks = @register path.join __dirname, 'tasks'
+
+		@addons()
 
 	###*
 	 * Register a gulp task
@@ -73,6 +74,17 @@ class Gastropod
 			dirname: globpath
 			filter: /(.+)\.[js|coffee|litcoffee]+$/
 			resolve: (task)=> task(@gulp, @plugins, @config)
+
+	###*
+	 * Find npm installed `gastropod-addon-*`
+	###
+
+	addons: ->
+		pkgs = load
+			dirname: path.join process.cwd(), 'node_modules'
+			filter: /gastropod-(.+)\/package\.json$/
+			resolve: (pkg)->
+				debug 'found package for', pkg
 
 	run: (tasks)->
 		if typeof tasks is 'string'

@@ -34,29 +34,38 @@ module.exports = (gulp, $, config)->
 		target = path.join(config.target.root,
 						   config.target.scripts)
 
+		browserifyConfig = config.plugins.js.browserify
+		transforms = browserifyConfig.transforms
+
 		debug "Starting"
 		debug " > source", source
 		debug " > target", target
 
 		return gulp.src source
-			.pipe logger.info '<%= file.relative %>'
+			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('scripts:browserify')
 			.pipe $.through.obj (file, env, next)->
-				debug 'processing %s', file
-				$.browserify(file.path, config.plugins.js.browserify)
-					.transform $.nghtml2js module: 'templates'
-					.bundle (err, results)->
-						if err
-							file.contents = null
-							next err, file
-						else
-							file.contents = results
-							next(null, file)
+
+				browserify = $.browserify file.path, browserifyConfig
+
+				for plugin, options in transforms
+					if plugin of $
+						transform = $[plugin]
+						browserify.transform transform.apply options
+
+				browserify.bundle (err, results)->
+					debug 'processed %s', file.relative
+					if err
+						file.contents = null
+						next err, file
+					else
+						file.contents = results
+						next(null, file)
 
 			.pipe $.rename
 				extname: '.js'
-			.pipe logger.info '<%= file.relative %> [<%= file.size %>]'
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
+			.pipe logger.outgoing()
 			.on 'error', (err)-> debug err
 			.on 'end', ()-> debug "Finished"
