@@ -145,7 +145,6 @@ defaultPluginSass =
 defaultPluginServer =
 	open: false
 	server:
-		baseDir: defaultTarget.root
 		notify: false
 
 #

@@ -38,8 +38,19 @@ module.exports =
 			}
 
 			if (!url.match(#{REGEX_EXTERNAL_URL})) {
+
+				if(root.indexOf('/') == 0){
+					root = root.substring(1);
+				}
+				if(static.indexOf('/') == 0){
+					static = static.substring(1);
+				}
+				if(url.indexOf('/') == 0){
+					url = url.substring(1);
+				}
+
 				url = manifest[url] || url;
-				_output += root + static + url;
+				_output += [root, static, url].join('/');
 
 			} else {
 				_output += url;

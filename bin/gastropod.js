@@ -56,6 +56,12 @@ Program
 		runner.run(tasks)
 	});
 
+Program
+	.command('list <what>')
+	.action(function(what, options){
+		runner = new Gastropod(options.parent)
+		runner.list(what)
+	});
 
 Program
 	.parse(process.argv)

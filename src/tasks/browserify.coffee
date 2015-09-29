@@ -32,6 +32,7 @@ module.exports = (gulp, $, config)->
 						   config.filters.scripts.modules)
 
 		target = path.join(config.target.root,
+						   config.target.static,
 						   config.target.scripts)
 
 		browserifyConfig = config.plugins.js.browserify

@@ -19,7 +19,7 @@ ContextFactory = require '../core/templates/context'
 Configurator = require '../core/swig/configurator'
 Manifest = require '../core/assets/manifest'
 Files = require '../core/utils/files'
-
+deepmerge = require 'deepmerge'
 
 module.exports = (gulp, $, config)->
 
@@ -37,6 +37,8 @@ module.exports = (gulp, $, config)->
 		data = path.join(process.cwd(),
 						 config.source.root,
 						 config.source.data)
+
+
 		sources = [
 			path.join(config.source.root,
 					  config.source.pages,
@@ -46,8 +48,11 @@ module.exports = (gulp, $, config)->
 		]
 		target = path.join config.target.root, '/'
 
+		delete require.cache[require.resolve(data)]
+		globals = require data
+
 		Context = new ContextFactory()
-		Context.add site: require data
+		Context.add deepmerge globals, config.context
 		Context.add manifest: Manifest.db
 		Context.add templates: new Files(pattern='**', options=root, ignore=['pages/*'])
 
@@ -56,16 +61,16 @@ module.exports = (gulp, $, config)->
 		debug 'sources', sources
 		debug 'target', target
 		debug "Starting"
-		done()
-		# return gulp.src sources
-		# 	.pipe logger.incoming()
-		# 	.pipe $.plumber ErrorHandler('pages')
-		# 	.pipe $.frontMatter
-		# 		property: 'meta'
-		# 		remove: true
-		# 	.pipe $.data Context.export
-		# 	.pipe $.swig SwigConfiguration
-		# 	.pipe gulp.dest target
-		# 	.pipe logger.outgoing()
-		# 	.pipe $.browsersync.stream()
-		# 	.on 'end', ()-> debug "Finished"
+
+		return gulp.src sources
+			.pipe logger.incoming()
+			.pipe $.plumber ErrorHandler('pages')
+			.pipe $.frontMatter
+				property: 'meta'
+				remove: true
+			.pipe $.data Context.export
+			.pipe $.swig SwigConfiguration
+			.pipe gulp.dest target
+			.pipe logger.outgoing()
+			.pipe $.browsersync.stream()
+			.on 'end', ()-> debug "Finished"

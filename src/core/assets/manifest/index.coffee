@@ -18,6 +18,7 @@ class Manifester
 
 	add: (file, tap)=>
 		filePathSplit = file.path.split(@options.root+'/')
+		debug 'splitting on', filePathSplit
 		current = filePathSplit.length and filePathSplit[1] ? file.path
 		original = current
 

@@ -32,6 +32,7 @@ module.exports = (gulp, $, config)->
 							 config.filters.styles)
 
 		target = path.join(config.target.root,
+						   config.target.static,
 						   config.target.styles)
 
 		debug 'source', source

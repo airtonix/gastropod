@@ -24,8 +24,7 @@ module.exports =
 		"""(function() {
 			var url = #{args[0]};
 			var urls = _ctx.site && _ctx.site.urls || null;
-			var media, manifest, root;
-			var manifest = _ctx.manifest || {};
+			var media, root;
 
 			if (urls) {
 				media = urls.media || null;
@@ -36,10 +35,20 @@ module.exports =
 				_output = url;
 				return;
 			}
+
 			if (!url.match(#{REGEX_EXTERNAL_URL})) {
-				url = manifest[url] || url;
-				_output += root + media + url;
-				return
+
+				if(root.indexOf('/') == 0){
+					root = root.substring(1);
+				}
+				if(media.indexOf('/') == 0){
+					media = media.substring(1);
+				}
+				if(url.indexOf('/') == 0){
+					url = url.substring(1);
+				}
+
+				_output += [root, media, url].join('/');
 
 			} else {
 				_output += url;

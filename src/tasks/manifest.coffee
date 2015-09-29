@@ -33,21 +33,26 @@ module.exports = (gulp, $, config)->
 
 		sources = [
 				path.join(config.target.root
+						config.target.static,
 						config.target.images
 						config.filters.images)
 
 				path.join(config.target.root
+						config.target.static,
 						config.target.fonts
 						config.filters.fonts)
 
 				path.join(config.target.root
+						config.target.static,
 						config.target.styles
 						config.filters.styles)
 
 				path.join(config.target.root
+						config.target.static,
 						config.target.scripts
 						config.filters.scripts.all)
 			]
+
 		target = config.target.root
 
 		debug 'sources', sources

@@ -37,6 +37,7 @@ module.exports = (gulp, $, config)->
 					  config.filters.fonts)
 		]
 		target = path.join(config.target.root,
+						   config.target.static,
 						   config.target.fonts)
 
 		debug 'sources', sources

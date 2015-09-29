@@ -22,8 +22,9 @@ module.exports = (gulp, $, config)->
 	gulp.task 'clean:scripts', (done)->
 		logger = new Logger('clean:scripts')
 		source = path.join(config.target.root,
-							 config.target.scripts,
-							 config.filters.scripts.all)
+						   config.target.static,
+						   config.target.scripts,
+						   config.filters.scripts.all)
 
 		debug 'source', source
 		debug "Starting"
@@ -39,6 +40,7 @@ module.exports = (gulp, $, config)->
 	gulp.task 'clean:styles', (done)->
 		logger = new Logger('clean:styles')
 		source = path.join(config.target.root,
+						   config.target.static,
 							 config.target.styles,
 							 config.filters.styles)
 
@@ -56,6 +58,7 @@ module.exports = (gulp, $, config)->
 	gulp.task 'clean:images', (done)->
 		logger = new Logger('clean:images')
 		source = path.join(config.target.root,
+						   config.target.static,
 							 config.target.images,
 							 config.filters.images)
 
@@ -73,6 +76,7 @@ module.exports = (gulp, $, config)->
 	gulp.task 'clean:fonts', (done)->
 		logger = new Logger('clean:fonts')
 		source = path.join(config.target.root,
+						   config.target.static,
 							 config.target.fonts,
 							 config.filters.fonts)
 

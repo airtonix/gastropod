@@ -52,15 +52,20 @@ module.exports = ($)->
 
 			data = options.data or {}
 
-			if _.isFuncion data
+			if _.isFunction data
+				debug 'global data is a function'
 				data = data file
 
 			if file.data
+				debug 'merging data from previous stream'
 				data = deepmerge {}, file.data, data
 
 			try
+				debug 'parsing', file.path
 				template = swig.compile(String(file.contents), filename: file.path)
+				debug 'compiling', file.path
 				compiled = template(data)
+				debug 'done'
 				file.contents = new Buffer compiled
 				done null, file
 

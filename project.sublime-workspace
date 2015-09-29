@@ -4,6 +4,42 @@
 		"selected_items":
 		[
 			[
+				"modul",
+				"modulePath"
+			],
+			[
+				"mod",
+				"modulePath"
+			],
+			[
+				"add",
+				"addonPkg"
+			],
+			[
+				"gastr",
+				"gastropod"
+			],
+			[
+				"md",
+				"modulesPath"
+			],
+			[
+				"tras",
+				"transforms"
+			],
+			[
+				"file",
+				"filepath"
+			],
+			[
+				"defa",
+				"defaultSource"
+			],
+			[
+				"merge-",
+				"merge-to-master"
+			],
+			[
 				"error",
 				"ErrorHandler"
 			],
@@ -23,6 +59,22 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/tasks/swig.coffee",
+			"settings":
+			{
+				"buffer_size": 1735,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/core/templates/context.coffee",
+			"settings":
+			{
+				"buffer_size": 797,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -31,10 +83,42 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 354.0,
-		"last_filter": "insta",
+		"height": 134.0,
+		"last_filter": "edit proj",
 		"selected_items":
 		[
+			[
+				"edit proj",
+				"Project: Edit Project"
+			],
+			[
+				"check",
+				"Git: Checkout Current File"
+			],
+			[
+				"trail",
+				"Trailing Spaces: Delete Trailing Spaces"
+			],
+			[
+				"upp",
+				"Convert Case: Upper Case"
+			],
+			[
+				"tabs",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"lower",
+				"Convert Case: Lower Case"
+			],
+			[
+				"com",
+				"Git: Commit"
+			],
+			[
+				"add",
+				"Git: Add Current File"
+			],
 			[
 				"insta",
 				"Package Control: Install Package"
@@ -58,18 +142,6 @@
 			[
 				"move",
 				"File: Move"
-			],
-			[
-				"add",
-				"Project: Add Folder"
-			],
-			[
-				"tabs",
-				"Indentation: Convert to Tabs"
-			],
-			[
-				"trail",
-				"Trailing Spaces: Delete Trailing Spaces"
 			],
 			[
 				"coffee",
@@ -154,10 +226,51 @@
 	},
 	"expanded_folders":
 	[
-		"/home/zenobius/Projects/Mine/gastropod"
+		"/home/zenobius/Projects/Mine/gastropod",
+		"/home/zenobius/Projects/Mine/gastropod/bin",
+		"/home/zenobius/Projects/Mine/gastropod/config",
+		"/home/zenobius/Projects/Mine/gastropod/src",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/plugins",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/swig",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/templates",
+		"/home/zenobius/Projects/Mine/gastropod/src/tasks"
 	],
 	"file_history":
 	[
+		"/home/zenobius/Projects/Mine/gastropod/src/core/swig/tags/static.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/swig/tags/media.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/bin/gastropod.js",
+		"/home/zenobius/Projects/Mine/gastropod/src/index.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/tasks/swig.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/plugins/swig.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/tasks/clean.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/jobs/server.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/project.sublime-project",
+		"/home/zenobius/Projects/Mine/gastropod/src/jobs/compile.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/jobs/default.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/jobs/watch.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/config/default.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/swig/configurator.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/plugins/index.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/tasks/jade.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/tasks/manifest.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/assets/manifest/index.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/tasks/scss.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/tasks/browserify.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/tasks/images.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/tasks/fonts.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/utils/files.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/logging/logger.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/swig/filters/slugify.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/package.json",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/swig/loaders/MulitPathFsLoader.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/swig/tags/staticTag.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/swig/tags/mediaTag.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/swig/tags/urlTag.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/src/core/templates/context.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/node_modules/jade/lib/parser.js",
+		"/home/zenobius/Projects/Mine/gastropod/src/jobs/clean.coffee",
+		"/home/zenobius/Projects/Mine/gastropod/README.md",
 		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/swig.coffee",
 		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/images.coffee",
 		"/home/zenobius/Projects/Mine/gremlinjs/src/tasks/manifest.coffee",
@@ -236,6 +349,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"opts",
+			"fileOriginalPathSplit",
+			"plugin",
 			"gremlin",
 			"chalk",
 			"watch",
@@ -258,8 +374,73 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/tasks/swig.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1735,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1548,
+								1548
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1079.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 1,
+					"file": "src/core/templates/context.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 797,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								684,
+								684
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 215.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -280,11 +461,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -297,6 +485,10 @@
 	"output.find_results":
 	{
 		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 168.0
 	},
 	"output.settings_documentation_panel":
 	{
@@ -315,6 +507,14 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"defa",
+				"Src/jobs/default.coffee"
+			],
+			[
+				"bin/",
+				"Root/bin/gastropod.js"
+			]
 		],
 		"width": 0.0
 	},

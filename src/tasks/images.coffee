@@ -31,6 +31,7 @@ module.exports = (gulp, $, config)->
 							 config.filters.images)
 
 		target = path.join(config.target.root,
+						   config.target.static,
 						   config.target.images)
 
 		debug 'source', source

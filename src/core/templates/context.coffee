@@ -35,8 +35,9 @@ class TemplateContextFactory
 
 		try
 			delete require.cache[require.resolve(filepath)]
-			page = require filepath
-			output = _.merge({}, @data, { page: page })
+			page = page: require(filepath)
+			meta = meta: file.meta
+			output = _.merge({}, @data, page, meta)
 		catch err
 
 		return output
