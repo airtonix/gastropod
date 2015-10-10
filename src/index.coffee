@@ -23,6 +23,7 @@ debug = require('debug')('gastropod')
 merge = require 'deepmerge'
 postmortem = require 'postmortem'
 
+
 ###*
  * Gastropod Class
 ###
@@ -63,7 +64,6 @@ class Gastropod
 		@config = nconf.get()
 		debug 'nconf loaded'
 
-		@gulp = gulp
 		@plugins = require './core/plugins'
 		@jobs = @register path.join __dirname, 'jobs'
 		@tasks = @register path.join __dirname, 'tasks'
@@ -82,7 +82,7 @@ class Gastropod
 			resolve: @initialiseModule
 
 	initialiseModule: (addon)=>
-		addon(@gulp, @plugins, @config)
+		addon(gulp, @plugins, @config)
 
 	###*
 	 * Find npm installed `gastropod-addon-*`
@@ -127,6 +127,6 @@ class Gastropod
 		if typeof tasks is 'string'
 			tasks = [tasks, ]
 		debug 'running tasks', tasks
-		@gulp.start(tasks)
+		gulp.start(tasks)
 
 module.exports = Gastropod

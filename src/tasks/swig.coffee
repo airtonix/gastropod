@@ -21,6 +21,7 @@ Manifest = require '../core/assets/manifest'
 Files = require '../core/utils/files'
 deepmerge = require 'deepmerge'
 
+
 module.exports = (gulp, $, config)->
 
 	###*
@@ -38,7 +39,6 @@ module.exports = (gulp, $, config)->
 						 config.source.root,
 						 config.source.data)
 
-
 		sources = [
 			path.join(config.source.root,
 					  config.source.pages,
@@ -49,12 +49,13 @@ module.exports = (gulp, $, config)->
 		target = path.join config.target.root, '/'
 
 		delete require.cache[require.resolve(data)]
-		globals = require data
 
 		Context = new ContextFactory()
-		Context.add deepmerge globals, config.context
 		Context.add manifest: Manifest.db
 		Context.add templates: new Files(pattern='**', options=root, ignore=['pages/*'])
+
+		globals = require(data)(Context.data)
+		Context.add deepmerge config.context, globals
 
 		SwigConfiguration = new Configurator root: root
 
@@ -70,7 +71,7 @@ module.exports = (gulp, $, config)->
 				remove: true
 			.pipe $.data Context.export
 			.pipe $.swig SwigConfiguration
-			.pipe gulp.dest target
 			.pipe logger.outgoing()
+			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
 			.on 'end', ()-> debug "Finished"

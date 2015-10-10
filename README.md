@@ -23,4 +23,4 @@ in your `package.json`
 
 # Configuration
 
-See `config/default.coffee`
+See `config/master.coffee`

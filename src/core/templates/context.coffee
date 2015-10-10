@@ -7,6 +7,9 @@ path = require 'path'
 # Framework
 #
 _ = require 'lodash'
+debug = require('debug')('gastropod/core/templates/context')
+postmortem = require 'postmortem'
+
 
 ###*
  * [TemplateContexter description]
@@ -16,7 +19,8 @@ class TemplateContextFactory
 
 	@defaults =
 		manifest: {}
-		document: {}
+		page: {}
+		meta: {}
 
 	data: {}
 
@@ -33,12 +37,21 @@ class TemplateContextFactory
 		filename = path.basename(file.relative, fileext)
 		filepath = path.join filebase, filename
 
+		debug 'attempting to load', filepath
+
+		output = _.extend {}, @data, meta: file.meta
+
 		try
-			delete require.cache[require.resolve(filepath)]
-			page = page: require(filepath)
-			meta = meta: file.meta
-			output = _.merge({}, @data, page, meta)
+			pageFactory = require(filepath)
+			page = pageFactory output
+			debug page
+
 		catch err
+			if not err.code is 'MODULE_NOT_FOUND'
+				postmortem.prettyPrint err
+			page = {}
+
+		output = _.extend output, page: page
 
 		return output
 

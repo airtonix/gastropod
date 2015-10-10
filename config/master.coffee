@@ -99,6 +99,15 @@ defaultContext =
 ###
 
 ###*
+ * gulp-git-pages
+ * https://www.npmjs.com/package/gulp-git-pages#api
+ * @type {Object}
+###
+defaultDeployOptions = {
+	# remoteUrl: 
+}
+
+###*
  * Asset Fingerprinting
  * @affects swig.tags.media
  * @affects swig.tags.static

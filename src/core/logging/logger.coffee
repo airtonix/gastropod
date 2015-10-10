@@ -13,6 +13,8 @@ path = require 'path'
 _ = require 'lodash'
 through = require 'through2'
 util = require 'gulp-util'
+prettyBytes = require 'pretty-bytes'
+
 
 class Logger
 
@@ -29,19 +31,20 @@ class Logger
 	spawn: (name)->
 		Logger.spawn "#{@name}/{name}"
 
-	through: (level, itemTpl, collectionTpl)->
+	through: (level, itemTpl="<%= file.relative %>", collectionTpl="<%= count %> items.")->
 		@level = level
 		@itemTpl = _.template itemTpl
-		@collectionTpl = collectionTpl and _.template @collectionTpl
+		@collectionTpl = _.template collectionTpl
 		count = 0
 
 		item = (file, enc, done)=>
 			count++
+			file.size = prettyBytes String(file.contents).length
 			@msg util.colors.grey @itemTpl file: file
 			done(null, file)
 
 		end = (done)=>
-			@msg util.colors.grey "#{count} items."
+			@msg util.colors.grey @collectionTpl count: count
 			count = null
 			done()
 

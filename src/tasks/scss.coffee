@@ -43,8 +43,8 @@ module.exports = (gulp, $, config)->
 			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('Styles')
 			.pipe $.sass(config.plugins.sass)
+			.pipe logger.outgoing()
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
-			.pipe logger.outgoing()
 			.on 'error', (err)-> debug err
 			.on 'end', ()-> debug "Finished"
