@@ -48,15 +48,34 @@ module.exports = (gulp, $, config)->
 		]
 		target = path.join config.target.root, '/'
 
+		# remove cached version of global data
+		# because we want a fresh copy every time.
+		# @TODO: this needs closer attention... doesn't seem to be working
 		delete require.cache[require.resolve(data)]
 
+		#
+		# Template HashMap
+		#
+		# make a hashmap of project templates
+		templates = new Files(pattern='**', options=root, ignore=['pages/*'])
+		# @TODO: make a list of templates from gastropod modules that provide templates
+		# for addon in gastropod.addons where 'templates' in addon.provides
+		#	templates = deepmerge {}, templates
+
+		#
+		# Page Context
+		#
 		Context = new ContextFactory()
+		# add fingerprinted asset manifest
 		Context.add manifest: Manifest.db
-		Context.add templates: new Files(pattern='**', options=root, ignore=['pages/*'])
+		# add template hashmap
+		Context.add templates: templates
+		# merge in project level global context.
+		Context.add deepmerge config.context, require(data)(Context.data)
 
-		globals = require(data)(Context.data)
-		Context.add deepmerge config.context, globals
-
+		#
+		# Swig Config
+		#
 		SwigConfiguration = new Configurator root: root
 
 		debug 'sources', sources
@@ -71,6 +90,8 @@ module.exports = (gulp, $, config)->
 				remove: true
 			.pipe $.data Context.export
 			.pipe $.swig SwigConfiguration
+			.pipe $.removeEmptyLines()
+			.pipe $.htmlPrettify()
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
