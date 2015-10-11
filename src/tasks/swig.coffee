@@ -12,14 +12,18 @@ _ = require 'lodash'
 #
 # Project
 #
-ErrorHandler = require '../core/logging/errors'
-Logger = require '../core/logging/logger'
-debug = require('debug')('gastropod/tasks/pages:swig')
-ContextFactory = require '../core/templates/context'
+async = require 'async-chainable'
 Configurator = require '../core/swig/configurator'
-Manifest = require '../core/assets/manifest'
-Files = require '../core/utils/files'
+ContentCollection = require '../core/content'
+ContextFactory = require '../core/templates/context'
+debug = require('debug')('gastropod/tasks/pages:swig')
 deepmerge = require 'deepmerge'
+ErrorHandler = require '../core/logging/errors'
+Files = require '../core/utils/files'
+Logger = require '../core/logging/logger'
+Manifest = require '../core/assets/manifest'
+postmortem = require 'postmortem'
+requireUncached = require 'require-uncached'
 
 
 module.exports = (gulp, $, config)->
@@ -35,48 +39,36 @@ module.exports = (gulp, $, config)->
 		root = path.join(config.source.root,
 						 config.source.patterns)
 
+		pages = path.join(config.source.root,
+					  	  config.source.pages)
+
 		data = path.join(process.cwd(),
 						 config.source.root,
 						 config.source.data)
 
 		sources = [
-			path.join(config.source.root,
-					  config.source.pages,
-					  config.filters.all)
-
+			path.join(pages, config.filters.all)
 			'!**/*.coffee'
 		]
+
 		target = path.join config.target.root, '/'
 
-		# remove cached version of global data
-		# because we want a fresh copy every time.
-		# @TODO: this needs closer attention... doesn't seem to be working
-		delete require.cache[require.resolve(data)]
+		SwigConfig = new Configurator(root: root)
+		TemplateContext = new ContextFactory({})
+		TemplateHash = new Files(pattern='**', options=root, ignore=['pages/*'])
 
-		#
-		# Template HashMap
-		#
-		# make a hashmap of project templates
-		templates = new Files(pattern='**', options=root, ignore=['pages/*'])
-		# @TODO: make a list of templates from gastropod modules that provide templates
-		# for addon in gastropod.addons where 'templates' in addon.provides
-		#	templates = deepmerge {}, templates
-
-		#
-		# Page Context
-		#
-		Context = new ContextFactory()
+		debug 'Populating Global Context'
 		# add fingerprinted asset manifest
-		Context.add manifest: Manifest.db
-		# add template hashmap
-		Context.add templates: templates
-		# merge in project level global context.
-		Context.add deepmerge config.context, require(data)(Context.data)
+		debug 'Manifest.db', Manifest.db
+		debug 'TemplateContext.data', TemplateContext.data
 
-		#
-		# Swig Config
-		#
-		SwigConfiguration = new Configurator root: root
+		TemplateContext.add Manifest: Manifest.db
+		# add template hashmap
+		TemplateContext.add Templates: TemplateHash
+		# add Project level global context
+		TemplateContext.add requireUncached(data)(TemplateContext.data)
+		# add Environment level global context
+		TemplateContext.add config.context
 
 		debug 'sources', sources
 		debug 'target', target
@@ -88,11 +80,12 @@ module.exports = (gulp, $, config)->
 			.pipe $.frontMatter
 				property: 'meta'
 				remove: true
-			.pipe $.data Context.export
-			.pipe $.swig SwigConfiguration
+			.pipe $.data TemplateContext.export
+			.pipe $.swig SwigConfig
 			.pipe $.removeEmptyLines()
 			.pipe $.htmlPrettify()
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
-			.on 'end', ()-> debug "Finished"
+			.on 'end', ()->
+				debug "Finished"

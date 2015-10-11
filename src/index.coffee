@@ -124,9 +124,19 @@ class Gastropod
 		debug JSON.stringify @[what], null, 4
 
 	run: (tasks)->
+		# gulp_src = gulp.src
+		# gulp.src = ()=>
+		# 	gulp_src.apply gulp, arguments
+		# 		.pipe @plugins.plumber (error)=>
+		# 			message = "Error (#{error.plugin}): #{error.message}"
+		# 			@plugins.util.log @plugins.util.colors.red message
+		# 			@emit 'end'
+		gulp.on 'error', (err)->
+			postmortem.prettyPrint err
+
 		if typeof tasks is 'string'
 			tasks = [tasks, ]
 		debug 'running tasks', tasks
-		gulp.start(tasks)
+		gulp.start tasks
 
 module.exports = Gastropod

@@ -14,11 +14,15 @@ class Manifester
 	options: {}
 
 	option: (key, value)->
+		debug 'setting option', key, value
 		@options[key] = value
+
+	empty: ->
+		debug 'emptying manifest'
+		@db = {}
 
 	add: (file, tap)=>
 		filePathSplit = file.path.split(@options.root+'/')
-		debug 'splitting on', filePathSplit
 		current = filePathSplit.length and filePathSplit[1] ? file.path
 		original = current
 
@@ -26,7 +30,7 @@ class Manifester
 			originalSplit = file.revPathOriginal.split(@options.root+'/')
 			original = originalSplit.length and originalSplit[1] or file.revPathOriginal
 
-		debug 'hashed:', original, ' > ', current
+		debug 'manifest.add', original, ' = ', current
 
 		@db[original] = current
 

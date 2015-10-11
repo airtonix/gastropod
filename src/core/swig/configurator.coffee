@@ -17,7 +17,6 @@ class SwigConfigFactory
 	setup: (swig)=>
 		swig.setDefaults
 			loader: swig.loaders.fs @options.root
-			locals: @options.globals
 			cache: false
 
 		debug 'swig configured.'
@@ -33,7 +32,7 @@ class SwigConfigFactory
 				debug 'registering filter', name
 				swig.setFilter name, filter
 		catch err
-			debug err
+			throw err
 
 		try
 			debug 'loading tags', tags
@@ -48,6 +47,6 @@ class SwigConfigFactory
 					debug 'registering tag.extension', name
 					swig.setExtension name, obj
 		catch err
-			debug err
+			throw err
 
 module.exports = SwigConfigFactory

@@ -24,7 +24,7 @@ module.exports = (gulp, $, config)->
 	 * @param  {Function} done [description]
 	 * @return {[type]}        [description]
 	###
-	gulp.task 'fonts', (done)->
+	gulp.task 'copy:fonts', (done)->
 		logger = new Logger('fonts')
 		sources = [
 			path.join(process.cwd(),

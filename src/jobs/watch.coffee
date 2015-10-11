@@ -26,7 +26,4 @@ module.exports = (gulp, $, config)->
 						   config.filters.all)
 
 		debug('watching', source)
-		gulp
-			.watch source, ['compile']
-			.on 'change', (file)->
-				debug 'changed', file
+		gulp.watch source, ['compile']

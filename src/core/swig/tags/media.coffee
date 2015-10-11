@@ -23,7 +23,7 @@ module.exports =
 
 		"""(function() {
 			var url = #{args[0]};
-			var urls = _ctx.site && _ctx.site.urls || null;
+			var urls = _ctx.Site && _ctx.Site.urls || null;
 			var media, root;
 
 			if (urls) {

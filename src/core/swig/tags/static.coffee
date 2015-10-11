@@ -23,9 +23,9 @@ module.exports =
 
 		"""(function() {
 			var url = #{args[0]};
-			var urls = _ctx.site && _ctx.site.urls || null;
+			var urls = _ctx.Site && _ctx.Site.urls || null;
 			var static, manifest, root;
-			var manifest = _ctx.manifest || {};
+			var manifest = _ctx.Manifest || {};
 
 			if (urls) {
 				static = urls.static || null;
@@ -33,7 +33,7 @@ module.exports =
 			}
 
 			if(!static || !root){
-				_output = url;
+				_output += url;
 				return;
 			}
 

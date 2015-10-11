@@ -9,6 +9,8 @@ path = require 'path'
 _ = require 'lodash'
 debug = require('debug')('gastropod/core/templates/context')
 postmortem = require 'postmortem'
+deepmerge = require 'deepmerge'
+requireUncached = require 'require-uncached'
 
 
 ###*
@@ -18,40 +20,41 @@ postmortem = require 'postmortem'
 class TemplateContextFactory
 
 	@defaults =
-		manifest: {}
-		page: {}
-		meta: {}
+		Manifest: {}
+		Page: {}
+		Meta: {}
 
 	data: {}
 
 	constructor: (data={}) ->
-		@data = _.defaultsDeep data, @constructor.defaults
+		@data = deepmerge data, @constructor.defaults
 
 	add: (data)->
-		@data = _.defaultsDeep @data, data
+		@data = deepmerge @data, data
+
+	empty: ()->
+		@data = {}
 
 	export: (file)=>
 		output = @data
-		filebase = file.base
-		fileext = path.extname(file.relative)
-		filename = path.basename(file.relative, fileext)
-		filepath = path.join filebase, filename
 
-		debug 'attempting to load', filepath
-
-		output = _.extend {}, @data, meta: file.meta
+		directory = path.dirname file.path
+		fileext = path.extname(file.path)
+		filename = path.basename(file.path, fileext)
+		filepath = path.join directory, filename
+		output = deepmerge _.clone(@data), Meta: file.meta
 
 		try
-			pageFactory = require(filepath)
+			pageFactory = requireUncached filepath
 			page = pageFactory output
-			debug page
+			debug 'Page:', filepath, '>', page
 
 		catch err
 			if not err.code is 'MODULE_NOT_FOUND'
 				postmortem.prettyPrint err
 			page = {}
 
-		output = _.extend output, page: page
+		output = _.extend output, Page: page
 
 		return output
 

@@ -32,7 +32,7 @@ module.exports =
 			}
 
 			if(!root){
-				_output = url;
+				_output += url;
 				return;
 			}
 

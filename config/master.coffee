@@ -13,6 +13,8 @@ defaultPipeline =
 	templates: ['swig']
 	scripts: ['browserify']
 	styles: ['scss']
+	fonts: ['copy:fonts']
+	images: ['copy:images']
 
 ###*
  * List of targets for various jobs

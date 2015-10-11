@@ -30,12 +30,14 @@ PluginError = gutil.PluginError
 module.exports = ($)->
 
 	debug 'exporting new '
+	DEFAULTS =
+		cache: false
 
 	(options={}) ->
 
 		debug 'setting up swig instance'
 		if options.defaults
-			swig.setDefaults options.defaults
+			swig.setDefaults _.extend {}, DEFAULTS, options.defaults
 
 		debug 'setting up swig instance'
 		try
@@ -57,8 +59,8 @@ module.exports = ($)->
 				data = data file
 
 			if file.data
-				debug 'merging data from previous stream'
-				data = deepmerge {}, file.data, data
+				debug 'merging file.data'
+				data = deepmerge file.data, data
 
 			try
 				debug 'parsing', file.path

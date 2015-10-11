@@ -1,37 +1,34 @@
+#
+# System
+#
+fs = require('fs')
+path = require('path')
+
+#
+# Framework
+#
+_ = require 'lodash'
 ContentTree = require 'content-tree'
-QueryEngine = require 'query-engine'
 traverse = require 'traverse'
+debug = require('debug')('gastropod/core/content')
+Backbone = require 'backbone'
+{QueryCollection} = require 'backbone-query'
+
+class FileModel extends Backbone.Model
 
 
-module.exports = (path)->
-	reducer = (accumulator, item)->
-		if @isLeaf
-			accumulator.push item
-		return accumulator
+module.exports = (contentPath, done)->
+	debug 'Creating content-tree from', contentPath
 
-	models = ContentTree(path)
-		.generate()
-		.then (tree)->
-			traverse tree
-				.reduce reducer, []
+	models = []
 
-	QueryEngine
-		.createLiveCollection models
-		.createLiveChildCollection()
-		.setPill 'id',
-			prefixes: ['id:']
-			callback: (model, value)-> model.get('id') is parseInt(value, 10)
+	ContentTree(contentPath)
 
-		.setPill 'basename',
-			prefixes: ['basename:']
-			callback: (model, value)->
-				searchRegex = QueryEngine.createSafeRegex value
-				return searchRegex.test model.get 'basename'
+		.on 'file', (file)->
+			debug 'adding file to models', file.path
+			models.push new FileModel file
 
-		.setPill 'mime',
-			prefixes: ['mime:']
-			callback: (model, value)->
-				searchRegex = QueryEngine.createSafeRegex value
-				return searchRegex.test model.get 'mimeType'
-
-		.query()
+		.generate ()->
+			collection = new QueryCollection models
+			debug 'Collection created', collection.length
+			done null, collection

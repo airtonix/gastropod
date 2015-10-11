@@ -101,8 +101,9 @@ module.exports = (gulp, $, config)->
 		debug "Starting"
 
 		return gulp.src source, read: false
-			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('clean:pages')
+			.pipe logger.incoming()
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished: pages"
+			.on 'end', ()->
+				debug "Finished: pages"

@@ -24,7 +24,7 @@ module.exports = (gulp, $, config)->
 	 * @param  {Function} done [description]
 	 * @return {[type]}        [description]
 	###
-	gulp.task 'images', ['clean:images'], (done)->
+	gulp.task 'copy:images', (done)->
 		logger = new Logger('images')
 		source = path.join(config.source.root,
 							 config.source.images,
