@@ -51,9 +51,11 @@ class TemplateContextFactory
 
 		catch err
 			if not err.code is 'MODULE_NOT_FOUND'
+				debug 'error importing', filepath
 				postmortem.prettyPrint err
 			page = {}
 
+		debug 'Page:', filepath, '>', page
 		output = _.extend output, Page: page
 
 		return output

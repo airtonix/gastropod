@@ -23,4 +23,4 @@ module.exports = (gulp, $, config)->
 	 * @return {[type]}        [description]
 	###
 	gulp.task 'compile', (done)->
-		$.runsequence 'styles', 'scripts', 'fonts', 'images', 'manifest', 'pages', done
+		$.runsequence 'styles', 'scripts', 'fonts', 'images', 'pages', done

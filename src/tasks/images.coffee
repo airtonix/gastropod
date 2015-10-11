@@ -38,7 +38,7 @@ module.exports = (gulp, $, config)->
 		debug 'target', target
 		debug "Starting"
 
-		return gulp.src source, base: config.source.images
+		return gulp.src source #, base: config.source.images
 			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('images')
 			.pipe $.imagemin()

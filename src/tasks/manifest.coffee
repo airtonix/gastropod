@@ -58,8 +58,11 @@ module.exports = (gulp, $, config)->
 		debug 'sources', sources
 		debug 'target', target
 		debug "Starting"
+		debug 'existing manifest', manifest.db
 
 		manifest.empty()
+
+		debug 'new manifest', manifest.db
 
 		return gulp.src sources, base: config.target.root
 			.pipe logger.incoming()

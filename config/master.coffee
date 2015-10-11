@@ -129,6 +129,12 @@ defaultPluginMinify =
 	scripts: false
 
 ###*
+ * HtmlPrettify
+###
+defaultPluginPrettify =
+	indent_char: ' '
+
+###*
  * Browserify Settings
  * @affects task:browserify
 ###
@@ -169,6 +175,7 @@ module.exports =
 	context: defaultContext
 	watch: false
 	plugins:
+		prettify: defaultPluginPrettify
 		fingerprint: defaultPluginFingerPrinter
 		minify: defaultPluginMinify
 		js: defaultPluginJs

@@ -33,7 +33,7 @@ module.exports = (gulp, $, config)->
 	 * @param  {Function} done [description]
 	 * @return {[type]}        [description]
 	###
-	gulp.task 'swig', (done)->
+	gulp.task 'swig', ['manifest'], (done)->
 		logger = new Logger('pages:swig')
 
 		root = path.join(config.source.root,
@@ -59,8 +59,6 @@ module.exports = (gulp, $, config)->
 
 		debug 'Populating Global Context'
 		# add fingerprinted asset manifest
-		debug 'Manifest.db', Manifest.db
-		debug 'TemplateContext.data', TemplateContext.data
 
 		TemplateContext.add Manifest: Manifest.db
 		# add template hashmap
@@ -77,13 +75,15 @@ module.exports = (gulp, $, config)->
 		return gulp.src sources
 			.pipe logger.incoming()
 			.pipe $.plumber ErrorHandler('pages')
+			.pipe $.tap (file, tap)->
+				debug 'Manifest.db', Manifest.db['styles/screen.css']
 			.pipe $.frontMatter
 				property: 'meta'
 				remove: true
 			.pipe $.data TemplateContext.export
 			.pipe $.swig SwigConfig
-			.pipe $.removeEmptyLines()
-			.pipe $.htmlPrettify()
+			.pipe $.if config.plugins.prettify, $.removeEmptyLines()
+			.pipe $.if config.plugins.prettify, $.htmlPrettify config.plugins.prettify
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
