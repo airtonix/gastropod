@@ -70,7 +70,8 @@ module.exports = (gulp, $, config)->
 			.pipe $.clean()
 			.pipe $.fingerprinter().revision()
 			.pipe $.tap manifest.add
-			.pipe gulp.dest target
 			.pipe logger.outgoing()
-			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished"
+			.pipe gulp.dest target
+			.on 'error', debug
+			.on 'finish', ->
+				debug "Finished"

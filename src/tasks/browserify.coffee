@@ -69,4 +69,4 @@ module.exports = (gulp, $, config)->
 			.pipe $.browsersync.stream()
 			.pipe logger.outgoing()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished"
+			.on 'finish', ()-> debug "Finished"

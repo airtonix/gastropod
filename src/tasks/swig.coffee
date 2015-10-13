@@ -16,6 +16,7 @@ async = require 'async-chainable'
 Configurator = require '../core/swig/configurator'
 ContentCollection = require '../core/content'
 ContextFactory = require '../core/templates/context'
+ContentCollection = require '../core/content'
 debug = require('debug')('gastropod/tasks/pages:swig')
 deepmerge = require 'deepmerge'
 ErrorHandler = require '../core/logging/errors'
@@ -28,12 +29,13 @@ requireUncached = require 'require-uncached'
 
 module.exports = (gulp, $, config)->
 
+
 	###*
 	 * Templates
 	 * @param  {Function} done [description]
 	 * @return {[type]}        [description]
 	###
-	gulp.task 'swig', ['manifest'], (done)->
+	gulp.task 'swig', (done)->
 		logger = new Logger('pages:swig')
 
 		root = path.join(config.source.root,
@@ -63,6 +65,9 @@ module.exports = (gulp, $, config)->
 		TemplateContext.add Manifest: Manifest.db
 		# add template hashmap
 		TemplateContext.add Templates: TemplateHash
+		# add ContentCollection with blank query (gives us everything)
+
+		# TemplateContext.add Content: ContentCollection.query path: $regex: /(.*).html$/gi
 		# add Project level global context
 		TemplateContext.add requireUncached(data)(TemplateContext.data)
 		# add Environment level global context
@@ -87,5 +92,4 @@ module.exports = (gulp, $, config)->
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
 			.pipe $.browsersync.stream()
-			.on 'end', ()->
-				debug "Finished"
+			.on 'finish', ()-> debug "Finished"

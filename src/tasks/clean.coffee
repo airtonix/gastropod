@@ -34,7 +34,7 @@ module.exports = (gulp, $, config)->
 			.pipe $.plumber ErrorHandler('clean:scripts')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished: scripts"
+			.on 'finish', ()-> debug "Finished: scripts"
 
 
 	gulp.task 'clean:styles', (done)->
@@ -52,7 +52,7 @@ module.exports = (gulp, $, config)->
 			.pipe $.plumber ErrorHandler('clean:styles')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished: styles"
+			.on 'finish', ()-> debug "Finished: styles"
 
 
 	gulp.task 'clean:images', (done)->
@@ -70,7 +70,7 @@ module.exports = (gulp, $, config)->
 			.pipe $.plumber ErrorHandler('clean:images')
 			.pipe $.clean()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished: images"
+			.on 'finish', ()-> debug "Finished: images"
 
 
 	gulp.task 'clean:fonts', (done)->

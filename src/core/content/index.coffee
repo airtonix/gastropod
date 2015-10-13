@@ -14,21 +14,39 @@ debug = require('debug')('gastropod/core/content')
 Backbone = require 'backbone'
 {QueryCollection} = require 'backbone-query'
 
+
 class FileModel extends Backbone.Model
 
 
-module.exports = (contentPath, done)->
-	debug 'Creating content-tree from', contentPath
+###*
+ * ContentTree
+###
+class ContentCollection
 
-	models = []
+	db: null
 
-	ContentTree(contentPath)
+	constructor: (@options)->
 
-		.on 'file', (file)->
-			debug 'adding file to models', file.path
-			models.push new FileModel file
+	empty: ->
+		@db = null
 
-		.generate ()->
-			collection = new QueryCollection models
-			debug 'Collection created', collection.length
-			done null, collection
+	query: (query={})->
+		@db.query query
+
+	generate: (source, done)->
+		debug 'Creating content-tree from', source
+		models = []
+
+		ContentTree(source)
+			.on 'file', (file)->
+				model = new FileModel file
+				debug 'adding file to models', file.path
+				models.push model
+
+			.generate (tree)->
+				@db = new QueryCollection models
+				debug 'Collection created', @db.length
+				done()
+
+
+module.exports = new ContentCollection

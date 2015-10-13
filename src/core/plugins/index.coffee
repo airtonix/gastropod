@@ -29,6 +29,8 @@ $.vinylPaths = require 'vinyl-paths'
 # Custom Plugins
 $.fingerprinter = require('./fingerprinter')($)
 $.swig = require('./swig')($)
+$.end = require 'stream-end'
+
 
 debug 'loaded plugins', Object.keys $
 

@@ -38,4 +38,4 @@ module.exports = (gulp, $, config)->
 			.pipe $.gitPages config.deploy
 			.pipe logger.outgoing()
 			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished"
+			.on 'finish', ()-> debug "Finished"
