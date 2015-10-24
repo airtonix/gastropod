@@ -8,42 +8,53 @@ path = require 'path'
 # Framework
 #
 _ = require 'lodash'
-
-#
-# Projects
-#
-ErrorHandler = require '../core/logging/errors'
-Logger = require '../core/logging/logger'
 debug = require('debug')('gastropod/tasks/images')
+{pongular} = require 'pongular'
 
 
-module.exports = (gulp, $, config)->
+#
+# Exportable
+pongular.module 'gastropod.tasks.images', [
+	'gastropod.vendor.gulp'
+	'gastropod.core.logging'
+	'gastropod.plugins'
+	'gastropod.config'
+	]
 
-	###*
-	 * Images
-	 * @param  {Function} done [description]
-	 * @return {[type]}        [description]
-	###
-	gulp.task 'copy:images', (done)->
-		logger = new Logger('images')
-		source = path.join(config.source.root,
-							 config.source.images,
-							 config.filters.images)
+	.run [
+		'GulpService'
+		'PluginService'
+		'ConfigStore'
+		'ErrorHandler'
+		'Logger'
+		(Gulp, Plugins, Config, ErrorHandler, Logger)->
 
-		target = path.join(config.target.root,
-						   config.target.static,
-						   config.target.images)
+			###*
+			 * Images
+			 * @param  {Function} done [description]
+			 * @return {[type]}        [description]
+			###
+			Gulp.task 'copy:images', (done)->
+				logger = new Logger('images')
+				source = path.join(Config.source.root,
+									 Config.source.images,
+									 Config.filters.images)
 
-		debug 'source', source
-		debug 'target', target
-		debug "Starting"
+				target = path.join(Config.target.root,
+								   Config.target.static,
+								   Config.target.images)
 
-		return gulp.src source #, base: config.source.images
-			.pipe logger.incoming()
-			.pipe $.plumber ErrorHandler('images')
-			.pipe $.imagemin()
-			.pipe gulp.dest target
-			.pipe logger.outgoing()
-			.pipe $.browsersync.stream()
-			.on 'error', (err)-> debug err
-			.on 'finish', ()-> debug "Finished"
+				debug 'source', source
+				debug 'target', target
+				debug "Starting"
+
+				return Gulp.src source #, base: Config.source.images
+					.pipe logger.incoming()
+					.pipe Plugins.plumber ErrorHandler('images')
+					.pipe Plugins.imagemin()
+					.pipe Gulp.dest target
+					.pipe logger.outgoing()
+					.pipe Plugins.browsersync.stream()
+					.on 'error', (err)-> debug err
+					.on 'finish', ()-> debug "Finished"
+	]

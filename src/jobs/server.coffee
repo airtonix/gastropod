@@ -16,37 +16,59 @@ morgan = require 'morgan'
 errorhandler = require 'errorhandler'
 merge = require 'deepmerge'
 
-module.exports = (gulp, $, config)->
-	defaults =
-		server:
-			baseDir: path.join process.cwd(), config.target.root
-			middleware: [
-				morgan('dev')
-				bodyParser.json()
-				bodyParser.urlencoded extended:false
-			]
+#
+# Framework
+{pongular} = require 'pongular'
 
-	###*
-	 * [description]
-	 * @return {[type]} [description]
-	 * @todo mount middleware on `instance.app.use`
-	 * @todo auto reload middleware with nodemon?
-	###
-	gulp.task 'server', (done)->
-		done() unless config.plugins.server
 
-		serverConfig = _.defaultsDeep defaults, config.plugins.server
+#
+# Exportable
+pongular.module 'gastropod.jobs.server', [
+	'gastropod.vendor.gulp'
+	'gastropod.plugins'
+	'gastropod.config'
+	]
 
-		debug 'serverConfig', serverConfig
-		try
-			debug 'starting browsersync'
-			$.browsersync.init serverConfig, (err, instance) ->
-				debug 'browsersync running'
-				# access to :
-				# - `instance.app` the Connect Server
-				done()
+	.run [
+		'GulpService'
+		'PluginService'
+		'ConfigStore'
+		(Gulp, Plugins, Config)->
 
-		catch err
-			postmortem.prettyPrint err
-			done(err)
+			config = Config
 
+			defaults =
+				server:
+					baseDir: path.join process.cwd(), config.target.root
+					middleware: [
+						morgan('dev')
+						bodyParser.json()
+						bodyParser.urlencoded extended:false
+					]
+
+			###*
+			 * [description]
+			 * @return {[type]} [description]
+			 * @todo mount middleware on `instance.app.use`
+			 * @todo auto reload middleware with nodemon?
+			###
+
+			Gulp.task 'server', (done)->
+				done() unless config.plugins.server
+
+				serverConfig = _.defaultsDeep defaults, config.plugins.server
+
+				debug 'serverConfig', serverConfig
+				try
+					debug 'starting browsersync'
+					Plugins.browsersync.init serverConfig, (err, instance) ->
+						debug 'browsersync running'
+						# access to :
+						# - `instance.app` the Connect Server
+						done()
+
+				catch err
+					postmortem.prettyPrint err
+					done(err)
+
+	]

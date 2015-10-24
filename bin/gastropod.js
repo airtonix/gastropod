@@ -64,4 +64,11 @@ Program
 	});
 
 Program
+	.command('serve')
+	.action(function(options){
+		runner = new Gastropod(options.parent)
+		runner.serve()
+	});
+
+Program
 	.parse(process.argv)

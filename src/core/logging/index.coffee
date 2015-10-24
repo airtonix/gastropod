@@ -14,6 +14,7 @@ _ = require 'lodash'
 through = require 'through2'
 util = require 'gulp-util'
 prettyBytes = require 'pretty-bytes'
+{pongular} = require 'pongular'
 
 
 class Logger
@@ -74,4 +75,16 @@ class Logger
 	warn: (itemTemplate, collectionTemplate)->
 		@through('warn', itemTemplate, collectionTemplate)
 
-module.exports = Logger
+
+#
+# Exportable
+pongular.module 'gastropod.core.logging', []
+
+	.factory 'Logger', -> Logger
+
+	.factory 'ErrorHandler', ->
+		(name)->
+			name = util.colors.red "[#{name}]"
+			(err)->
+				util.log name, err
+				@emit 'end'

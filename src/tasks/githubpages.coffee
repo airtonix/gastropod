@@ -12,30 +12,46 @@ _ = require 'lodash'
 #
 # Projects
 #
-ErrorHandler = require '../core/logging/errors'
-Logger = require '../core/logging/logger'
 debug = require('debug')('gastropod/tasks/images')
 
+{pongular} = require 'pongular'
 
-module.exports = (gulp, $, config)->
 
-	###*
-	 * Images
-	 * @param  {Function} done [description]
-	 * @return {[type]}        [description]
-	###
-	gulp.task 'deploy:github-pages', (done)->
-		logger = new Logger('deploy')
-		source = path.join(config.target.root,
-							 config.filters.all)
+#
+# Exportable
+pongular.module 'gastropod.tasks.githubpages', [
+	'gastropod.vendor.gulp'
+	'gastropod.core.logging'
+	'gastropod.plugins'
+	'gastropod.config'
+	]
 
-		debug 'source', source
-		debug 'Starting'
+	.run [
+		'GulpService'
+		'PluginService'
+		'ConfigStore'
+		'ErrorHandler'
+		'Logger'
+		(Gulp, Plugins, Config, ErrorHandler, Logger)->
 
-		return gulp.src source
-			.pipe logger.incoming()
-			.pipe $.plumber ErrorHandler('deploy:github-pages')
-			.pipe $.gitPages config.deploy
-			.pipe logger.outgoing()
-			.on 'error', (err)-> debug err
-			.on 'finish', ()-> debug "Finished"
+			###*
+			 * Images
+			 * @param  {Function} done [description]
+			 * @return {[type]}        [description]
+			###
+			Gulp.task 'deploy:github-pages', (done)->
+				logger = new Logger('deploy')
+				source = path.join(Config.target.root,
+									 Config.filters.all)
+
+				debug 'source', source
+				debug 'Starting'
+
+				return Gulp.src source
+					.pipe logger.incoming()
+					.pipe Plugins.plumber ErrorHandler('deploy:github-pages')
+					.pipe Plugins.gitPages Config.deploy
+					.pipe logger.outgoing()
+					.on 'error', (err)-> debug err
+					.on 'finish', ()-> debug "Finished"
+	]

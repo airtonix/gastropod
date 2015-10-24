@@ -8,43 +8,57 @@ path = require 'path'
 # Framework
 #
 _ = require 'lodash'
-
-#
-# Projects
-#
-ErrorHandler = require '../core/logging/errors'
-Logger = require '../core/logging/logger'
 debug = require('debug')('gastropod/tasks/styles')
+{pongular} = require 'pongular'
 
 
-module.exports = (gulp, $, config)->
+#
+# Exportable
+pongular.module 'gastropod.tasks.scss', [
+	'gastropod.vendor.gulp'
+	'gastropod.core.logging'
+	'gastropod.plugins'
+	'gastropod.config'
+	]
 
-	logger = new Logger('styles')
-	###*
-	 * Style Sheets
-	 * @param  {Function} done [description]
-	 * @return {[type]}        [description]
-	###
-	gulp.task 'scss', (done)->
+	.run [
+		'GulpService'
+		'PluginService'
+		'ConfigStore'
+		'ManifestStore'
+		'ContextService'
+		'ErrorHandler'
+		'Logger'
+		(Gulp, Plugins, Config, Manifest, Context, ErrorHandler, Logger)->
 
-		source = path.join(config.source.root,
-							 config.source.styles,
-							 config.filters.styles)
+			logger = new Logger('styles')
 
-		target = path.join(config.target.root,
-						   config.target.static,
-						   config.target.styles)
+			###*
+			 * Style Sheets
+			 * @param  {Function} done [description]
+			 * @return {[type]}        [description]
+			###
+			Gulp.task 'scss', (done)->
 
-		debug 'source', source
-		debug 'target', target
-		debug "Starting"
+				source = path.join(Config.source.root,
+								   Config.source.styles,
+								   Config.filters.styles)
 
-		return gulp.src source
-			.pipe logger.incoming()
-			.pipe $.plumber ErrorHandler('Styles')
-			.pipe $.sass(config.plugins.sass)
-			.pipe logger.outgoing()
-			.pipe gulp.dest target
-			.pipe $.browsersync.stream()
-			.on 'error', (err)-> debug err
-			.on 'finish', ()-> debug "Finished"
+				target = path.join(Config.target.root,
+								   Config.target.static,
+								   Config.target.styles)
+
+				debug 'source', source
+				debug 'target', target
+				debug "Starting"
+
+				return Gulp.src source
+					.pipe logger.incoming()
+					.pipe Plugins.plumber ErrorHandler('Styles')
+					.pipe Plugins.sass(Config.plugins.sass)
+					.pipe logger.outgoing()
+					.pipe Gulp.dest target
+					.pipe Plugins.browsersync.stream()
+					.on 'error', (err)-> debug err
+					.on 'finish', ()-> debug "Finished"
+	]

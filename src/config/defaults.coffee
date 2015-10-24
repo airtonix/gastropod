@@ -1,4 +1,5 @@
 path = require 'path'
+{pongular} = require 'pongular'
 
 ###*
  * Asset Pipeline Spec
@@ -44,9 +45,10 @@ defaultSource =
 	images: './images'
 	styles: './styles'
 	scripts: './scripts'
-	patterns: './patterns'
 	pages: './patterns/pages'
-
+	patterns: [
+		'./src/patterns',
+	]
 ###*
  * Filters to dictate what files to operate on
 ###
@@ -167,17 +169,21 @@ defaultPluginServer =
 #
 # Export the default configuration
 #
-module.exports =
-	pipeline: defaultPipeline
-	filters: defaultFilters
-	source: defaultSource
-	target: defaultTarget
-	context: defaultContext
-	watch: false
-	plugins:
-		prettify: defaultPluginPrettify
-		fingerprint: defaultPluginFingerPrinter
-		minify: defaultPluginMinify
-		js: defaultPluginJs
-		sass: defaultPluginSass
-		server: defaultPluginServer
+
+pongular.module 'gastropod.config.defaults', []
+
+	.constant 'DefautConfig', {
+		pipeline: defaultPipeline
+		filters: defaultFilters
+		source: defaultSource
+		target: defaultTarget
+		context: defaultContext
+		watch: false
+		plugins:
+			prettify: defaultPluginPrettify
+			fingerprint: defaultPluginFingerPrinter
+			minify: defaultPluginMinify
+			js: defaultPluginJs
+			sass: defaultPluginSass
+			server: defaultPluginServer
+	}

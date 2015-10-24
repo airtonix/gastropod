@@ -6,24 +6,31 @@ path = require 'path'
 
 #
 # Framework
-#
-_ = require 'lodash'
-
-#
-# Projects
-#
-ErrorHandler = require '../core/logging/errors'
-Logger = require '../core/logging/logger'
+{pongular} = require 'pongular'
 debug = require('debug')('gastropod/jobs/watch')
 
+#
+# Exportable
+pongular.module 'gastropod.jobs.watch', [
+	'gastropod.config'
+	'gastropod.vendor.gulp'
+	'gastropod.core.logging'
+	'gastropod.plugins'
+	]
 
-module.exports = (gulp, $, config)->
+	.run [
+		'GulpService'
+		'PluginService'
+		'ConfigStore'
+		(Gulp, Plugins, Config)->
+			config = Config
 
-	gulp.task 'watch', (done)->
-		done() unless config.watch
+			Gulp.task 'watch', (done)->
+				done() unless config?
+				done() unless config.watch
+			# 	source = path.join(config.source.root,
+			# 					   config.filters.all)
 
-		source = path.join(config.source.root,
-						   config.filters.all)
-
-		debug('watching', source)
-		gulp.watch source, ['compile']
+			# 	debug('watching', source)
+			# 	Gulp.watch source, ['compile']
+	]

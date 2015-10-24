@@ -7,22 +7,40 @@ path = require('path')
 #
 # Framework
 #
-ContentCollection = require '../core/content'
 debug = require('debug')('gastropod/tasks/collection')
+{pongular} = require 'pongular'
 
 
-module.exports = (gulp, $, config)->
+#
+# Exportable
+pongular.module 'gastropod.tasks.collection', [
+	'gastropod.vendor.gulp'
+	'gastropod.core.logging'
+	'gastropod.core.content'
+	'gastropod.plugins'
+	'gastropod.config'
+	]
+
+	.run [
+		'GulpService'
+		'PluginService'
+		'ConfigStore'
+		'ContentService'
+		'ErrorHandler'
+		'Logger'
+		(Gulp, Plugins, Config, Content, ErrorHandler, Logger)->
 
 
-	pages = path.join(config.source.root,
-				  	  config.source.pages)
+			pages = path.join(Config.source.root,
+						  	  Config.source.pages)
 
-	gulp.task 'collection', (done)->
-		debug 'building collection', ContentCollection.db
+			Gulp.task 'collection', (done)->
+				debug 'building collection', ContentCollection.db
 
-		ContentCollection.empty()
-		ContentCollection.generate pages, ()->
-			debug 'content colletion generated'
-			done()
+				Content.empty()
+				Content.generate pages, ()->
+					debug 'content colletion generated'
+					done()
 
-		return
+				return
+	]

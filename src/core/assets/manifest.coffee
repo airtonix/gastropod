@@ -1,14 +1,16 @@
 #
 # System
-#
-_ = require 'lodash'
 path = require 'path'
-debug = require('debug')('gastropod/core/assets/manifest')
 
-###*
- * Manifester Class
-###
-class Manifester
+
+#
+# Framework
+_ = require 'lodash'
+debug = require('debug')('gastropod/core/assets/manifest')
+{pongular} = require 'pongular'
+
+
+class ManifestService
 
 	db: {}
 	options: {}
@@ -35,4 +37,14 @@ class Manifester
 		@db[original] = current
 
 
-module.exports = new Manifester()
+#
+# Exportable
+pongular.module 'gastropod.core.assets.manifest', []
+
+	.service 'ManifestService', -> new ManifestService()
+
+	.factory 'ManifestStore', [
+		'ManifestService'
+		(ManifestService)->
+			return ManifestService.db
+	]

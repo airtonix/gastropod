@@ -1,20 +1,27 @@
-###*
- * CleanUp
-###
-
-#
-# System
-#
-path = require 'path'
-
 #
 # Framework
+{pongular} = require 'pongular'
+debug = require('debug')('gastropod/jobs/clean')
+
 #
-_ = require 'lodash'
+# Exportable
+pongular.module 'gastropod.jobs.clean', [
+	'gastropod.vendor.gulp'
+	'gastropod.plugins'
+	]
 
+	.run [
+		'GulpService'
+		'PluginService'
+		(Gulp, Plugins)->
+			run = Plugins.runsequence
 
-
-module.exports = (gulp, $, config)->
-
-	gulp.task 'clean', (done)->
-		$.runsequence 'clean:scripts', 'clean:styles', 'clean:images', 'clean:fonts', 'clean:pages', done
+			Gulp.task 'clean', (done)->
+				run([
+					'clean:scripts'
+					'clean:styles'
+					'clean:images'
+					'clean:fonts'
+					'clean:pages'
+				], done)
+	]

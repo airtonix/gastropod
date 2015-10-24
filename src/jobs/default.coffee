@@ -1,21 +1,27 @@
-
-#
-# System
-#
-path = require 'path'
-
 #
 # Framework
+{pongular} = require 'pongular'
+
+
 #
-_ = require 'lodash'
+# Exportable
+pongular.module 'gastropod.jobs', [
+	'gastropod.vendor.gulp'
+	'gastropod.jobs.server'
+	'gastropod.jobs.watch'
+	'gastropod.jobs.compile'
+	]
 
-module.exports = (gulp, $, config)->
+	.run [
+		'GulpService'
+		(Gulp)->
 
-	###*
-	 * Main Entrypoint
-	 * @param  {Function} done [description]
-	 * @return {[type]}        [description]
-	###
-	gulp.task 'default', ['compile', 'server', 'watch'], (done)->
-		# $.runsequence , done
-		done()
+			###*
+			 * Main Entrypoint
+			 * @param  {Function} done [description]
+			 * @return {[type]}        [description]
+			###
+			Gulp.task 'default', ['compile', 'server', 'watch'], (done)->
+				# $.runsequence , done
+				done()
+	]

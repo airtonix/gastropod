@@ -12,43 +12,58 @@ _ = require 'lodash'
 #
 # Projects
 #
-ErrorHandler = require '../core/logging/errors'
-Logger = require '../core/logging/logger'
 debug = require('debug')('gastropod/tasks/fonts')
+{pongular} = require 'pongular'
 
 
-module.exports = (gulp, $, config)->
+#
+# Exportable
+pongular.module 'gastropod.tasks.fonts', [
+	'gastropod.vendor.gulp'
+	'gastropod.core.logging'
+	'gastropod.plugins'
+	'gastropod.config'
+	]
 
-	###*
-	 * Fonts
-	 * @param  {Function} done [description]
-	 * @return {[type]}        [description]
-	###
-	gulp.task 'copy:fonts', (done)->
-		logger = new Logger('fonts')
-		sources = [
-			path.join(process.cwd(),
-					  config.source.root,
-					  config.source.fonts.internal,
-					  config.filters.fonts)
+	.run [
+		'GulpService'
+		'PluginService'
+		'ConfigStore'
+		'ErrorHandler'
+		'Logger'
+		(Gulp, Plugins, Config, ErrorHandler, Logger)->
 
-			path.join(process.cwd(),
-					  config.source.fonts.vendor,
-					  config.filters.fonts)
-		]
-		target = path.join(config.target.root,
-						   config.target.static,
-						   config.target.fonts)
+			###*
+			 * Fonts
+			 * @param  {Function} done [description]
+			 * @return {[type]}        [description]
+			###
+			Gulp.task 'copy:fonts', (done)->
+				logger = new Logger('fonts')
+				sources = [
+					path.join(process.cwd(),
+							  Config.source.root,
+							  Config.source.fonts.internal,
+							  Config.filters.fonts)
 
-		debug 'sources', sources
-		debug 'target', target
-		debug "Starting"
+					path.join(process.cwd(),
+							  Config.source.fonts.vendor,
+							  Config.filters.fonts)
+				]
+				target = path.join(Config.target.root,
+								   Config.target.static,
+								   Config.target.fonts)
 
-		return gulp.src sources
-			.pipe logger.incoming()
-			.pipe $.plumber ErrorHandler('fonts')
-			.pipe gulp.dest target
-			.pipe logger.outgoing()
-			.pipe $.browsersync.stream()
-			.on 'error', (err)-> debug err
-			.on 'finish', ()-> debug "Finished"
+				debug 'sources', sources
+				debug 'target', target
+				debug "Starting"
+
+				return Gulp.src sources
+					.pipe logger.incoming()
+					.pipe Plugins.plumber ErrorHandler('fonts')
+					.pipe Gulp.dest target
+					.pipe logger.outgoing()
+					.pipe Plugins.browsersync.stream()
+					.on 'error', (err)-> debug err
+					.on 'finish', ()-> debug "Finished"
+	]

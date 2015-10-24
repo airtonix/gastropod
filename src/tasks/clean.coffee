@@ -8,102 +8,113 @@ path = require 'path'
 # Framework
 #
 _ = require 'lodash'
-
-#
-# Projects
-#
-ErrorHandler = require '../core/logging/errors'
-Logger = require '../core/logging/logger'
 debug = require('debug')('gastropod/tasks/clean')
+{pongular} = require 'pongular'
 
 
-module.exports = (gulp, $, config)->
+#
+# Exportable
+pongular.module 'gastropod.tasks.clean', [
+	'gastropod.vendor.gulp'
+	'gastropod.core.logging'
+	'gastropod.plugins'
+	'gastropod.config'
+	]
 
-	gulp.task 'clean:scripts', (done)->
-		logger = new Logger('clean:scripts')
-		source = path.join(config.target.root,
-						   config.target.static,
-						   config.target.scripts,
-						   config.filters.scripts.all)
+	.run [
+		'GulpService'
+		'PluginService'
+		'ConfigStore'
+		'ErrorHandler'
+		'Logger'
+		(Gulp, Plugins, Config, ErrorHandler, Logger)->
 
-		debug 'source', source
-		debug "Starting"
+			Gulp.task 'clean:scripts', (done)->
+				logger = new Logger('clean:scripts')
+				source = path.join(Config.target.root,
+								   Config.target.static,
+								   Config.target.scripts,
+								   Config.filters.scripts.all)
 
-		return gulp.src source, read: false
-			.pipe logger.incoming()
-			.pipe $.plumber ErrorHandler('clean:scripts')
-			.pipe $.clean()
-			.on 'error', (err)-> debug err
-			.on 'finish', ()-> debug "Finished: scripts"
+				debug 'source', source
+				debug "Starting"
 
-
-	gulp.task 'clean:styles', (done)->
-		logger = new Logger('clean:styles')
-		source = path.join(config.target.root,
-						   config.target.static,
-							 config.target.styles,
-							 config.filters.styles)
-
-		debug 'source', source
-		debug "Starting"
-
-		return gulp.src source, read: false
-			.pipe logger.incoming()
-			.pipe $.plumber ErrorHandler('clean:styles')
-			.pipe $.clean()
-			.on 'error', (err)-> debug err
-			.on 'finish', ()-> debug "Finished: styles"
+				return Gulp.src source, read: false
+					.pipe logger.incoming()
+					.pipe Plugins.plumber ErrorHandler('clean:scripts')
+					.pipe Plugins.clean()
+					.on 'error', (err)-> debug err
+					.on 'finish', ()-> debug "Finished: scripts"
 
 
-	gulp.task 'clean:images', (done)->
-		logger = new Logger('clean:images')
-		source = path.join(config.target.root,
-						   config.target.static,
-							 config.target.images,
-							 config.filters.images)
+			Gulp.task 'clean:styles', (done)->
+				logger = new Logger('clean:styles')
+				source = path.join(Config.target.root,
+								   Config.target.static,
+									 Config.target.styles,
+									 Config.filters.styles)
 
-		debug 'source', source
-		debug "Starting"
+				debug 'source', source
+				debug "Starting"
 
-		return gulp.src source, read: false
-			.pipe logger.incoming()
-			.pipe $.plumber ErrorHandler('clean:images')
-			.pipe $.clean()
-			.on 'error', (err)-> debug err
-			.on 'finish', ()-> debug "Finished: images"
-
-
-	gulp.task 'clean:fonts', (done)->
-		logger = new Logger('clean:fonts')
-		source = path.join(config.target.root,
-						   config.target.static,
-							 config.target.fonts,
-							 config.filters.fonts)
-
-		debug 'source', source
-		debug "Starting"
-
-		return gulp.src source, read: false
-			.pipe logger.incoming()
-			.pipe $.plumber ErrorHandler('clean:fonts')
-			.pipe $.clean()
-			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished: fonts"
+				return Gulp.src source, read: false
+					.pipe logger.incoming()
+					.pipe Plugins.plumber ErrorHandler('clean:styles')
+					.pipe Plugins.clean()
+					.on 'error', (err)-> debug err
+					.on 'finish', ()-> debug "Finished: styles"
 
 
-	gulp.task 'clean:pages', (done)->
-		logger = new Logger('clean:pages')
-		source = path.join(config.target.root,
-							 config.target.pages,
-							 config.filters.patterns)
+			Gulp.task 'clean:images', (done)->
+				logger = new Logger('clean:images')
+				source = path.join(Config.target.root,
+								   Config.target.static,
+									 Config.target.images,
+									 Config.filters.images)
 
-		debug 'source', source
-		debug "Starting"
+				debug 'source', source
+				debug "Starting"
 
-		return gulp.src source, read: false
-			.pipe $.plumber ErrorHandler('clean:pages')
-			.pipe logger.incoming()
-			.pipe $.clean()
-			.on 'error', (err)-> debug err
-			.on 'end', ()->
-				debug "Finished: pages"
+				return Gulp.src source, read: false
+					.pipe logger.incoming()
+					.pipe Plugins.plumber ErrorHandler('clean:images')
+					.pipe Plugins.clean()
+					.on 'error', (err)-> debug err
+					.on 'finish', ()-> debug "Finished: images"
+
+
+			Gulp.task 'clean:fonts', (done)->
+				logger = new Logger('clean:fonts')
+				source = path.join(Config.target.root,
+								   Config.target.static,
+									 Config.target.fonts,
+									 Config.filters.fonts)
+
+				debug 'source', source
+				debug "Starting"
+
+				return Gulp.src source, read: false
+					.pipe logger.incoming()
+					.pipe Plugins.plumber ErrorHandler('clean:fonts')
+					.pipe Plugins.clean()
+					.on 'error', (err)-> debug err
+					.on 'end', ()-> debug "Finished: fonts"
+
+
+			Gulp.task 'clean:pages', (done)->
+				logger = new Logger('clean:pages')
+				source = path.join(Config.target.root,
+									 Config.target.pages,
+									 Config.filters.patterns)
+
+				debug 'source', source
+				debug "Starting"
+
+				return Gulp.src source, read: false
+					.pipe Plugins.plumber ErrorHandler('clean:pages')
+					.pipe logger.incoming()
+					.pipe Plugins.clean()
+					.on 'error', (err)-> debug err
+					.on 'end', ()->
+						debug "Finished: pages"
+	]

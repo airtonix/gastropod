@@ -11,13 +11,14 @@ debug = require('debug')('gastropod/core/templates/context')
 postmortem = require 'postmortem'
 deepmerge = require 'deepmerge'
 requireUncached = require 'require-uncached'
+{pongular} = require 'pongular'
 
 
 ###*
  * [TemplateContexter description]
  * @param {[type]} file [description]
 ###
-class TemplateContextFactory
+class ContextService
 
 	@defaults =
 		Manifest: {}
@@ -28,9 +29,13 @@ class TemplateContextFactory
 
 	constructor: (data={}) ->
 		@data = deepmerge data, @constructor.defaults
+		@
 
-	add: (data)->
-		@data = deepmerge @data, data
+	add: (key, data)->
+		obj = {}
+		obj[key] = data
+		debug 'adding', key
+		@data = deepmerge @data, obj
 
 	empty: ()->
 		@data = {}
@@ -61,4 +66,24 @@ class TemplateContextFactory
 		return output
 
 
-module.exports = TemplateContextFactory
+#
+# Exportable
+pongular.module 'gastropod.core.templates.context', []
+
+	.service 'ContextService', [
+		'PackageJson'
+		'TemplateStore'
+		'ManifestStore'
+		(PackageJson, Templates, Manifest)->
+			context = new ContextService()
+			context.add 'Manifest', Manifest
+			context.add 'Templates', Templates
+			context.add 'Pkg', PackageJson
+			return context
+	]
+
+	.factory 'ContextStore', [
+		'ContextService'
+		(ContextService)->
+			return ContextService.data
+	]

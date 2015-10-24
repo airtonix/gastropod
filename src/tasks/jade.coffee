@@ -8,59 +8,71 @@ path = require 'path'
 # Framework
 #
 _ = require 'lodash'
-
-#
-# Project
-#
-ErrorHandler = require '../core/logging/errors'
-Logger = require '../core/logging/logger'
-debug = require('debug')('gastropod/tasks/pages:jade')
-ContextFactory = require '../core/templates/context'
-Manifest = require '../core/assets/manifest'
 jade = require 'jade'
+debug = require('debug')('gastropod/tasks/pages:jade')
+{pongular} = require 'pongular'
 
 
-module.exports = (gulp, $, config)->
-	###*
-	 * Templates
-	 * @param  {Function} done [description]
-	 * @return {[type]}        [description]
-	###
-	gulp.task 'jade', (done)->
-		logger = new Logger('pages:jade')
-		source = path.join(config.source.root,
-						   config.source.pages,
-						   config.filters.patterns)
+#
+# Exportable
+pongular.module 'gastropod.tasks.jade', [
+	'gastropod.vendor.gulp'
+	'gastropod.core.logging'
+	'gastropod.plugins'
+	'gastropod.config'
+	]
 
-		patterns = path.join(process.cwd(),
-							 config.source.root,
-						     config.source.patterns)
+	.run [
+		'GulpService'
+		'PluginService'
+		'ConfigStore'
+		'ManifestStore'
+		'ContextService'
+		'ErrorHandler'
+		'Logger'
+		(Gulp, Plugins, Config, Manifest, Context, ErrorHandler, Logger)->
 
-		globals = path.join(process.cwd(),
-							config.source.root,
-						    config.source.data)
+			###*
+			 * Templates
+			 * @param  {Function} done [description]
+			 * @return {[type]}        [description]
+			###
+			Gulp.task 'jade', (done)->
+				logger = new Logger('pages:jade')
+				source = path.join(Config.source.root,
+								   Config.source.pages,
+								   Config.filters.patterns)
 
-		target = path.join config.target.root, '/'
+				patterns = path.join(process.cwd(),
+									 Config.source.root,
+								     Config.source.patterns)
 
-		Context = new ContextFactory()
-		Context.add require globals
-		Context.add manifest: Manifest.db
+				globals = path.join(process.cwd(),
+									Config.source.root,
+								    Config.source.data)
 
-		debug 'source', source
-		debug 'target', target
+				target = path.join Config.target.root, '/'
 
-		debug "Starting"
+				Context.empty()
+				Context.add require globals
+				Context.add manifest: Manifest
 
-		return gulp.src source
-			.pipe logger.incoming()
-			.pipe $.plumber ErrorHandler('pages:jade')
-			.pipe $.frontMatter
-				property: 'meta'
-				remove: true
-			.pipe $.data Context.export
-			.pipe $.jade basedir: patterns
-			.pipe gulp.dest target
-			.pipe $.browsersync.stream()
-			.pipe logger.outgoing()
-			.on 'error', (err)-> debug err
-			.on 'finish', ()-> debug "Finished"
+				debug 'source', source
+				debug 'target', target
+
+				debug "Starting"
+
+				return Gulp.src source
+					.pipe logger.incoming()
+					.pipe Plugins.plumber ErrorHandler('pages:jade')
+					.pipe Plugins.frontMatter
+						property: 'meta'
+						remove: true
+					.pipe Plugins.data Context.export
+					.pipe Plugins.jade basedir: patterns
+					.pipe Gulp.dest target
+					.pipe Plugins.browsersync.stream()
+					.pipe logger.outgoing()
+					.on 'error', (err)-> debug err
+					.on 'finish', ()-> debug "Finished"
+	]

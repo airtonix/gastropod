@@ -13,6 +13,8 @@ traverse = require 'traverse'
 debug = require('debug')('gastropod/core/content')
 Backbone = require 'backbone'
 {QueryCollection} = require 'backbone-query'
+{pongular} = require 'pongular'
+
 
 
 class FileModel extends Backbone.Model
@@ -21,11 +23,9 @@ class FileModel extends Backbone.Model
 ###*
  * ContentTree
 ###
-class ContentCollection
+class ContentService
 
 	db: null
-
-	constructor: (@options)->
 
 	empty: ->
 		@db = null
@@ -48,5 +48,14 @@ class ContentCollection
 				debug 'Collection created', @db.length
 				done()
 
+#
+# Exportable
+pongular.module 'gastropod.core.content', []
 
-module.exports = new ContentCollection
+	.service 'ContentService', -> new ContentService()
+
+	.factory 'ContentStore', [
+		'ContentService'
+		(ContentService)->
+			return ContentService.db
+	]
