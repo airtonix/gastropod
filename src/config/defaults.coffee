@@ -54,7 +54,7 @@ defaultSource =
 ###
 defaultFilters =
 	all: '**/*.*'
-	data: '**/*.{coffee,json,yml}'
+	data: '**/*.{litcoffee,coffee,json,yml}'
 	fonts: '**/*.{otf,ttf,eot,woff}'
 	images: '**/*.{png,jpg,jpeg,gif,bmp,svg,apng}'
 	styles: '**/*.{scss,css}'

@@ -26,7 +26,10 @@ app = pongular.module('gastropod', [
 		'gastropod.plugins'
 		'gastropod.tasks'
 		'gastropod.jobs'
+		'gastropod.page'
 	])
+
+pongular.module('gastropod.page', [])
 
 ###*
  * Gastropod Class

@@ -22,6 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "async-chainable": "^1.7.15",
+    "bluebird": "^2.10.2",
     "body-parser": "^1.14.1",
     "browser-request": "^0.3.3",
     "browser-sync": "^2.9.6",

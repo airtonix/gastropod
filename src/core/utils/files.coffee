@@ -10,12 +10,13 @@ changeCase = require 'change-case'
 debug = require('debug')('gastropod/core/utils/files')
 glob = require "glob"
 {pongular} = require 'pongular'
+$Q = require 'bluebird'
 
 
 
 #
 # Exportable
-pongular.module 'gastropod.core.utils', []
+pongular.module 'gastropod.core.utils.files', []
 	.service 'FileService', [
 		'isFile'
 		'isDirectory'
@@ -45,6 +46,23 @@ pongular.module 'gastropod.core.utils', []
 	.factory 'pathExists', ->
 		(filepath)->
 			return exports.isDirectory(filepath) or exports.isFile(filepath)
+
+	.factory 'CollectFiles', ->
+		(dirname='./', pattern='**', options={})->
+			defaults =
+					cwd: path.resolve(dirname)
+					nodir: true
+
+			options = _.extend {}, defaults, options
+			debug 'globbing files:', dirname, pattern
+			promise = new $Q (resolve, reject)->
+				glob pattern, options, (err, files)->
+					if err
+						return reject(err)
+					else
+						return resolve(files)
+
+			return promise
 
 	.factory 'fileMap', ->
 		(pattern='**', root='./', ignore=null)->
