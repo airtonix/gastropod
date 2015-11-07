@@ -27,7 +27,7 @@ PROJECT_GLOBAL_DATAROOT = path.join(process.cwd(),
 				 				    Config.source.data)
 CONTEXT_BUILTINS =
 	Pkg: ()-> PackageJson
-	Manifest: ()-> Manifest
+	Manifest: ()-> Manifest.db
 	Templates: ()-> Templates
 
 #
@@ -54,23 +54,21 @@ class Context
 		debug 'datapath', datapath
 		return datapath
 
-	export: => (file, done)->
-		data = _.clone(@Store)
-		data.Meta = file.meta
-		debug 'exporting data for file', Object.keys(data).length
+	export: (file, done)=>
 		podule = @loadFile(file)
-		# page = podule()
-		page = project.invoke podule
-		debug 'page', page
-		done(null, {})
-
+		container.inject(podule).then (page)=>
+			debug 'exporting page'
+			data = deepmerge _.clone(@Store), Config.context
+			data.Meta = file.meta
+			data.Page = page
+			done null, data
 	###*
 	 * Export Page Context
 	 * @param  {[type]}   file [description]
 	 * @param  {Function} done [description]
 	 * @return {[type]}        [description]
 	###
-	loadFile: (file, done)->
+	loadFile: (file)->
 		try
 			fileDataPath = @getPath(file)
 			return requireUncached fileDataPath
@@ -90,6 +88,8 @@ class Context
 		debug 'preparing ioc'
 		container = new Zeninjector()
 		AddToContext = @add
+		Store = @Store
+
 		try
 			async()
 

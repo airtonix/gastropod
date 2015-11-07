@@ -32,6 +32,8 @@ gulp.task 'scss', (done)->
 	debug " > source", source
 	debug " > target", target
 
+	debug Config.plugins.sass.includePaths
+
 	return gulp.src source
 		.pipe logger.incoming()
 		.pipe Plugins.plumber ErrorHandler('Styles')

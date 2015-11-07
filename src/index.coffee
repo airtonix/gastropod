@@ -13,6 +13,7 @@ load = require 'require-all'
 debug = require('debug')('gastropod')
 merge = require 'deepmerge'
 postmortem = require 'postmortem'
+moduleFinder = require('module-finder')
 
 #
 # Project
@@ -24,6 +25,7 @@ class Gastropod
 
 	constructor: (options={})->
 		ConfigStore.init options
+		@loadAddons()
 
 		jobs = load({
 			dirname: path.join(__dirname, 'jobs')
@@ -34,37 +36,27 @@ class Gastropod
 			filter: /(.+)\.[js|coffee|litcoffee]+$/
 		});
 
-	# ###*
-	#  * Find npm installed `gastropod-addon-*`
-	# ###
-	# loadAddons: ->
-	# 	dependencies = _.extend {}, (@pkg.dependencies ? {}), (@pkg.devDependencies ? {})
+	loadAddons: ->
+		query =
+			local: true
+			recursive: true
+			cwd: process.cwd()
+			filter: {
+				keywords: {$in: ['gastropod-plugin']}
+			}
 
-	# 	debug 'searching for gastropod addons'
+		debug 'searching for gastropod addons'
+		moduleFinder(query)
+			.then (modules)->
+				try
+					modules.forEach (addon)->
+						debug 'loading', addon.pkg.name
+						addon = require addon.path
+						cache[name] = addon
+						debug "initialised [#{addonType}]:",  name
 
-	# 	_.chain dependencies
-	# 		.keys()
-	# 		.filter (name)-> /^gastropod\-(.*)$/igm.test name
-	# 		.each (name)=>
-	# 			debug 'loading', name
-	# 			try
-	# 				addonPath = path.join process.cwd(), 'node_modules', name
-	# 				addonPkgPath = path.join addonPath, 'package.json'
-
-	# 				addonPkg = require addonPkgPath
-	# 				addonType = addonPkg?.config?.type ? 'task'
-
-	# 				cache = @addons[addonType]?={}
-
-	# 				addon = require addonPath
-	# 				cache[name] = addon
-	# 				@initialiseModule(addon)
-	# 				debug "initialised [#{addonType}]:",  name
-	# 			catch err
-	# 				postmortem.prettyPrint err
-
-	# 		.value()
-	# 	return
+				catch err
+					postmortem.prettyPrint err
 
 	run: (tasks)->
 		if typeof tasks is 'string'

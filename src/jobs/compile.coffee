@@ -27,13 +27,7 @@ gulp.task 'scripts', (done)->
 	run.apply run, tasks
 
 gulp.task 'copy', (done)->
-	tasks = ['clean:copies' ].concat pipeline.fonts
-	tasks.push done
-	debug 'running', tasks
-	run.apply run, tasks
-
-gulp.task 'images', (done)->
-	tasks = ['clean:images' ].concat pipeline.images
+	tasks = ['clean:copies' ].concat pipeline.copy
 	tasks.push done
 	debug 'running', tasks
 	run.apply run, tasks
@@ -45,7 +39,8 @@ gulp.task 'pages', (done)->
 	run.apply run, tasks
 
 gulp.task 'compile', (done)->
-	run(['styles', 'scripts', 'copy', 'images'],
+	run(['styles', 'scripts'],
+		'copy',
 		'manifest',
 		'pages',
 		()->

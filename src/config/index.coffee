@@ -22,8 +22,6 @@ class ConfigStore
 		nconf.argv()
 		nconf.env match: /^gastropod__(.*)/
 
-		@add 'defaults', DefaultConfig
-
 	add: (key, value)->
 		debug 'adding', key
 		nconf.add key, type: 'literal', store: value
@@ -35,12 +33,14 @@ class ConfigStore
 
 	init: (options)->
 		projectConfigPath = path.resolve(options.config)
+		value = require projectConfigPath
 		try
 			debug 'adding environment: ', projectConfigPath
-			@add 'project', require projectConfigPath
-
+			@add 'project', value
 		catch err
 			debug 'missing ', projectConfigPath
+
+		@add 'defaults', DefaultConfig
 
 		module.exports.Config = Config = @build()
 

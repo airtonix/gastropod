@@ -39,8 +39,8 @@ gulp.task 'clean:styles', (done)->
 	logger = new Logger('clean:styles')
 	source = path.join(Config.target.root,
 					   Config.target.static,
-						 Config.target.styles,
-						 Config.filters.styles)
+					   Config.target.styles,
+					   Config.filters.styles)
 
 	debug 'source', source
 	debug "Starting"
@@ -53,42 +53,34 @@ gulp.task 'clean:styles', (done)->
 		.on 'finish', ()-> debug "Finished: styles"
 
 
-gulp.task 'clean:images', (done)->
-	logger = new Logger('clean:images')
-	source = path.join(Config.target.root,
-					   Config.target.static,
-						 Config.target.images,
-						 Config.filters.images)
-
-	debug 'source', source
-	debug "Starting"
-
-	return gulp.src source, read: false
-		.pipe logger.incoming()
-		.pipe Plugins.plumber ErrorHandler('clean:images')
-		.pipe Plugins.clean()
-		.on 'error', (err)-> debug err
-		.on 'finish', ()-> debug "Finished: images"
-
-
+cleanLogger = new Logger('clean:copies')
 gulp.task 'clean:copies', (done)->
-	logger = new Logger('clean:copies')
-	debug "Starting"
+	debug 'enter', Config.plugins.copy
+	if not Config.plugins.copy
+		debug 'Nothing to copy!'
+		done()
+	else
+		debug "Starting: copies"
 
-	for task in Config.copy
+	Stream = Plugins.merge()
+
+	Config.plugins.copy.map (task)->
 		source = path.join(process.cwd(),
-						   Config.source.root,
+						   Config.target.root,
 						   task.dest)
 
-		debug " > source", source
+		debug "copies: > source", source
 
-		return gulp.src source, read: false
-			.pipe logger.incoming()
+		taskStream = gulp.src source, read: false
+			.pipe cleanLogger.incoming()
 			.pipe Plugins.plumber ErrorHandler('clean:copy')
 			.pipe Plugins.clean()
 			.on 'error', (err)-> debug err
 			.on 'end', ()-> debug "Finished: clean:copy"
 
+		Stream.add taskStream
+
+	return Stream
 
 gulp.task 'clean:pages', (done)->
 	logger = new Logger('clean:pages')

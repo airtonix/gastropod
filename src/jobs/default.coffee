@@ -14,4 +14,4 @@ Plugins = require '../plugins'
  * @return {[type]}        [description]
 ###
 gulp.task 'default', (done)->
-	Plugins.runsequence 'compile', ['server', 'watch'], done
+	Plugins.runsequence 'clean', 'compile', ['server', 'watch'], done

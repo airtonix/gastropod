@@ -22,12 +22,15 @@ Plugins = require '../plugins'
 logger = new Logger('copy')
 
 
-gulp.task 'copy', (done)->
-	debug "Starting", Config.copy
+gulp.task 'copy:extras', (done)->
+	debug "Starting", Config.plugins.copy
+	if not Config.plugins.copy?
+		debug 'Nothing to copy!'
+		done()
 
 	Stream = Plugins.merge()
 
-	Config.copy.map (task)->
+	Config.plugins.copy.map (task)->
 		source = path.join(process.cwd(),
 						    Config.source.root,
 						    task.src)

@@ -13,8 +13,7 @@ defaultPipeline =
 	templates: ['swig']
 	scripts: ['browserify']
 	styles: ['scss']
-	fonts: ['copy:fonts']
-	images: ['copy:images']
+	copy: ['copy:extras']
 
 ###*
  * Filters to dictate what files to operate on
@@ -63,7 +62,8 @@ defaultSource =
 # src is relative to defaultSource.root
 # target is relative to defaultTarget.root
 defaultCopy = [
-	{src: path.join('fonts', defaultFilters.fonts), dest: './fonts'}
+	{src: path.join('fonts', defaultFilters.fonts), dest: './static/fonts'}
+	{src: path.join('images', defaultFilters.fonts), dest: './static/images'}
 ]
 
 ###*
@@ -156,8 +156,6 @@ defaultPluginJs =
 defaultPluginSass =
 	errLogToConsole: true
 	includePaths: [
-		path.join __dirname, 'node_modlues', 'ratchet', 'sass'
-		path.join __dirname, 'node_modlues', 'bourboun', 'sass'
 	]
 
 ###*
@@ -176,11 +174,11 @@ module.exports =
 	pipeline: defaultPipeline
 	filters: defaultFilters
 	source: defaultSource
-	copy: defaultCopy
 	target: defaultTarget
 	context: defaultContext
 	watch: false
 	plugins:
+		copy: defaultCopy
 		prettify: defaultPluginPrettify
 		fingerprint: defaultPluginFingerPrinter
 		minify: defaultPluginMinify

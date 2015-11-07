@@ -16,7 +16,6 @@ gulp.task 'clean', (done)->
 	run([
 		'clean:scripts'
 		'clean:styles'
-		'clean:images'
-		'clean:fonts'
+		'clean:copies'
 		'clean:pages'
 	], done)
