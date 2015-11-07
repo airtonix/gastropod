@@ -1,12 +1,10 @@
 
 #
 # System
-#
 path = require 'path'
 
 #
 # Framework
-#
 _ = require 'lodash'
 postmortem = require 'postmortem'
 debug = require('debug')('gastropod/jobs/server')
@@ -15,60 +13,44 @@ quip = require 'quip'
 morgan = require 'morgan'
 errorhandler = require 'errorhandler'
 merge = require 'deepmerge'
+gulp = require 'gulp'
 
 #
-# Framework
-{pongular} = require 'pongular'
+# Project
+{Config} = require('../config')
+Plugins = require '../plugins'
 
 
-#
-# Exportable
-pongular.module 'gastropod.jobs.server', [
-	'gastropod.vendor.gulp'
-	'gastropod.plugins'
-	'gastropod.config'
-	]
+defaults =
+	server:
+		baseDir: path.join process.cwd(), Config.target.root
+		middleware: [
+			morgan('dev')
+			bodyParser.json()
+			bodyParser.urlencoded extended:false
+		]
 
-	.run [
-		'GulpService'
-		'PluginService'
-		'ConfigStore'
-		(Gulp, Plugins, Config)->
+###*
+ * [description]
+ * @return {[type]} [description]
+ * @todo mount middleware on `instance.app.use`
+ * @todo auto reload middleware with nodemon?
+###
+gulp.task 'server', (done)->
+	done() unless Config.plugins.server
 
-			config = Config
+	serverConfig = _.defaultsDeep defaults, Config.plugins.server
 
-			defaults =
-				server:
-					baseDir: path.join process.cwd(), config.target.root
-					middleware: [
-						morgan('dev')
-						bodyParser.json()
-						bodyParser.urlencoded extended:false
-					]
+	debug 'serverConfig', serverConfig
+	try
+		debug 'starting browsersync'
+		Plugins.browsersync.init serverConfig, (err, instance) ->
+			debug 'browsersync running'
+			# access to :
+			# - `instance.app` the Connect Server
+			done()
 
-			###*
-			 * [description]
-			 * @return {[type]} [description]
-			 * @todo mount middleware on `instance.app.use`
-			 * @todo auto reload middleware with nodemon?
-			###
+	catch err
+		postmortem.prettyPrint err
+		done(err)
 
-			Gulp.task 'server', (done)->
-				done() unless config.plugins.server
-
-				serverConfig = _.defaultsDeep defaults, config.plugins.server
-
-				debug 'serverConfig', serverConfig
-				try
-					debug 'starting browsersync'
-					Plugins.browsersync.init serverConfig, (err, instance) ->
-						debug 'browsersync running'
-						# access to :
-						# - `instance.app` the Connect Server
-						done()
-
-				catch err
-					postmortem.prettyPrint err
-					done(err)
-
-	]

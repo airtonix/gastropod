@@ -1,27 +1,22 @@
 #
 # Framework
-{pongular} = require 'pongular'
 debug = require('debug')('gastropod/jobs/clean')
+gulp = require 'gulp'
+
+#
+# Project
+{Config} = require('../config')
+Plugins = require '../plugins'
 
 #
 # Exportable
-pongular.module 'gastropod.jobs.clean', [
-	'gastropod.vendor.gulp'
-	'gastropod.plugins'
-	]
+run = Plugins.runsequence
 
-	.run [
-		'GulpService'
-		'PluginService'
-		(Gulp, Plugins)->
-			run = Plugins.runsequence
-
-			Gulp.task 'clean', (done)->
-				run([
-					'clean:scripts'
-					'clean:styles'
-					'clean:images'
-					'clean:fonts'
-					'clean:pages'
-				], done)
-	]
+gulp.task 'clean', (done)->
+	run([
+		'clean:scripts'
+		'clean:styles'
+		'clean:images'
+		'clean:fonts'
+		'clean:pages'
+	], done)

@@ -6,7 +6,7 @@ fs = require 'fs'
 #
 # Framework
 debug = require('debug')('gastropod/core/swig/configurator')
-{pongular} = require 'pongular'
+
 
 class SwigService
 
@@ -21,7 +21,6 @@ class SwigService
 		swig.setDefaults
 			loader: swig.loaders.fs @options.sources
 			cache: false
-
 
 		for filter in @filters
 			debug 'registering filter', filter.name
@@ -47,15 +46,6 @@ class SwigService
 		@tags.push name: name, module: fn
 
 
-SwigService = new SwigService
+module.exports = new SwigService
 
-
-pongular.module 'gastropod.core.templates.swig.configurator', []
-
-	.provider 'SwigConfig', [
-		()->
-			configure: SwigService.configure
-			$get: [ ()-> SwigService ]
-
-	]
 

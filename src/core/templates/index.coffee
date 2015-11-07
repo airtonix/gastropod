@@ -1,21 +1,16 @@
 #
 # Framework
-{pongular} = require 'pongular'
+gulp = require 'gulp'
 debug = require('debug')('gastropod/core/templates')
 
 #
-# Exportable
-pongular.module 'gastropod.core.templates', [
-	'gastropod.config'
-	'gastropod.core.utils'
-	'gastropod.core.templates.context'
-	'gastropod.core.templates.swig'
-	]
+# Project
+{fileMap} = require '../utils/files'
+{Config} = require '../../config'
+plugins = require '../../plugins'
 
-	.service 'TemplateStore', [
-		'fileMap'
-		'ConfigStore'
-		(fileMap, Config)->
-			debug 'Config.filters.patterns', Config.filters.patterns
-			# return fileMap Config.filters.patterns, root, ['pages/**/*']
-	]
+root = Config.source.patterns[0]
+filter = Config.filters.patterns
+ignore = ['pages/**/*']
+
+module.exports = fileMap(filter, root, ignore)

@@ -4,44 +4,45 @@ path = require 'path'
 
 #
 # Framework
+debug = require('debug')('gastropod/config')
 nconf = require 'nconf'
 _ = require 'lodash'
-{pongular} = require 'pongular'
-debug = require('debug')('gastropod/config')
 
+#
+# Constants
+DefaultConfig = require './defaults'
+PackageJson = require(path.join(process.cwd(), 'package.json'))
 
-pongular.module 'gastropod.config', [
-	'gastropod.config.defaults'
-	]
+Config = {}
 
-	.constant 'PackageJson', require(path.join(process.cwd(), 'package.json'))
+class ConfigStore
 
-	.provider 'ConfigStore', [
-		'DefautConfig'
-		'PackageJson'
-		(DefautConfig, PackageJson)->
+	constructor: ()->
+		nconf.use 'memory'
+		nconf.argv()
+		nconf.env match: /^gastropod__(.*)/
 
-			nconf.use 'memory'
-			nconf.argv()
-			nconf.env match: /^gastropod__(.*)/
+		@add 'defaults', DefaultConfig
 
-			add = (key, value)->
-				debug 'adding', key
-				nconf.add key, type: 'literal', store: value
+	add: (key, value)->
+		debug 'adding', key
+		nconf.add key, type: 'literal', store: value
 
-			init = (options)->
-				projectConfigPath = path.resolve(options.config)
+	build: ->
+		store = nconf.get()
+		debug 'exporting', store
+		return store
 
-				try
-					add 'project', require projectConfigPath
-				catch err
-					debug 'missing ', projectConfigPath
+	init: (options)->
+		projectConfigPath = path.resolve(options.config)
+		try
+			debug 'adding environment: ', projectConfigPath
+			@add 'project', require projectConfigPath
 
-			add 'defaults', DefautConfig
+		catch err
+			debug 'missing ', projectConfigPath
 
-			return {
-				init: init
-				add: add
-				$get: -> nconf.get()
-			}
-	]
+		module.exports.Config = Config = @build()
+
+module.exports = new ConfigStore()
+module.exports.Config = Config

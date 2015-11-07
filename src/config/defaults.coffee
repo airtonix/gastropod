@@ -1,5 +1,4 @@
 path = require 'path'
-{pongular} = require 'pongular'
 
 ###*
  * Asset Pipeline Spec
@@ -16,6 +15,20 @@ defaultPipeline =
 	styles: ['scss']
 	fonts: ['copy:fonts']
 	images: ['copy:images']
+
+###*
+ * Filters to dictate what files to operate on
+###
+defaultFilters =
+	all: '**/*.*'
+	data: '**/*.{litcoffee,coffee,json,yml}'
+	fonts: '**/*.{otf,ttf,eot,woff}'
+	images: '**/*.{png,jpg,jpeg,gif,bmp,svg,apng}'
+	styles: '**/*.{scss,css}'
+	scripts:
+		all: '**/*.{js,coffee,litcoffee}'
+		modules: '**/{app,*-module,main}.{js,coffee,litcoffee}'
+	patterns: '**/*.html'
 
 ###*
  * List of targets for various jobs
@@ -39,9 +52,6 @@ defaultTarget =
 defaultSource =
 	root: './src'
 	data: './data'
-	fonts:
-		internal: './fonts'
-		vendor: './node_modules/ratchet/fonts'
 	images: './images'
 	styles: './styles'
 	scripts: './scripts'
@@ -49,19 +59,12 @@ defaultSource =
 	patterns: [
 		'./src/patterns',
 	]
-###*
- * Filters to dictate what files to operate on
-###
-defaultFilters =
-	all: '**/*.*'
-	data: '**/*.{litcoffee,coffee,json,yml}'
-	fonts: '**/*.{otf,ttf,eot,woff}'
-	images: '**/*.{png,jpg,jpeg,gif,bmp,svg,apng}'
-	styles: '**/*.{scss,css}'
-	scripts:
-		all: '**/*.{js,coffee,litcoffee}'
-		modules: '**/{app,*-module,main}.{js,coffee,litcoffee}'
-	patterns: '**/*.html'
+
+# src is relative to defaultSource.root
+# target is relative to defaultTarget.root
+defaultCopy = [
+	{src: path.join('fonts', defaultFilters.fonts), dest: './fonts'}
+]
 
 ###*
  * Default template context
@@ -169,21 +172,18 @@ defaultPluginServer =
 #
 # Export the default configuration
 #
-
-pongular.module 'gastropod.config.defaults', []
-
-	.constant 'DefautConfig', {
-		pipeline: defaultPipeline
-		filters: defaultFilters
-		source: defaultSource
-		target: defaultTarget
-		context: defaultContext
-		watch: false
-		plugins:
-			prettify: defaultPluginPrettify
-			fingerprint: defaultPluginFingerPrinter
-			minify: defaultPluginMinify
-			js: defaultPluginJs
-			sass: defaultPluginSass
-			server: defaultPluginServer
-	}
+module.exports =
+	pipeline: defaultPipeline
+	filters: defaultFilters
+	source: defaultSource
+	copy: defaultCopy
+	target: defaultTarget
+	context: defaultContext
+	watch: false
+	plugins:
+		prettify: defaultPluginPrettify
+		fingerprint: defaultPluginFingerPrinter
+		minify: defaultPluginMinify
+		js: defaultPluginJs
+		sass: defaultPluginSass
+		server: defaultPluginServer

@@ -1,27 +1,17 @@
 #
 # Framework
-{pongular} = require 'pongular'
-
+gulp = require 'gulp'
+debug = require('debug')('gastropod/jobs/default')
 
 #
-# Exportable
-pongular.module 'gastropod.jobs', [
-	'gastropod.vendor.gulp'
-	'gastropod.jobs.server'
-	'gastropod.jobs.watch'
-	'gastropod.jobs.compile'
-	]
+# project
+{Config} = require('../config')
+Plugins = require '../plugins'
 
-	.run [
-		'GulpService'
-		(Gulp)->
-
-			###*
-			 * Main Entrypoint
-			 * @param  {Function} done [description]
-			 * @return {[type]}        [description]
-			###
-			Gulp.task 'default', ['compile', 'server', 'watch'], (done)->
-				# $.runsequence , done
-				done()
-	]
+###*
+ * Main Entrypoint
+ * @param  {Function} done [description]
+ * @return {[type]}        [description]
+###
+gulp.task 'default', (done)->
+	Plugins.runsequence 'compile', ['server', 'watch'], done

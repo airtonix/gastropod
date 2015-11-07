@@ -7,72 +7,55 @@ path = require 'path'
 #
 # Framework
 #
-_ = require 'lodash'
-jade = require 'jade'
 debug = require('debug')('gastropod/tasks/pages:jade')
-{pongular} = require 'pongular'
-
+jade = require 'jade'
+gulp = require 'gulp'
+_ = require 'lodash'
 
 #
-# Exportable
-pongular.module 'gastropod.tasks.jade', [
-	'gastropod.vendor.gulp'
-	'gastropod.core.logging'
-	'gastropod.plugins'
-	'gastropod.config'
-	]
+# Project
+{Config} = require('../config')
+Plugins = require '../plugins'
+{ErrorHandler,Logger} = require '../core/logging'
+Manifest = require '../core/assets/manifest'
+Context = require '../core/templates/context'
 
-	.run [
-		'GulpService'
-		'PluginService'
-		'ConfigStore'
-		'ManifestStore'
-		'ContextService'
-		'ErrorHandler'
-		'Logger'
-		(Gulp, Plugins, Config, Manifest, Context, ErrorHandler, Logger)->
+#
+# Constants
+logger = new Logger('pages:jade')
+pages = path.join(Config.source.root,
+			  	  Config.source.pages)
+root = path.resolve(process.cwd(),
+			  		Config.source.patterns[0])
+projectGlobalDataRoot = path.join(process.cwd(),
+				 				  Config.source.root,
+				 				  Config.source.data)
+sources = [
+	path.join(pages, Config.filters.all)
+	'!**/*.coffee'
+]
+target = path.join Config.target.root, '/'
 
-			###*
-			 * Templates
-			 * @param  {Function} done [description]
-			 * @return {[type]}        [description]
-			###
-			Gulp.task 'jade', (done)->
-				logger = new Logger('pages:jade')
-				source = path.join(Config.source.root,
-								   Config.source.pages,
-								   Config.filters.patterns)
 
-				patterns = path.join(process.cwd(),
-									 Config.source.root,
-								     Config.source.patterns)
+gulp.task 'jade', (done)->
+	Context.empty()
+	Context.add require globalSource
+	Context.add manifest: Manifest
 
-				globals = path.join(process.cwd(),
-									Config.source.root,
-								    Config.source.data)
+	debug "Starting"
+	debug " > source", source
+	debug " > target", target
 
-				target = path.join Config.target.root, '/'
-
-				Context.empty()
-				Context.add require globals
-				Context.add manifest: Manifest
-
-				debug 'source', source
-				debug 'target', target
-
-				debug "Starting"
-
-				return Gulp.src source
-					.pipe logger.incoming()
-					.pipe Plugins.plumber ErrorHandler('pages:jade')
-					.pipe Plugins.frontMatter
-						property: 'meta'
-						remove: true
-					.pipe Plugins.data Context.export
-					.pipe Plugins.jade basedir: patterns
-					.pipe Gulp.dest target
-					.pipe Plugins.browsersync.stream()
-					.pipe logger.outgoing()
-					.on 'error', (err)-> debug err
-					.on 'finish', ()-> debug "Finished"
-	]
+	return gulp.src source
+		.pipe logger.incoming()
+		.pipe Plugins.plumber ErrorHandler('pages:jade')
+		.pipe Plugins.frontMatter
+			property: 'meta'
+			remove: true
+		.pipe Plugins.data Context.export
+		.pipe Plugins.jade basedir: patterns
+		.pipe gulp.dest target
+		.pipe Plugins.browsersync.stream()
+		.pipe logger.outgoing()
+		.on 'error', (err)-> debug err
+		.on 'finish', ()-> debug "Finished"

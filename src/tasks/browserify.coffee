@@ -9,76 +9,57 @@ path = require 'path'
 #
 _ = require 'lodash'
 debug = require('debug')('gastropod/tasks/scripts:browserify')
-{pongular} = require 'pongular'
-
+gulp = require 'gulp'
 
 #
-# Exportable
-pongular.module 'gastropod.tasks.browserify', [
-	'gastropod.vendor.gulp'
-	'gastropod.core.logging'
-	'gastropod.plugins'
-	'gastropod.config'
-	]
+# Project
+{Config} = require('../config')
+Plugins = require '../plugins'
+{ErrorHandler,Logger} = require '../core/logging'
 
-	.run [
-		'GulpService'
-		'PluginService'
-		'ConfigStore'
-		'ErrorHandler'
-		'Logger'
-		(Gulp, Plugins, Config, ErrorHandler, Logger)->
+#
+# Constants
+logger = new Logger('scripts:browserify')
+source = path.join(Config.source.root,
+				   Config.source.scripts,
+				   Config.filters.scripts.modules)
+target = path.join(Config.target.root,
+				   Config.target.static,
+				   Config.target.scripts)
+browserifyConfig = Config.plugins.js.browserify
+transforms = browserifyConfig.transforms
 
-			###*
-			 * Scripts
-			 * @param  {Function} done [description]
-			 * @return {[type]}        [description]
-			###
-			Gulp.task 'browserify', (done)->
-				logger = new Logger('scripts:browserify')
 
-				source = path.join(Config.source.root,
-								   Config.source.scripts,
-								   Config.filters.scripts.modules)
+gulp.task 'browserify', (done)->
+	debug "Starting"
+	debug " > source", source
+	debug " > target", target
 
-				target = path.join(Config.target.root,
-								   Config.target.static,
-								   Config.target.scripts)
+	return gulp.src source
+		.pipe logger.incoming()
+		.pipe Plugins.plumber ErrorHandler('scripts:browserify')
+		.pipe Plugins.through.obj (file, env, next)->
 
-				browserifyConfig = Config.plugins.js.browserify
-				transforms = browserifyConfig.transforms
+			browserify = Plugins.browserify file.path, browserifyConfig
 
-				debug "Starting"
-				debug " > source", source
-				debug " > target", target
+			for plugin, options in transforms
+				if plugin of Plugins
+					transform = Plugins[plugin]
+					browserify.transform transform.apply options
 
-				return Gulp.src source
-					.pipe logger.incoming()
-					.pipe Plugins.plumber ErrorHandler('scripts:browserify')
-					.pipe Plugins.through.obj (file, env, next)->
+			browserify.bundle (err, results)->
+				debug 'processed %s', file.relative
+				if err
+					file.contents = null
+					next err, file
+				else
+					file.contents = results
+					next(null, file)
 
-						browserify = Plugins.browserify file.path, browserifyConfig
-
-						for plugin, options in transforms
-							if plugin of Plugins
-								transform = Plugins[plugin]
-								browserify.transform transform.apply options
-
-						browserify.bundle (err, results)->
-							debug 'processed %s', file.relative
-							if err
-								file.contents = null
-								next err, file
-							else
-								file.contents = results
-								next(null, file)
-
-					.pipe Plugins.rename
-						extname: '.js'
-					.pipe Gulp.dest target
-					.pipe Plugins.browsersync.stream()
-					.pipe logger.outgoing()
-					.on 'error', (err)-> debug err
-					.on 'finish', ()-> debug "Finished"
-
-	]
+		.pipe Plugins.rename
+			extname: '.js'
+		.pipe gulp.dest target
+		.pipe Plugins.browsersync.stream()
+		.pipe logger.outgoing()
+		.on 'error', (err)-> debug err
+		.on 'finish', ()-> debug "Finished"

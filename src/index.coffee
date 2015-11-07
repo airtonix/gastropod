@@ -13,36 +13,27 @@ load = require 'require-all'
 debug = require('debug')('gastropod')
 merge = require 'deepmerge'
 postmortem = require 'postmortem'
-{pongular} = require 'pongular'
 
-# load all the parts of the app as pongular modules
-parts = load(dirname: __dirname, filter: /(.+)\.[js|coffee|litcoffee]+$/)
+#
+# Project
+ConfigStore = require('./config')
 
-# create the root pongular module
-app = pongular.module('gastropod', [
-		'gastropod.vendor'
-		'gastropod.config'
-		'gastropod.core'
-		'gastropod.plugins'
-		'gastropod.tasks'
-		'gastropod.jobs'
-		'gastropod.page'
-	])
-
-pongular.module('gastropod.page', [])
-
-###*
- * Gastropod Class
-###
+#
+# Gastropod Class
 class Gastropod
 
-	constructor: (@options={})->
-		options = @options
-		app.config [
-			'ConfigStoreProvider'
-			(Config)->
-				Config.init options
-		]
+	constructor: (options={})->
+		ConfigStore.init options
+
+		jobs = load({
+			dirname: path.join(__dirname, 'jobs')
+			filter: /(.+)\.[js|coffee|litcoffee]+$/
+		})
+		tasks = load({
+			dirname: path.join(__dirname, 'tasks')
+			filter: /(.+)\.[js|coffee|litcoffee]+$/
+		});
+
 	# ###*
 	#  * Find npm installed `gastropod-addon-*`
 	# ###
@@ -75,31 +66,11 @@ class Gastropod
 	# 		.value()
 	# 	return
 
-	serve: ()->
-		app.run [
-			'ConfigStore'
-			'GastroServer'
-			(Config, Server)->
-				Server.init Config
-				Server.start()
-		]
-
-		pongular.injector(['gastropod'])
-
-
 	run: (tasks)->
-		app.run [
-			'GulpService'
-			(Gulp)->
-				if typeof tasks is 'string'
-					tasks = [tasks, ]
+		if typeof tasks is 'string'
+			tasks = [tasks, ]
 
-				debug 'running tasks', tasks
-				Gulp.start tasks
-
-		]
-
-		pongular.injector(['gastropod'])
-
+		debug 'running tasks', tasks
+		gulp.start tasks
 
 module.exports = Gastropod

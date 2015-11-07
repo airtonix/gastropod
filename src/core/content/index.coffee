@@ -13,7 +13,6 @@ traverse = require 'traverse'
 debug = require('debug')('gastropod/core/content')
 Backbone = require 'backbone'
 {QueryCollection} = require 'backbone-query'
-{pongular} = require 'pongular'
 
 
 
@@ -50,12 +49,4 @@ class ContentService
 
 #
 # Exportable
-pongular.module 'gastropod.core.content', []
-
-	.service 'ContentService', -> new ContentService()
-
-	.factory 'ContentStore', [
-		'ContentService'
-		(ContentService)->
-			return ContentService.db
-	]
+module.exports = new ContentService()

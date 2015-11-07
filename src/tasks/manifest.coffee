@@ -1,91 +1,73 @@
-
 #
 # System
-#
 path = require 'path'
 
 #
 # Framework
-#
-_ = require 'lodash'
 debug = require('debug')('gastropod/tasks/manifest')
-{pongular} = require 'pongular'
+gulp = require 'gulp'
+_ = require 'lodash'
+
+#
+# Project
+{Config} = require('../config')
+Plugins = require '../plugins'
+{ErrorHandler,Logger} = require '../core/logging'
+Manifest = require '../core/assets/manifest'
 
 
 #
-# Exportable
-pongular.module 'gastropod.tasks.manifest', [
-	'gastropod.vendor.gulp'
-	'gastropod.core.logging'
-	'gastropod.plugins'
-	'gastropod.config'
+# Constants
+logger = new Logger('manifest')
+sources = [
+		path.join(Config.target.root
+				  Config.target.static,
+				  Config.target.images
+				  Config.filters.images)
+
+		path.join(Config.target.root
+				  Config.target.static,
+				  Config.target.fonts
+				  Config.filters.fonts)
+
+		path.join(Config.target.root
+				  Config.target.static,
+				  Config.target.styles
+				  Config.filters.styles)
+
+		path.join(Config.target.root
+				  Config.target.static,
+				  Config.target.scripts
+				  Config.filters.scripts.all)
 	]
 
-	.run [
-		'GulpService'
-		'PluginService'
-		'ConfigStore'
-		'ManifestStore'
-		'ContextService'
-		'ErrorHandler'
-		'Logger'
-		(Gulp, Plugins, Config, Manifest, Context, ErrorHandler, Logger)->
-			###*
-			 * Generate Manifest
-			 * @param  {Function} done [description]
-			 * @return {[type]}        [description]
-			###
-			Gulp.task 'manifest', (done)->
-				logger = new Logger('manifest')
+target = Config.target.root
 
-				# set the root for the manifest
-				# we want this done each run because
-				# the config file may have changed (thus
-				# the source of the trigger)
-				Manifest.option 'root', path.join Config.target.root, Config.target.static
+# set the root for the manifest
+# we want this done each run because
+# the config file may have changed (thus
+# the source of the trigger)
+Manifest.option 'root', path.join Config.target.root, Config.target.static
 
-				sources = [
-						path.join(Config.target.root
-								Config.target.static,
-								Config.target.images
-								Config.filters.images)
 
-						path.join(Config.target.root
-								Config.target.static,
-								Config.target.fonts
-								Config.filters.fonts)
+gulp.task 'manifest', (done)->
 
-						path.join(Config.target.root
-								Config.target.static,
-								Config.target.styles
-								Config.filters.styles)
+	debug 'sources', sources
+	debug 'target', target
+	debug "Starting"
 
-						path.join(Config.target.root
-								Config.target.static,
-								Config.target.scripts
-								Config.filters.scripts.all)
-					]
+	Manifest.empty()
 
-				target = Config.target.root
+	debug 'new manifest', Manifest
 
-				debug 'sources', sources
-				debug 'target', target
-				debug "Starting"
-				debug 'existing manifest', Manifest
-
-				Manifest.empty()
-
-				debug 'new manifest', Manifest
-
-				return Gulp.src sources, base: Config.target.root
-					.pipe logger.incoming()
-					.pipe Plugins.plumber ErrorHandler('manifest')
-					.pipe Plugins.clean()
-					.pipe Plugins.fingerprinter().revision()
-					.pipe Plugins.tap manifest.add
-					.pipe logger.outgoing()
-					.pipe Gulp.dest target
-					.on 'error', debug
-					.on 'finish', ->
-						debug "Finished"
-	]
+	return gulp.src sources, base: Config.target.root
+		.pipe logger.incoming()
+		.pipe Plugins.plumber ErrorHandler('manifest')
+		.pipe Plugins.clean()
+		.pipe Plugins.fingerprint().revision()
+		.pipe Plugins.tap Manifest.add
+		.pipe logger.outgoing()
+		.pipe gulp.dest target
+		.on 'error', debug
+		.on 'finish', ->
+			debug "Finished"

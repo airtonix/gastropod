@@ -8,39 +8,23 @@ path = require('path')
 # Framework
 #
 debug = require('debug')('gastropod/tasks/collection')
-{pongular} = require 'pongular'
-
+gulp = require 'gulp'
+_ = require 'lodash'
 
 #
-# Exportable
-pongular.module 'gastropod.tasks.collection', [
-	'gastropod.vendor.gulp'
-	'gastropod.core.logging'
-	'gastropod.core.content'
-	'gastropod.plugins'
-	'gastropod.config'
-	]
-
-	.run [
-		'GulpService'
-		'PluginService'
-		'ConfigStore'
-		'ContentService'
-		'ErrorHandler'
-		'Logger'
-		(Gulp, Plugins, Config, Content, ErrorHandler, Logger)->
+# Project
+{Config} = require('../config')
+Plugins = require '../plugins'
+{ErrorHandler,Logger} = require '../core/logging'
+ContentCollection = require '../core/content'
 
 
-			pages = path.join(Config.source.root,
-						  	  Config.source.pages)
+gulp.task 'collection', (done)->
+	debug 'building collection', ContentCollection.db
 
-			Gulp.task 'collection', (done)->
-				debug 'building collection', ContentCollection.db
+	Content.empty()
+	Content.generate pages, ()->
+		debug 'content colletion generated'
+		done()
 
-				Content.empty()
-				Content.generate pages, ()->
-					debug 'content colletion generated'
-					done()
-
-				return
-	]
+	return

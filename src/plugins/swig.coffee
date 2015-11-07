@@ -1,12 +1,10 @@
 #
 # System
-#
 fs = require('fs')
 path = require('path')
 
 #
 # Framework
-#
 _ = require 'lodash'
 through = require('through2')
 swig = require('swig')
@@ -14,68 +12,55 @@ clone = require('clone')
 postmortem = require 'postmortem'
 deepmerge = require 'deepmerge'
 debug = require('debug')('gastropod/core/plugins/swig')
-{pongular} = require 'pongular'
 
-#
-# Exportable
-pongular.module 'gastropod.plugins.swig', [
-	'gastropod.plugins.vendor'
-	]
 
-	.factory 'PluginSwig', [
-		'PluginCollectionVendor'
-		($)->
-			PluginError = $.util.PluginError
+DEFAULTS =
+	cache: false
 
-			DEFAULTS =
-				cache: false
+module.exports = (options={}) ->
 
-			plugin = (options={}) ->
+	debug 'setting up swig instance'
+	if options.defaults
+		swig.setDefaults _.extend {}, DEFAULTS, options.defaults
 
-				debug 'setting up swig instance'
-				if options.defaults
-					swig.setDefaults _.extend {}, DEFAULTS, options.defaults
+	debug 'setting up swig instance'
+	try
+		options.setup?(swig)
+	catch err
+		postmortem.prettyPrint err
 
-				debug 'setting up swig instance'
-				try
-					options.setup?(swig)
-				catch err
-					postmortem.prettyPrint err
+	streamFinish = (done)->
+		done()
 
-				streamFinish = (done)->
-					done()
+	streamStart = (file, ext, done)->
 
-				streamStart = (file, ext, done)->
+		debug 'processing file', file.relative
 
-					debug 'processing file', file.relative
+		data = options.data or {}
 
-					data = options.data or {}
+		if _.isFunction data
+			debug 'global data is a function'
+			data = data file
 
-					if _.isFunction data
-						debug 'global data is a function'
-						data = data file
+		if file.data
+			debug 'merging file.data'
+			data = deepmerge file.data, data
 
-					if file.data
-						debug 'merging file.data'
-						data = deepmerge file.data, data
+		try
+			debug 'parsing', file.path
+			template = swig.compile(String(file.contents), filename: file.path)
+			debug 'compiling', file.path
+			compiled = template(data)
+			debug 'done'
+			file.contents = new Buffer compiled
+			done null, file
 
-					try
-						debug 'parsing', file.path
-						template = swig.compile(String(file.contents), filename: file.path)
-						debug 'compiling', file.path
-						compiled = template(data)
-						debug 'done'
-						file.contents = new Buffer compiled
-						done null, file
+		catch err
+			postmortem.prettyPrint err
+			done()
 
-					catch err
-						postmortem.prettyPrint err
-						done()
+		return
 
-					return
+	debug 'Stream processor ready'
+	return through.obj streamStart, streamFinish
 
-				debug 'exporting through stream'
-				return through.obj streamStart, streamFinish
-
-			return plugin
-	]

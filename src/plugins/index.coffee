@@ -1,54 +1,28 @@
 #
 # Framework
-{pongular} = require 'pongular'
 debug = require('debug')('gastropod/plugins')
 
-
 #
 # Exportable
-pongular.module 'gastropod.plugins', [
-	'gastropod.plugins.vendor'
-	'gastropod.plugins.swig'
-	'gastropod.plugins.fingerprinter'
-	]
-
-	.factory 'PluginService', [
-		'PluginCollectionVendor'
-		'PluginSwig'
-		'PluginFingerprint'
-		(PluginVendors, PluginSwig, PluginFingerprint)->
-			plugins = PluginVendors
-			plugins.swig = PluginSwig
-			plugins.fingerprint = PluginFingerprint
-
-			debug 'loaded plugins', Object.keys plugins
-
-			return plugins
-	]
-
+plugins = require('gulp-load-plugins')()
+plugins.through = require 'through2'
+plugins.throughPipes = require 'through-pipes'
+plugins.browserify = require 'browserify'
+plugins.source = require 'vinyl-source-stream'
+plugins.buffer = require 'vinyl-buffer'
+plugins.globby = require 'globby'
+plugins.transform = require 'vinyl-transform'
+plugins.runsequence = require 'run-sequence'
+plugins.browsersync = require('browser-sync').create()
+plugins.nghtml2js = require 'browserify-ng-html2js'
+plugins.del = require 'del'
+plugins.vinylPaths = require 'vinyl-paths'
+plugins.end = require 'stream-end'
+plugins.merge = require 'merge-stream'
 
 #
-# Exportable
-pongular.module 'gastropod.plugins.vendor', []
+# Project Plugins
+plugins.swig = require './swig'
+plugins.fingerprint = require './fingerprinter'
 
-	.factory 'PluginCollectionVendor', [
-		()->
-
-			vendors = require('gulp-load-plugins')()
-			vendors.through = require 'through2'
-			vendors.throughPipes = require 'through-pipes'
-			vendors.browserify = require 'browserify'
-			vendors.source = require 'vinyl-source-stream'
-			vendors.buffer = require 'vinyl-buffer'
-			vendors.globby = require 'globby'
-			vendors.transform = require 'vinyl-transform'
-			vendors.runsequence = require 'run-sequence'
-			vendors.browsersync = require('browser-sync').create()
-			vendors.nghtml2js = require 'browserify-ng-html2js'
-			vendors.del = require 'del'
-			vendors.vinylPaths = require 'vinyl-paths'
-			vendors.end = require 'stream-end'
-
-			return vendors
-	]
-
+module.exports = plugins
