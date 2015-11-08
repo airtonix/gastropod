@@ -27,6 +27,7 @@ class SwigService
 		})
 
 	setup: (swig)=>
+		debug 'setting up swig instance'
 		swig.setDefaults
 			loader: swig.loaders.fs @options.sources
 			cache: false

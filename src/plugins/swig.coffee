@@ -23,7 +23,6 @@ module.exports = (options={}) ->
 	if options.defaults
 		swig.setDefaults _.extend {}, DEFAULTS, options.defaults
 
-	debug 'setting up swig instance'
 	try
 		options.setup?(swig)
 	catch err

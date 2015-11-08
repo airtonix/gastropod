@@ -30,6 +30,7 @@ logger = new Logger('pages:swig')
 
 pages = path.join(Config.source.root,
 			  	  Config.source.pages)
+
 root = path.resolve(process.cwd(),
 			  		Config.source.patterns[0])
 sources = [

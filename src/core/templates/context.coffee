@@ -55,14 +55,17 @@ class Context
 		return datapath
 
 	export: (file, done)=>
+		debug 'loading data for ', file.path
 		podule = @loadFile(file)
+		data = deepmerge _.clone(@Store), Config.context
+		data.Meta = file.meta
+
 		if not podule
-			done null, {}
+			data.Page = {}
+			done null, data
 		else
 			container.inject(podule).then (page)=>
 				debug 'exporting page'
-				data = deepmerge _.clone(@Store), Config.context
-				data.Meta = file.meta
 				data.Page = page
 				done null, data
 	###*
