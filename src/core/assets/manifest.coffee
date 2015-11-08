@@ -8,6 +8,10 @@ path = require 'path'
 _ = require 'lodash'
 debug = require('debug')('gastropod/core/assets/manifest')
 
+#
+# Project
+{Config} = require '../../config'
+
 
 class ManifestService
 

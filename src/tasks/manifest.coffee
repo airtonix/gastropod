@@ -19,27 +19,29 @@ Manifest = require '../core/assets/manifest'
 #
 # Constants
 logger = new Logger('manifest')
-sources = [
-		path.join(Config.target.root
-				  Config.target.static,
-				  Config.target.images
-				  Config.filters.images)
+sources =
 
-		path.join(Config.target.root
-				  Config.target.static,
-				  Config.target.fonts
-				  Config.filters.fonts)
+	styles: path.join(Config.target.root
+			  Config.target.static,
+			  Config.target.styles
+			  Config.filters.styles)
 
-		path.join(Config.target.root
-				  Config.target.static,
-				  Config.target.styles
-				  Config.filters.styles)
+	scripts: path.join(Config.target.root
+			  Config.target.static,
+			  Config.target.scripts
+			  Config.filters.scripts.all)
+	copy: do ->
+		parts = []
+		for task in Config.plugins.copy
+			parts.push path.join(Config.target.root, task.dest)
+		return parts
 
-		path.join(Config.target.root
-				  Config.target.static,
-				  Config.target.scripts
-				  Config.filters.scripts.all)
-	]
+
+sources.all = [
+	sources.scripts
+	sources.styles
+	sources.copy
+]
 
 target = Config.target.root
 
@@ -50,24 +52,30 @@ target = Config.target.root
 Manifest.option 'root', path.join Config.target.root, Config.target.static
 
 
-gulp.task 'manifest', (done)->
+manifestFactory = (source)->
+	(done)->
 
-	debug 'sources', sources
-	debug 'target', target
-	debug "Starting"
+		debug 'source', source
+		debug 'target', target
+		debug "Starting"
 
-	Manifest.empty()
+		# Manifest.empty()
 
-	debug 'new manifest', Manifest
+		debug 'new manifest', Manifest
 
-	return gulp.src sources, base: Config.target.root
-		.pipe logger.incoming()
-		.pipe Plugins.plumber ErrorHandler('manifest')
-		.pipe Plugins.clean()
-		.pipe Plugins.fingerprint().revision()
-		.pipe Plugins.tap Manifest.add
-		.pipe logger.outgoing()
-		.pipe gulp.dest target
-		.on 'error', debug
-		.on 'finish', ->
-			debug "Finished"
+		return gulp.src source, base: Config.target.root
+			.pipe logger.incoming()
+			.pipe Plugins.plumber ErrorHandler('manifest')
+			.pipe Plugins.clean()
+			.pipe Plugins.if Config.fingerprint, Plugins.fingerprint().revision()
+			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
+			.pipe logger.outgoing()
+			.pipe gulp.dest target
+			.on 'error', debug
+			.on 'finish', ->
+				debug "Finished"
+
+gulp.task 'manifest', ['manifest:scripts', 'manifest:styles', 'manifest:copy']
+gulp.task 'manifest:scripts', manifestFactory(sources.scripts)
+gulp.task 'manifest:styles', manifestFactory(sources.styles)
+gulp.task 'manifest:copy', manifestFactory(sources.copy)

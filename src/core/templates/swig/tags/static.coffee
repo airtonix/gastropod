@@ -42,9 +42,7 @@ module.exports =
 				}
 
 				url = manifest[url] || url;
-				// _output += [root, static, url].join('/');
-				_output += JSON.stringify(_ctx.Manifest, null, 2);
-
+				_output += [root, static, url].join('/');
 			} else {
 				_output += url;
 
