@@ -21,21 +21,24 @@ Manifest = require '../core/assets/manifest'
 logger = new Logger('manifest')
 sources =
 
-	styles: path.join(Config.target.root
+	styles: path.join(Config.target.root,
 			  Config.target.static,
-			  Config.target.styles
+			  Config.target.styles,
 			  Config.filters.styles)
 
-	scripts: path.join(Config.target.root
+	scripts: path.join(Config.target.root,
 			  Config.target.static,
-			  Config.target.scripts
+			  Config.target.scripts,
 			  Config.filters.scripts.all)
 	copy: do ->
 		parts = []
 		for task in Config.plugins.copy
-			parts.push path.join(Config.target.root, task.dest)
+			parts.push path.join(Config.target.root,
+							     task.dest,
+			  					 Config.filters.all)
 		return parts
 
+debug 'copy:extras', sources.copy
 
 sources.all = [
 	sources.scripts

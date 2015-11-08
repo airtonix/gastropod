@@ -24,9 +24,7 @@ logger = new Logger('copy')
 
 gulp.task 'copy:extras', (done)->
 	debug "Starting", Config.plugins.copy
-	if not Config.plugins.copy?
-		debug 'Nothing to copy!'
-		done()
+	done() unless Config.plugins.copy?
 
 	Stream = Plugins.merge()
 

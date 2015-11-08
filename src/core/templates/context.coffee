@@ -56,12 +56,15 @@ class Context
 
 	export: (file, done)=>
 		podule = @loadFile(file)
-		container.inject(podule).then (page)=>
-			debug 'exporting page'
-			data = deepmerge _.clone(@Store), Config.context
-			data.Meta = file.meta
-			data.Page = page
-			done null, data
+		if not podule
+			done null, {}
+		else
+			container.inject(podule).then (page)=>
+				debug 'exporting page'
+				data = deepmerge _.clone(@Store), Config.context
+				data.Meta = file.meta
+				data.Page = page
+				done null, data
 	###*
 	 * Export Page Context
 	 * @param  {[type]}   file [description]
@@ -76,8 +79,6 @@ class Context
 		catch err
 			if not err.code is 'MODULE_NOT_FOUND'
 				postmortem.prettyPrint err
-			else
-				throw err
 
 	###*
 	 * Prepare IOC Injection with builtins and project
