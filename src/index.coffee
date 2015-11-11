@@ -14,6 +14,7 @@ debug = require('debug')('gastropod')
 merge = require 'deepmerge'
 postmortem = require 'postmortem'
 moduleFinder = require('module-finder')
+Q = require 'bluebird'
 
 #
 # Project
@@ -23,40 +24,55 @@ ConfigStore = require('./config')
 # Gastropod Class
 class Gastropod
 
-	constructor: (options={})->
-		ConfigStore.init options
-		@loadAddons()
+	loadJobs = ->
+		new Q (resolve, reject)->
+			jobs = load({
+				dirname: path.join(__dirname, 'jobs')
+				filter: /(.+)\.[js|coffee|litcoffee]+$/
+			})
+			resolve(jobs)
 
-		jobs = load({
-			dirname: path.join(__dirname, 'jobs')
-			filter: /(.+)\.[js|coffee|litcoffee]+$/
-		})
-		tasks = load({
-			dirname: path.join(__dirname, 'tasks')
-			filter: /(.+)\.[js|coffee|litcoffee]+$/
-		});
 
-	loadAddons: ->
-		query =
-			local: true
-			recursive: true
-			cwd: process.cwd()
-			filter: {
-				keywords: {$in: ['gastropod-plugin']}
-			}
+	loadTasks = ->
+		new Q (resolve, reject)->
+			tasks = load({
+				dirname: path.join(__dirname, 'tasks')
+				filter: /(.+)\.[js|coffee|litcoffee]+$/
+			})
+			resolve(tasks)
 
-		debug 'searching for gastropod addons'
-		moduleFinder(query)
-			.then (modules)->
-				try
-					modules.forEach (addon)->
-						debug 'loading', addon.pkg.name
+	loadAddons = ->
+
+		new Q (resolve, reject)->
+			query =
+				local: true
+				cwd: process.cwd()
+				filter: {
+					keywords: {$in: ['gastropod']}
+				}
+
+			debug 'searching for gastropod addons'
+			addons = {}
+			moduleFinder(query)
+				.then (modules)->
+					debug 'found modules', modules.length
+					modules.forEach (addon)=>
+						name = addon.pkg.name
+						debug 'loading', name
 						addon = require addon.path
-						cache[name] = addon
-						debug "initialised [#{addonType}]:",  name
+						addons[name] = addon
+						debug "initialised:",  name
+					resolve(addons)
+				.catch (err)->
+					reject(err)
 
-				catch err
-					postmortem.prettyPrint err
+	init: (options={})->
+		ConfigStore.init options
+
+		loadAddons()
+			.then loadJobs
+			.then loadTasks
+
 
 	run: (tasks)->
 		if typeof tasks is 'string'
@@ -64,5 +80,10 @@ class Gastropod
 
 		debug 'running tasks', tasks
 		gulp.start tasks
+
+	list: (what)->
+		switch what
+			when 'addons'
+				console.log Object.keys(@addons)
 
 module.exports = Gastropod

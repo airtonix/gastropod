@@ -16,6 +16,9 @@
 		{
 			"name": "Tests",
 			"path": "test"
+		},
+		{
+			"path": "/home/zenobius/Projects/Mine/gastropod-task-webpack"
 		}
 	]
 }

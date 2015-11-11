@@ -7,7 +7,8 @@
     "gastropod": "./bin/gastropod.js"
   },
   "scripts": {
-    "test": "mocha -R spec",
+    "test": "mocha -R spec --recursive",
+    "dev": "mocha -R spec --recursive -w",
     "merge-to-master": "git checkout master && git merge develop",
     "merge-to-develop": "git checkout develop && git merge master",
     "recreate-shrinkwrap": "rm npm-shrinkwrap.json && npm shrinkwrap && git commit -am 'preversion: recreate shrinkwrap' ",
@@ -108,5 +109,8 @@
     "vinyl-transform": "^1.0.0",
     "wiretree": "^1.3.2",
     "zeninjector": "^0.1.12"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.3"
   }
 }

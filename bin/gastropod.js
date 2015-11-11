@@ -49,25 +49,37 @@ Program
 
 		// initialise
 		debug('spawning a gastropod')
-		runner = new Gastropod(options.parent)
+		runner = new Gastropod()
+		runner
+			.init(options.parent)
+			.then(function(){
+				// start
+				debug('gastropod:task -> ', tasks)
+				runner.run(tasks)
+			});
 
-		// start
-		debug('starting the gastropod')
-		runner.run(tasks)
 	});
 
 Program
 	.command('list <what>')
 	.action(function(what, options){
-		runner = new Gastropod(options.parent)
-		runner.list(what)
+		runner = new Gastropod()
+		runner
+			.init(options.parent)
+			.then(function(){
+				runner.list(what)
+			});
 	});
 
 Program
 	.command('serve')
 	.action(function(options){
-		runner = new Gastropod(options.parent)
-		runner.serve()
+		runner = new Gastropod()
+		runner
+			.init(options.parent)
+			.then(function(){
+				runner.serve()
+			});
 	});
 
 Program

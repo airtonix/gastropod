@@ -164,8 +164,7 @@ defaultPluginSass =
 ###
 defaultPluginServer =
 	open: false
-	server:
-		notify: false
+	notify: false
 
 #
 # Export the default configuration
