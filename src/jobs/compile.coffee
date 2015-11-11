@@ -12,7 +12,6 @@ Plugins = require '../plugins'
 # Exportable
 run = Plugins.runsequence
 pipeline = Config.pipeline
-debug 'pipeline', pipeline
 
 gulp.task 'styles', (done)->
 	tasks = ['clean:styles' ].concat pipeline.styles

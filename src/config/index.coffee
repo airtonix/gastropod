@@ -6,6 +6,7 @@ path = require 'path'
 # Framework
 debug = require('debug')('gastropod/config')
 nconf = require 'nconf'
+Q = require 'bluebird'
 _ = require 'lodash'
 
 #
@@ -27,6 +28,7 @@ class ConfigStore
 		nconf.add key, type: 'literal', store: value
 
 	build: ->
+		@add 'defaults', DefaultConfig
 		store = nconf.get()
 		debug 'exporting', store
 		return store
@@ -40,9 +42,8 @@ class ConfigStore
 		catch err
 			debug 'missing ', projectConfigPath
 
-		@add 'defaults', DefaultConfig
-
 		module.exports.Config = Config = @build()
+		return
 
 module.exports = new ConfigStore()
 module.exports.Config = Config

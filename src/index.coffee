@@ -19,12 +19,13 @@ Q = require 'bluebird'
 #
 # Project
 ConfigStore = require('./config')
+{Config} = require('./config')
 
 #
 # Gastropod Class
 class Gastropod
 
-	loadJobs = ->
+	loadJobs: ->
 		new Q (resolve, reject)->
 			jobs = load({
 				dirname: path.join(__dirname, 'jobs')
@@ -33,7 +34,7 @@ class Gastropod
 			resolve(jobs)
 
 
-	loadTasks = ->
+	loadTasks: ->
 		new Q (resolve, reject)->
 			tasks = load({
 				dirname: path.join(__dirname, 'tasks')
@@ -41,9 +42,9 @@ class Gastropod
 			})
 			resolve(tasks)
 
-	loadAddons = ->
+	loadAddons: ->
 
-		new Q (resolve, reject)->
+		new Q (resolve, reject)=>
 			query =
 				local: true
 				cwd: process.cwd()
@@ -54,24 +55,27 @@ class Gastropod
 			debug 'searching for gastropod addons'
 			addons = {}
 			moduleFinder(query)
-				.then (modules)->
+				.then (modules)=>
 					debug 'found modules', modules.length
 					modules.forEach (addon)=>
 						name = addon.pkg.name
-						debug 'loading', name
-						addon = require addon.path
-						addons[name] = addon
+						dirname = path.dirname(addon.path)
+						debug 'loading', "#{name}@#{dirname}"
+						addons[name] = require(dirname)(gulp, @)
 						debug "initialised:",  name
 					resolve(addons)
 				.catch (err)->
 					reject(err)
 
 	init: (options={})->
-		ConfigStore.init options
+		ConfigStore.init(options)
+		@Config = ConfigStore.build()
+		@loadAddons()
+			.then @loadJobs
+			.then @loadTasks
+			.finally ->
+				debug 'gulp.tasks', Object.keys(gulp.tasks)
 
-		loadAddons()
-			.then loadJobs
-			.then loadTasks
 
 
 	run: (tasks)->
