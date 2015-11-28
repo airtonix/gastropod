@@ -6,6 +6,7 @@ path = require 'path'
 # Framework
 debug = require('debug')('gastropod/tasks/manifest')
 gulp = require 'gulp'
+revAll = require 'gulp-rev-all'
 _ = require 'lodash'
 
 #
@@ -38,15 +39,12 @@ sources =
 			  					 Config.filters.all)
 		return parts
 
+	all: path.join(Config.target.root, Config.target.static, Config.filters.all)
+
 debug 'copy:extras', sources.copy
 
-sources.all = [
-	sources.scripts
-	sources.styles
-	sources.copy
-]
 
-target = Config.target.root
+target = path.join Config.target.root, Config.target.static
 
 # set the root for the manifest
 # we want this done each run because
@@ -54,6 +52,10 @@ target = Config.target.root
 # the source of the trigger)
 Manifest.option 'root', path.join Config.target.root, Config.target.static
 
+Urls = Config.context.site.urls
+Fingerprint = new revAll
+	debug: true
+	prefix: path.join Urls.root, Urls.static
 
 manifestFactory = (source)->
 	(done)->
@@ -66,19 +68,21 @@ manifestFactory = (source)->
 
 		debug 'new manifest', Manifest
 
-		return gulp.src source, base: Config.target.root
+		return gulp.src source
 			.pipe logger.incoming()
 			.pipe Plugins.plumber ErrorHandler('manifest')
 			.pipe Plugins.clean()
-			.pipe Plugins.if Config.fingerprint, Plugins.fingerprint().revision()
+			.pipe Plugins.if Config.fingerprint, Fingerprint.revision()
 			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
 			.pipe logger.outgoing()
+			.pipe gulp.dest target
+			.pipe Plugins.if Config.fingerprint, Fingerprint.manifestFile()
 			.pipe gulp.dest target
 			.on 'error', debug
 			.on 'finish', ->
 				debug "Finished"
 
-gulp.task 'manifest', ['manifest:scripts', 'manifest:styles', 'manifest:copy']
+gulp.task 'manifest', manifestFactory(sources.all)
 gulp.task 'manifest:scripts', manifestFactory(sources.scripts)
 gulp.task 'manifest:styles', manifestFactory(sources.styles)
 gulp.task 'manifest:copy', manifestFactory(sources.copy)

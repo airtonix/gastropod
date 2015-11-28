@@ -1,7 +1,10 @@
 #
 # System
-#
 path = require 'path'
+
+#
+# Framework
+debug = require('debug')('gastropod/core/assets/hasher')
 
 ###*
  * [hasher description]

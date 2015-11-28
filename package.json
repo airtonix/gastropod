@@ -32,7 +32,6 @@
     "browserify": "^11.0.1",
     "browserify-ng-html2js": "^1.1.2",
     "browserify-shim": "^3.8.10",
-    "browsernizr": "^1.0.2",
     "chalk": "^1.1.1",
     "change-case": "^2.3.0",
     "clone": "^1.0.2",
