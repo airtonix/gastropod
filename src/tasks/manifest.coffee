@@ -59,7 +59,6 @@ basepath = path.join(Config.target.root, Config.target.static)
 # the source of the trigger)
 Manifest.option 'root', path.join Config.target.root, Config.target.static
 
-
 manifestFactory = (source)->
 	(done)->
 
