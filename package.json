@@ -22,7 +22,7 @@
   "author": "Zenobius Jiricek",
   "license": "MIT",
   "dependencies": {
-    "async-chainable": "^1.7.15",
+    "async-chainable": "https://registry.npmjs.org/async-chainable/-/async-chainable-1.7.15.tgz",
     "backbone": "^1.2.3",
     "backbone-query": "^0.1.2",
     "bluebird": "^2.10.2",

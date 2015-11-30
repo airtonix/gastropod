@@ -17,5 +17,5 @@ Replacer = require '../core/assets/replacer'
 module.exports = ->
 	new revAll
 		debug: true
-		transformFilename: Hasher
-		replacer: Replacer
+		# replacer: Replacer
+		# transformFilename: Hasher

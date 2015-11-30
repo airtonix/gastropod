@@ -81,9 +81,9 @@ class Gastropod
 	run: (tasks)->
 		if typeof tasks is 'string'
 			tasks = [tasks, ]
-
+		run = require 'run-sequence'
 		debug 'running tasks', tasks
-		gulp.start tasks
+		run.apply run, tasks
 
 	list: (what)->
 		switch what

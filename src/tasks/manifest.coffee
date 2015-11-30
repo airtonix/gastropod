@@ -4,9 +4,10 @@ path = require 'path'
 
 #
 # Framework
-debug = require('debug')('gastropod/tasks/manifest')
-gulp = require 'gulp'
 _ = require 'lodash'
+gulp = require 'gulp'
+debug = require('debug')('gastropod/tasks/manifest')
+async = require 'async-chainable'
 
 #
 # Project
@@ -20,16 +21,19 @@ Manifest = require '../core/assets/manifest'
 # Constants
 logger = new Logger('manifest')
 sources =
+	static: path.join(Config.target.root,
+			  		  Config.target.static,
+			  		  Config.filters.all)
 
 	styles: path.join(Config.target.root,
-			  Config.target.static,
-			  Config.target.styles,
-			  Config.filters.styles)
+					  Config.target.static,
+					  Config.target.styles,
+					  Config.filters.styles)
 
 	scripts: path.join(Config.target.root,
-			  Config.target.static,
-			  Config.target.scripts,
-			  Config.filters.scripts.all)
+					   Config.target.static,
+					   Config.target.scripts,
+					   Config.filters.scripts.all)
 	copy: do ->
 		parts = []
 		for task in Config.plugins.copy
@@ -41,12 +45,13 @@ sources =
 debug 'copy:extras', sources.copy
 
 sources.all = [
+	sources.copy
 	sources.scripts
 	sources.styles
-	sources.copy
 ]
 
 target = Config.target.root
+basepath = path.join(Config.target.root, Config.target.static)
 
 # set the root for the manifest
 # we want this done each run because
@@ -62,9 +67,7 @@ manifestFactory = (source)->
 		debug 'target', target
 		debug "Starting"
 
-		# Manifest.empty()
-
-		debug 'new manifest', Manifest
+		debug 'current manifest', Object.keys(Manifest.db).length
 
 		return gulp.src source, base: Config.target.root
 			.pipe logger.incoming()
@@ -78,7 +81,26 @@ manifestFactory = (source)->
 			.on 'finish', ->
 				debug "Finished"
 
-gulp.task 'manifest', ['manifest:scripts', 'manifest:styles', 'manifest:copy']
+gulp.task 'manifest', manifestFactory(sources.static)
+
+	# async()
+	# 	.then (next)->
+	# 		debug 'manifest:copy'
+	# 		Plugins.runsequence 'manifest:copy', next
+
+	# 	.then (next)->
+	# 		debug 'manifest:styles'
+	# 		Plugins.runsequence 'manifest:styles', next
+
+	# 	.then (next)->
+	# 		debug 'manifest:scripts'
+	# 		Plugins.runsequence 'manifest:scripts', next
+
+	# 	.end (err)->
+	# 		debug 'manifest:done'
+	# 		done()
+	# return
+
 gulp.task 'manifest:scripts', manifestFactory(sources.scripts)
 gulp.task 'manifest:styles', manifestFactory(sources.styles)
 gulp.task 'manifest:copy', manifestFactory(sources.copy)
