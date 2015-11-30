@@ -13,73 +13,70 @@ requireUncached = require 'require-uncached'
 {Config} = require('../config')
 Plugins = require '../plugins'
 
+paths =
+	patterns: (path.join(pattern, Config.filters.all) for pattern in Config.source.patterns)
+	environments: path.join(process.cwd(), 'config', Config.filters.all)
+	project: path.join(Config.source.root, Config.filters.all)
+	scripts: path.join(Config.source.root, Config.source.scripts, Config.filters.all)
+	styles: path.join(Config.source.root, Config.source.styles, Config.filters.all)
+	copy: (path.join(Config.source.root, task.src) for task in Config.plugins.copy)
+
+debug 'watch paths created'
 
 gulp.task 'reload-config', (done)->
 	debug 'Reloading Config'
 	{Config} = requireUncached('../config')
 
-
 gulp.task 'watch', (done)->
+	Plugins.runsequence [
+		'watch:scripts'
+		'watch:styles'
+		'watch:copy'
+		'watch:patterns'
+		'watch:environments'
+	]
+
+gulp.task 'watch:scripts', (done)->
 	debug 'Starting'
-	done() unless Config? or Config.watch?
-
-	debug 'creating watch paths'
-	environments = path.join(process.cwd(), 'config', Config.filters.all)
-	project = path.join(Config.source.root, Config.filters.all)
-	scripts = path.join(Config.source.root,
-						Config.source.scripts,
-						Config.filters.all)
-	styles = path.join(Config.source.root,
-						Config.source.styles,
-						Config.filters.all)
-
-	debug 'creating pattern watch paths', Config.source.patterns
-	patterns = []
-	for patternRoot in Config.source.patterns
-		debug 'creating pattern watch path:', patternRoot
-		patterns.push path.join(patternRoot,
-								Config.filters.all)
-
-	debug 'creating copy task watch paths'
-	copyTasks = []
-	for task in Config.plugins.copy
-		debug 'creating watch path:', task.src
-		copyTasks.push path.join(Config.source.root, task.src)
-
-	debug('watching', [
-		scripts,
-		styles,
-		patterns,
-		copyTasks,
-		environments
-	])
-
-	gulp.watch scripts, (event)->
-		debug 'File ' + event.path + ' was ' + event.type + ', running tasks...'
+	gulp.watch paths.scripts, (event)->
+		debug "Scripts: File #{event.path} was #{event.type}"
 		if Config.fingerprint
 			Plugins.runsequence 'scripts', 'manifest:scripts', 'pages'
 		else
 			Plugins.runsequence 'scripts'
+	debug "watching scripts: #{paths.scripts}"
 
-	gulp.watch styles, (event)->
-		debug 'File ' + event.path + ' was ' + event.type + ', running tasks...'
+gulp.task 'watch:styles', (done)->
+	debug 'Starting'
+	gulp.watch paths.styles, (event)->
+		debug "Styles: File #{event.path} was #{event.type}"
 		if Config.fingerprint
 			Plugins.runsequence 'styles', 'manifest:styles', 'pages'
 		else
 			Plugins.runsequence 'styles'
+	debug "watching styles: #{paths.styles}"
 
-	gulp.watch copyTasks, (event)->
-		debug 'File ' + event.path + ' was ' + event.type + ', running tasks...'
+gulp.task 'watch:copy', (done)->
+	debug 'Starting'
+	gulp.watch paths.copy, (event)->
+		debug "CopyTasks: File #{event.path} was #{event.type}"
 		if Config.fingerprint
 			Plugins.runsequence 'copy', 'manifest:copy', 'pages'
 		else
 			Plugins.runsequence 'copy'
+	debug "watching copy: #{paths.copy}"
 
-	gulp.watch patterns, (event)->
-		debug 'File ' + event.path + ' was ' + event.type + ', running tasks...'
+gulp.task 'watch:patterns', (done)->
+	debug 'Starting'
+	gulp.watch paths.patterns, (event)->
+		debug "Patterns: File #{event.path} was #{event.type}"
 		Plugins.runsequence 'pages'
+	debug "watching patterns: #{paths.patterns}"
 
-
-	gulp.watch environments, (event)->
-		debug 'File ' + event.path + ' was ' + event.type + ', running tasks...'
+gulp.task 'watch:environments', (done)->
+	debug 'Starting'
+	gulp.watch paths.environments, (event)->
+		debug "Environments: File #{event.path} was #{event.type}"
 		Plugins.runsequence 'reload-config', 'compile'
+	debug "watching environments: #{paths.environments}"
+	

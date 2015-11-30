@@ -39,9 +39,7 @@ gulp.task 'pages', (done)->
 
 gulp.task 'compile', (done)->
 	run(['styles', 'scripts'],
-		'copy',
-		'manifest',
-		'pages',
+		'copy', 'manifest', 'pages',
 		()->
 			debug 'done'
 			done()

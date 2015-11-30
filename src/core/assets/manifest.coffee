@@ -26,7 +26,7 @@ class ManifestService
 		debug 'emptying manifest'
 		@db = {}
 
-	add: (file, tap)=>
+	add: (file, tap) =>
 		filePathSplit = file.path.split(@options.root+'/')
 		current = filePathSplit.length and filePathSplit[1] ? file.path
 		original = current

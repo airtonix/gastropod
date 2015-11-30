@@ -4,10 +4,10 @@ path = require 'path'
 
 #
 # Framework
+_ = require 'lodash'
 debug = require('debug')('gastropod/tasks/manifest')
 gulp = require 'gulp'
-revAll = require 'gulp-rev-all'
-_ = require 'lodash'
+async = require 'async-chainable'
 
 #
 # Project
@@ -21,16 +21,19 @@ Manifest = require '../core/assets/manifest'
 # Constants
 logger = new Logger('manifest')
 sources =
+	static: path.join(Config.target.root,
+			  		  Config.target.static,
+			  		  Config.filters.all)
 
 	styles: path.join(Config.target.root,
-			  Config.target.static,
-			  Config.target.styles,
-			  Config.filters.styles)
+					  Config.target.static,
+					  Config.target.styles,
+					  Config.filters.styles)
 
 	scripts: path.join(Config.target.root,
-			  Config.target.static,
-			  Config.target.scripts,
-			  Config.filters.scripts.all)
+					   Config.target.static,
+					   Config.target.scripts,
+					   Config.filters.scripts.all)
 	copy: do ->
 		parts = []
 		for task in Config.plugins.copy
@@ -41,10 +44,16 @@ sources =
 
 	all: path.join(Config.target.root, Config.target.static, Config.filters.all)
 
-debug 'copy:extras', sources.copy
 
+sources.all = [
+	sources.copy
+	sources.scripts
+	sources.styles
+]
 
-target = path.join Config.target.root, Config.target.static
+target = Config.target.root
+basepath = path.join(Config.target.root, Config.target.static)
+
 
 # set the root for the manifest
 # we want this done each run because
@@ -64,25 +73,42 @@ manifestFactory = (source)->
 		debug 'target', target
 		debug "Starting"
 
-		# Manifest.empty()
-
-		debug 'new manifest', Manifest
+		debug 'current manifest', Object.keys(Manifest.db).length
 
 		return gulp.src source
 			.pipe logger.incoming()
 			.pipe Plugins.plumber ErrorHandler('manifest')
 			.pipe Plugins.clean()
-			.pipe Plugins.if Config.fingerprint, Fingerprint.revision()
+			.pipe Plugins.if Config.fingerprint, Plugins.fingerprint.revision()
 			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
-			.pipe Plugins.if Config.fingerprint, Fingerprint.manifestFile()
+			.pipe Plugins.if Config.fingerprint, Plugins.fingerprint.manifestFile()
 			.pipe gulp.dest target
 			.on 'error', debug
 			.on 'finish', ->
 				debug "Finished"
 
-gulp.task 'manifest', manifestFactory(sources.all)
+gulp.task 'manifest', manifestFactory(sources.static)
+
+	# async()
+	# 	.then (next)->
+	# 		debug 'manifest:copy'
+	# 		Plugins.runsequence 'manifest:copy', next
+
+	# 	.then (next)->
+	# 		debug 'manifest:styles'
+	# 		Plugins.runsequence 'manifest:styles', next
+
+	# 	.then (next)->
+	# 		debug 'manifest:scripts'
+	# 		Plugins.runsequence 'manifest:scripts', next
+
+	# 	.end (err)->
+	# 		debug 'manifest:done'
+	# 		done()
+	# return
+
 gulp.task 'manifest:scripts', manifestFactory(sources.scripts)
 gulp.task 'manifest:styles', manifestFactory(sources.styles)
 gulp.task 'manifest:copy', manifestFactory(sources.copy)
