@@ -1,6 +1,6 @@
 {
   "name": "gastropod",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "dependencies": {
     "async-chainable": {
       "version": "1.7.15",
