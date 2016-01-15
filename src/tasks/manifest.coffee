@@ -5,8 +5,8 @@ path = require 'path'
 #
 # Framework
 _ = require 'lodash'
-gulp = require 'gulp'
 debug = require('debug')('gastropod/tasks/manifest')
+gulp = require 'gulp'
 async = require 'async-chainable'
 
 #
@@ -42,7 +42,8 @@ sources =
 			  					 Config.filters.all)
 		return parts
 
-debug 'copy:extras', sources.copy
+	all: path.join(Config.target.root, Config.target.static, Config.filters.all)
+
 
 sources.all = [
 	sources.copy
@@ -50,14 +51,18 @@ sources.all = [
 	sources.styles
 ]
 
-target = Config.target.root
-basepath = path.join(Config.target.root, Config.target.static)
+
+target = path.join(Config.target.root, Config.target.static)
+
 
 # set the root for the manifest
 # we want this done each run because
 # the config file may have changed (thus
 # the source of the trigger)
 Manifest.option 'root', path.join Config.target.root, Config.target.static
+
+Urls = Config.context.site.urls
+
 
 manifestFactory = (source)->
 	(done)->
@@ -66,40 +71,23 @@ manifestFactory = (source)->
 		debug 'target', target
 		debug "Starting"
 
-		debug 'current manifest', Object.keys(Manifest.db).length
+		debug "current manifest contains #{Object.keys(Manifest.db).length} objects"
 
-		return gulp.src source, base: Config.target.root
+		return gulp.src source
 			.pipe logger.incoming()
 			.pipe Plugins.plumber ErrorHandler('manifest')
 			.pipe Plugins.clean()
-			.pipe Plugins.if Config.fingerprint, Plugins.fingerprint().revision()
+			.pipe Plugins.if Config.fingerprint, Plugins.fingerprint.revision()
 			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
+			# .pipe Plugins.if Config.fingerprint, Plugins.fingerprint.manifestFile()
+			# .pipe gulp.dest target
 			.on 'error', debug
 			.on 'finish', ->
 				debug "Finished"
 
 gulp.task 'manifest', manifestFactory(sources.static)
-
-	# async()
-	# 	.then (next)->
-	# 		debug 'manifest:copy'
-	# 		Plugins.runsequence 'manifest:copy', next
-
-	# 	.then (next)->
-	# 		debug 'manifest:styles'
-	# 		Plugins.runsequence 'manifest:styles', next
-
-	# 	.then (next)->
-	# 		debug 'manifest:scripts'
-	# 		Plugins.runsequence 'manifest:scripts', next
-
-	# 	.end (err)->
-	# 		debug 'manifest:done'
-	# 		done()
-	# return
-
 gulp.task 'manifest:scripts', manifestFactory(sources.scripts)
 gulp.task 'manifest:styles', manifestFactory(sources.styles)
 gulp.task 'manifest:copy', manifestFactory(sources.copy)

@@ -24,7 +24,7 @@ ConfigStore = require('./config')
 #
 # Gastropod Class
 class Gastropod
-
+	logging: require './core/logging'
 	loadJobs: ->
 		new Q (resolve, reject)->
 			jobs = load({
