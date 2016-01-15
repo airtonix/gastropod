@@ -51,8 +51,8 @@ sources.all = [
 	sources.styles
 ]
 
-target = Config.target.root
-basepath = path.join(Config.target.root, Config.target.static)
+# target = Config.target.root
+target = path.join(Config.target.root, Config.target.static)
 
 
 # set the root for the manifest
@@ -62,9 +62,6 @@ basepath = path.join(Config.target.root, Config.target.static)
 Manifest.option 'root', path.join Config.target.root, Config.target.static
 
 Urls = Config.context.site.urls
-Fingerprint = new revAll
-	debug: true
-	prefix: path.join Urls.root, Urls.static
 
 manifestFactory = (source)->
 	(done)->
@@ -73,7 +70,7 @@ manifestFactory = (source)->
 		debug 'target', target
 		debug "Starting"
 
-		debug 'current manifest', Object.keys(Manifest.db).length
+		debug "current manifest contains #{Object.keys(Manifest.db).length} objects"
 
 		return gulp.src source
 			.pipe logger.incoming()
@@ -83,32 +80,13 @@ manifestFactory = (source)->
 			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
-			.pipe Plugins.if Config.fingerprint, Plugins.fingerprint.manifestFile()
-			.pipe gulp.dest target
+			# .pipe Plugins.if Config.fingerprint, Plugins.fingerprint.manifestFile()
+			# .pipe gulp.dest target
 			.on 'error', debug
 			.on 'finish', ->
 				debug "Finished"
 
 gulp.task 'manifest', manifestFactory(sources.static)
-
-	# async()
-	# 	.then (next)->
-	# 		debug 'manifest:copy'
-	# 		Plugins.runsequence 'manifest:copy', next
-
-	# 	.then (next)->
-	# 		debug 'manifest:styles'
-	# 		Plugins.runsequence 'manifest:styles', next
-
-	# 	.then (next)->
-	# 		debug 'manifest:scripts'
-	# 		Plugins.runsequence 'manifest:scripts', next
-
-	# 	.end (err)->
-	# 		debug 'manifest:done'
-	# 		done()
-	# return
-
 gulp.task 'manifest:scripts', manifestFactory(sources.scripts)
 gulp.task 'manifest:styles', manifestFactory(sources.styles)
 gulp.task 'manifest:copy', manifestFactory(sources.copy)

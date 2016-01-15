@@ -10,10 +10,8 @@ _ = require 'lodash'
 #
 # Project
 revAll = require 'gulp-rev-all'
-Hasher = require '../core/assets/hasher'
-Replacer = require '../core/assets/replacer'
+# Hasher = require '../core/assets/hasher'
+# Replacer = require '../core/assets/replacer'
 
 
-module.exports = ->
-	new revAll
-		debug: true
+module.exports = new revAll debug: true
