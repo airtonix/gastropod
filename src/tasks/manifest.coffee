@@ -10,6 +10,8 @@ gulp = require 'gulp'
 async = require 'async-chainable'
 vinylPaths = require 'vinyl-paths'
 del = require 'del'
+Q = require 'bluebird'
+
 
 #
 # Project
@@ -77,18 +79,26 @@ manifestFactory = (source)->
 
 		debug "current manifest contains #{Object.keys(Manifest.db).length} objects"
 
-		return gulp.src source
-			.pipe logger.incoming()
-			.pipe Plugins.plumber ErrorHandler('manifest')
-			.pipe vinylPaths(del)
-			.pipe Plugins.if Config.fingerprint, Plugins.fingerprint.revision()
-			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
-			.pipe logger.outgoing()
-			.pipe gulp.dest target
-			# .pipe Plugins.if Config.fingerprint, Plugins.fingerprint.manifestFile()
-			# .pipe gulp.dest target
-			.on 'error', debug
-			.on 'finish', -> debug "Finished"
+		return new Q (resolve, reject)->
+
+			vinylPathsPipe = vinylPaths()
+
+			return gulp.src source
+				.pipe logger.incoming()
+				.pipe Plugins.plumber ErrorHandler('manifest')
+				.pipe vinylPathsPipe
+				.pipe Plugins.if Config.fingerprint, Plugins.fingerprint.revision()
+				.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
+				.pipe logger.outgoing()
+				.pipe gulp.dest target
+				# .pipe Plugins.if Config.fingerprint, Plugins.fingerprint.manifestFile()
+				# .pipe gulp.dest target
+				.on 'end', ->
+					del vinylPathsPipe.paths
+						.then resolve
+						.catch reject
+				.on 'error', debug
+				.on 'finish', -> debug "Finished"
 
 gulp.task 'manifest', manifestFactory(sources.static)
 gulp.task 'manifest:scripts', manifestFactory(sources.scripts)

@@ -42,7 +42,7 @@
     "content-tree": "0.0.1",
     "debug": "^2.2.0",
     "deepmerge": "^0.2.10",
-    "del": "^1.2.1",
+    "del": "^2.2.0",
     "errorhandler": "^1.4.2",
     "event-stream": "^3.3.1",
     "fallbackswigloader": "^1.0.0",
