@@ -8,6 +8,8 @@ _ = require 'lodash'
 debug = require('debug')('gastropod/tasks/manifest')
 gulp = require 'gulp'
 async = require 'async-chainable'
+vinylPaths = require 'vinyl-paths'
+del = require 'del'
 
 #
 # Project
@@ -71,12 +73,14 @@ manifestFactory = (source)->
 		debug 'target', target
 		debug "Starting"
 
+		Manifest.empty()
+
 		debug "current manifest contains #{Object.keys(Manifest.db).length} objects"
 
 		return gulp.src source
 			.pipe logger.incoming()
 			.pipe Plugins.plumber ErrorHandler('manifest')
-			.pipe Plugins.clean()
+			.pipe vinylPaths(del)
 			.pipe Plugins.if Config.fingerprint, Plugins.fingerprint.revision()
 			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
 			.pipe logger.outgoing()
@@ -84,8 +88,7 @@ manifestFactory = (source)->
 			# .pipe Plugins.if Config.fingerprint, Plugins.fingerprint.manifestFile()
 			# .pipe gulp.dest target
 			.on 'error', debug
-			.on 'finish', ->
-				debug "Finished"
+			.on 'finish', -> debug "Finished"
 
 gulp.task 'manifest', manifestFactory(sources.static)
 gulp.task 'manifest:scripts', manifestFactory(sources.scripts)

@@ -7,12 +7,15 @@ path = require 'path'
 debug = require('debug')('gastropod/core/assets/hasher')
 
 ###*
- * [hasher description]
+ * https://www.npmjs.com/package/gulp-rev-all#transformfilename
  * @param  {[type]} file [description]
  * @param  {[type]} hash [description]
  * @return {[type]}      [description]
 ###
 module.exports = (file, hash)->
 	ext = path.extname(file.path)
-	output = hash.substr(0, 5) + '.'  + path.basename(file.path, ext) + ext
+	basename = path.basename(file.path, ext)
+	debug('renaming', basename)
+
+	output = hash.substr(0, 5) + '.'  + basename + ext
 	return output

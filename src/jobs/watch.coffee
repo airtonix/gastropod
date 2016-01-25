@@ -16,6 +16,7 @@ Plugins = require '../plugins'
 paths =
 	patterns: (path.join(pattern, Config.filters.all) for pattern in Config.source.patterns)
 	environments: path.join(process.cwd(), 'config', Config.filters.all)
+	data: path.join(Config.source.root, Config.source.data, Config.filters.all)
 	project: path.join(Config.source.root, Config.filters.all)
 	scripts: path.join(Config.source.root, Config.source.scripts, Config.filters.all)
 	styles: path.join(Config.source.root, Config.source.styles, Config.filters.all)
@@ -33,6 +34,7 @@ gulp.task 'watch', (done)->
 		'watch:styles'
 		'watch:copy'
 		'watch:patterns'
+		'watch:data'
 		'watch:environments'
 	]
 
@@ -55,6 +57,13 @@ gulp.task 'watch:styles', (done)->
 		else
 			Plugins.runsequence 'styles'
 	debug "watching styles: #{paths.styles}"
+
+gulp.task 'watch:data', (done)->
+	debug 'Starting'
+	gulp.watch paths.data, (event)->
+		debug "Data: File #{event.path} was #{event.type}"
+		Plugins.runsequence 'pages'
+	debug "watching data: #{paths.data}"
 
 gulp.task 'watch:copy', (done)->
 	debug 'Starting'

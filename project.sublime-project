@@ -18,7 +18,10 @@
 			"path": "test"
 		},
 		{
-			"path": "/home/zenobius/Projects/Mine/gastropod-task-webpack"
+			"path": "C:\\Users\\zenobius\\Projects\\gastropod-task-webpack"
+		},
+		{
+			"path": "C:\\Users\\zenobius\\Projects\\gastropod-task-sass"
 		}
 	]
 }

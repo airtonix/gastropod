@@ -5,10 +5,13 @@ path = require 'path'
 #
 # Framework
 debug = require('debug')('gastropod/core/assets/replacer')
+unixify = require 'unixify'
 
 #
 # Project
 {Config} = require '../../config'
+Manifest = require './manifest'
+
 
 ###*
  * [hasher description]
@@ -16,12 +19,24 @@ debug = require('debug')('gastropod/core/assets/replacer')
  * @param  {[type]} hash [description]
  * @return {[type]}      [description]
 ###
+
 module.exports = (fragment, replaceRegExp, newReference, referencedFile)->
-	debug 'replacing:', newReference, referencedFile.path
-
+	
 	regExp = replaceRegExp
-	root = path.resolve Config.source.root
-	referencedFilePath = referencedFile.path.replace root + '/', ''
-	reference = referencedFilePath.replace /([\d\w]+\.)/, ''
+	root = unixify path.resolve Manifest.options.root
+	refPath = unixify path.resolve referencedFile.path
 
-	fragment.contents = fragment.contents.replace reference, newReference
+	debug 'root:', root
+	debug 'replacing:', newReference, refPath
+
+	# attempt to remove the root from the path
+	reference = refPath
+		.replace(root, '')
+		.replace(/^(\/|\\)+/, '')
+
+	# replace reference with new filename
+	result = fragment.contents.replace reference, newReference
+
+	debug 'reference', reference
+
+	fragment.contents = result

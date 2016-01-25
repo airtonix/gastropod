@@ -153,10 +153,11 @@ defaultPluginJs =
  * node-sass
  * @affects task:scss
 ###
-defaultPluginSass =
-	errLogToConsole: true
-	includePaths: [
-	]
+defaultPluginCss =
+	sass:
+		errLogToConsole: true
+		includePaths: [
+		]
 
 ###*
  * BrowserSync
@@ -182,5 +183,5 @@ module.exports =
 		fingerprint: defaultPluginFingerPrinter
 		minify: defaultPluginMinify
 		js: defaultPluginJs
-		sass: defaultPluginSass
+		css: defaultPluginCss
 		server: defaultPluginServer
