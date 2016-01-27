@@ -1,6 +1,6 @@
 {
   "name": "gastropod",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Opinionated patternlab workflow using gulp",
   "main": "index.js",
   "bin": {
@@ -10,7 +10,6 @@
     "preinstall": "npm config set msvs_version 2012",
     "test": "mocha -R spec --recursive",
     "dev": "mocha -R spec --recursive -w",
-
     "merge-to-master": "git checkout master && git merge develop",
     "merge-to-develop": "git checkout develop && git merge master",
     "pre-shrinkwrap": "rm shrinkwrap.json",
