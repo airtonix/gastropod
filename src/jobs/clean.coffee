@@ -10,4 +10,5 @@ Plugins = require '../plugins'
 
 #
 # Exportable
-gulp.task 'clean', [ 'clean:scripts', 'clean:styles', 'clean:copies', 'clean:pages']
+gulp.task 'clean', (done)->
+	Plugins.runsequence 'clean:scripts', 'clean:styles', 'clean:copies', 'clean:pages', done
