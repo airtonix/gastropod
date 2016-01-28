@@ -12,6 +12,7 @@ gulp = require 'gulp'
 del = require 'del'
 vinylPaths = require 'vinyl-paths'
 _ = require 'lodash'
+Q = require 'bluebird'
 
 
 #
@@ -20,43 +21,44 @@ _ = require 'lodash'
 Plugins = require '../plugins'
 {ErrorHandler,Logger} = require '../core/logging'
 
+
 gulp.task 'clean:scripts', (done)->
-	logger = new Logger('clean:scripts')
-	source = path.join(Config.target.root,
+	sources = []
+	sources.push path.join(Config.target.root,
 					   Config.target.static,
 					   Config.target.scripts,
 					   Config.filters.all)
 
-	debug 'scripts: > source', source
+	debug 'scripts: > sources', sources
 	debug "Starting: Scripts"
 
-	return gulp.src source, read: false
-		.pipe logger.incoming()
-		.pipe Plugins.plumber ErrorHandler('clean:scripts')
-		.pipe vinylPaths(del)
-		.on 'error', (err)-> debug err
-		.on 'finish', ()-> debug "Finished: scripts"
-
+	return new Q (resolve, reject)->
+		del(sources)
+			.then (paths)->
+				debug 'Finished: clean:scripts'
+			.then(resolve)
+			.catch(reject)
+		return
 
 gulp.task 'clean:styles', (done)->
-	logger = new Logger('clean:styles')
-	source = path.join(Config.target.root,
+	sources = []
+	sources.push path.join(Config.target.root,
 					   Config.target.static,
 					   Config.target.styles,
 					   Config.filters.all)
 
-	debug 'styles: > source', source
+	debug 'styles: > sources', sources
 	debug "Starting: styles"
 
-	return gulp.src source, read: false
-		.pipe logger.incoming()
-		.pipe Plugins.plumber ErrorHandler('clean:styles')
-		.pipe vinylPaths(del)
-		.on 'error', (err)-> debug err
-		.on 'finish', ()-> debug "Finished: styles"
+	return new Q (resolve, reject)->
+		del(sources)
+			.then (paths)->
+				debug 'Finished: clean:styles'
+			.then(resolve)
+			.catch(reject)
+		return
 
 
-cleanLogger = new Logger('clean:copies')
 gulp.task 'clean:copies', (done)->
 	debug 'enter: copies >', Config.plugins.copy
 	if not Config.plugins.copy
@@ -65,30 +67,25 @@ gulp.task 'clean:copies', (done)->
 	else
 		debug "Starting: copies"
 
-	Stream = Plugins.merge()
-
-	Config.plugins.copy.map (task)->
+	sources = Config.plugins.copy.map (task)->
+		debug 'building copy source', task.dest
 		source = path.join(process.cwd(),
 						   Config.target.root,
 						   task.dest)
 
-		debug "copies: > source", source
+		debug "copies: > sources", source
+		return source
 
-		taskStream = gulp.src source, read: false
-			.pipe cleanLogger.incoming()
-			.pipe Plugins.plumber ErrorHandler('clean:copy')
-			.pipe vinylPaths(del)
-			.on 'error', (err)-> debug err
-			.on 'end', ()-> debug "Finished: clean:copy [#{source}]"
-
-		Stream.add taskStream
+	return new Q (resolve, reject)->
+		del(sources)
+			.then (paths)->
+				debug 'Finished: clean:copies'
+			.then(resolve)
+			.catch(reject)
 		return
 
-	return Stream
-
 gulp.task 'clean:pages', (done)->
-	logger = new Logger('clean:pages')
-	source = [
+	sources = [
 		path.join(Config.target.root, Config.target.pages, Config.filters.all)
 		"!#{path.join Config.target.root, Config.target.static, Config.target.styles}{,/**}"
 		"!#{path.join Config.target.root, Config.target.static, Config.target.scripts}{,/**}"
@@ -96,13 +93,14 @@ gulp.task 'clean:pages', (done)->
 		"!#{path.join Config.target.root, Config.target.static, Config.target.images}{,/**}"
 	]
 
-	debug 'pages: > source', source
+	debug 'pages: > sources', sources
 	debug "Starting: pages"
 
-	return gulp.src source, read: false
-		.pipe Plugins.plumber ErrorHandler('clean:pages')
-		.pipe logger.incoming()
-		.pipe vinylPaths(del)
-		.on 'error', (err)-> debug err
-		.on 'end', ()->
-			debug "Finished: pages"
+	return new Q (resolve, reject)->
+		del(sources)
+			.then (paths)->
+				debug 'Finished: clean:pages'
+			.then(resolve)
+			.catch(reject)
+		return
+

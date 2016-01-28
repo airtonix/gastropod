@@ -28,8 +28,7 @@ gulp.task 'reload-config', (done)->
 	debug 'Reloading Config'
 	{Config} = requireUncached('../config')
 
-gulp.task 'watch', (done)->
-	Plugins.runsequence [
+gulp.task 'watch', [
 		'watch:scripts'
 		'watch:styles'
 		'watch:copy'
