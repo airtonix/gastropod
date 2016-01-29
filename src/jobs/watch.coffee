@@ -42,7 +42,7 @@ gulp.task 'watch:scripts', (done)->
 	gulp.watch paths.scripts, (event)->
 		debug "Scripts: File #{event.path} was #{event.type}"
 		if Config.fingerprint
-			Plugins.runsequence 'scripts', 'manifest:scripts', 'pages'
+			Plugins.runsequence 'clean:scripts', 'scripts', 'manifest:scripts', 'pages', 'documentation'
 		else
 			Plugins.runsequence 'scripts'
 	debug "watching scripts: #{paths.scripts}"
@@ -52,7 +52,7 @@ gulp.task 'watch:styles', (done)->
 	gulp.watch paths.styles, (event)->
 		debug "Styles: File #{event.path} was #{event.type}"
 		if Config.fingerprint
-			Plugins.runsequence 'styles', 'manifest:styles', 'pages'
+			Plugins.runsequence 'clean:styles', 'styles', 'manifest:styles', 'pages', 'documentation'
 		else
 			Plugins.runsequence 'styles'
 	debug "watching styles: #{paths.styles}"
@@ -61,7 +61,7 @@ gulp.task 'watch:data', (done)->
 	debug 'Starting'
 	gulp.watch paths.data, (event)->
 		debug "Data: File #{event.path} was #{event.type}"
-		Plugins.runsequence 'pages'
+		Plugins.runsequence 'pages', 'documentation'
 	debug "watching data: #{paths.data}"
 
 gulp.task 'watch:copy', (done)->
@@ -69,7 +69,7 @@ gulp.task 'watch:copy', (done)->
 	gulp.watch paths.copy, (event)->
 		debug "CopyTasks: File #{event.path} was #{event.type}"
 		if Config.fingerprint
-			Plugins.runsequence 'copy', 'manifest:copy', 'pages'
+			Plugins.runsequence 'clean:copies', 'copy', 'manifest:copy', 'pages', 'documentation'
 		else
 			Plugins.runsequence 'copy'
 	debug "watching copy: #{paths.copy}"
@@ -78,7 +78,7 @@ gulp.task 'watch:patterns', (done)->
 	debug 'Starting'
 	gulp.watch paths.patterns, (event)->
 		debug "Patterns: File #{event.path} was #{event.type}"
-		Plugins.runsequence 'pages'
+		Plugins.runsequence 'clean:pages', 'pages', 'documentation'
 	debug "watching patterns: #{paths.patterns}"
 
 gulp.task 'watch:environments', (done)->

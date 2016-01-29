@@ -12,8 +12,9 @@ path = require 'path'
 defaultPipeline =
 	templates: ['swig']
 	scripts: ['browserify']
-	styles: ['scss']
+	styles: []
 	copy: ['copy:extras']
+	docs: ['docjs']
 
 ###*
  * Filters to dictate what files to operate on
@@ -25,7 +26,7 @@ defaultFilters =
 	images: '**/*.{png,jpg,jpeg,gif,bmp,svg,apng}'
 	styles: '**/*.{scss,css}'
 	scripts:
-		all: '**/*.{js,coffee,litcoffee}'
+		all: '**/**.{js,coffee,litcoffee}'
 		modules: '**/{app,*-module,main}.{js,coffee,litcoffee}'
 	patterns: '**/*.html'
 
@@ -42,6 +43,7 @@ defaultTarget =
 	images: './images'
 	styles: './styles'
 	scripts: './scripts'
+	docs: './docs'
 	pages: '' # target root is the site root
 
 ###*
@@ -167,6 +169,12 @@ defaultPluginServer =
 	open: false
 	notify: false
 
+
+###*
+ * Documentation
+###
+defaultPluginDocumentation = {}
+
 #
 # Export the default configuration
 #
@@ -182,6 +190,7 @@ module.exports =
 		prettify: defaultPluginPrettify
 		fingerprint: defaultPluginFingerPrinter
 		minify: defaultPluginMinify
+		documentation: defaultPluginDocumentation
 		js: defaultPluginJs
 		css: defaultPluginCss
 		server: defaultPluginServer

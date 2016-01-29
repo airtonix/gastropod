@@ -50,6 +50,8 @@ class ManifestService
 
 		if 'revPathOriginal' of file
 			original = unixify(file.revPathOriginal).replace(@pattern(), '$3')
+		if original of @db
+			@db[original] = null
 
 		debug 'manifest.add', original, ' = ', current
 

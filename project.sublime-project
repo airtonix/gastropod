@@ -19,11 +19,15 @@
 		},
 		{
 			"name": "ADDON-webpack",
-			"path": "../gastropod-task-webpack"
+			"path": "/home/zjiricek/Projects/mine/gastropod-task-webpack"
 		},
 		{
 			"name": "ADDON-sass",
-			"path": "../gastropod-task-sass"
+			"path": "/home/zjiricek/Projects/mine/gastropod-task-sass"
+		},
+		{
+			"name": "ADDON-docs",
+			"path": "/home/zjiricek/Projects/mine/gastropod-task-docs"
 		}
 	]
 }

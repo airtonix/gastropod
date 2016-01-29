@@ -31,6 +31,12 @@ gulp.task 'copy', (done)->
 	debug 'running', tasks
 	run.apply run, tasks
 
+gulp.task 'documentation', (done)->
+	tasks = ['clean:docs' ].concat pipeline.docs
+	tasks.push done
+	debug 'running', tasks
+	run.apply run, tasks
+
 gulp.task 'pages', (done)->
 	tasks = ['clean:pages' ].concat pipeline.templates
 	tasks.push done
@@ -39,7 +45,10 @@ gulp.task 'pages', (done)->
 
 gulp.task 'compile', (done)->
 	run(['styles', 'scripts'],
-		'copy', 'manifest', 'pages',
+		'copy',
+		'manifest',
+		'pages',
+		'documentation', 
 		()->
 			debug 'done'
 			done()

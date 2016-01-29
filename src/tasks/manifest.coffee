@@ -11,7 +11,7 @@ async = require 'async-chainable'
 vinylPaths = require 'vinyl-paths'
 del = require 'del'
 Q = require 'bluebird'
-
+through = require 'through2'
 
 #
 # Project
@@ -75,30 +75,31 @@ manifestFactory = (source)->
 		debug 'target', target
 		debug "Starting"
 
-		Manifest.empty()
 
 		debug "current manifest contains #{Object.keys(Manifest.db).length} objects"
+		
+		vinyl = vinylPaths()
 
 		return new Q (resolve, reject)->
-
-			vinylPathsPipe = vinylPaths()
 
 			return gulp.src source
 				.pipe logger.incoming()
 				.pipe Plugins.plumber ErrorHandler('manifest')
-				.pipe vinylPathsPipe
+				.pipe vinyl
 				.pipe Plugins.if Config.fingerprint, Plugins.fingerprint.revision()
+				.pipe Plugins.tap (file, tap)->
+					debug "Deleting:file", file.revOrigPath
+					del.sync([file.revOrigPath])
+					return
 				.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
 				.pipe logger.outgoing()
 				.pipe gulp.dest target
 				# .pipe Plugins.if Config.fingerprint, Plugins.fingerprint.manifestFile()
 				# .pipe gulp.dest target
-				.on 'end', ->
-					del vinylPathsPipe.paths
-						.then resolve
-						.catch reject
-				.on 'error', debug
-				.on 'finish', -> debug "Finished"
+				.on 'finish', ->
+					debug "Finished"
+					resolve()
+				.on 'error', reject
 
 gulp.task 'manifest', manifestFactory(sources.static)
 gulp.task 'manifest:scripts', manifestFactory(sources.scripts)

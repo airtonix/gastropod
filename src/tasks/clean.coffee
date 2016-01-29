@@ -36,7 +36,7 @@ gulp.task 'clean:scripts', (done)->
 		del(sources)
 			.then (paths)->
 				debug 'Finished: clean:scripts'
-			.then(resolve)
+			.then( ()=> resolve())
 			.catch(reject)
 		return
 
@@ -84,13 +84,33 @@ gulp.task 'clean:copies', (done)->
 			.catch(reject)
 		return
 
+gulp.task 'clean:docs', (done)->
+	sources = []
+	sources.push path.join(Config.target.root,
+					   Config.target.static,
+					   Config.target.docs,
+					   Config.filters.all)
+
+	debug 'documentation: > sources', sources
+	debug "Starting: documentation"
+
+	return new Q (resolve, reject)->
+		del(sources)
+			.then (paths)->
+				debug 'Finished: clean:documentation'
+			.then(resolve)
+			.catch(reject)
+		return
+
+
 gulp.task 'clean:pages', (done)->
 	sources = [
 		path.join(Config.target.root, Config.target.pages, Config.filters.all)
 		"!#{path.join Config.target.root, Config.target.static, Config.target.styles}{,/**}"
 		"!#{path.join Config.target.root, Config.target.static, Config.target.scripts}{,/**}"
 		"!#{path.join Config.target.root, Config.target.static, Config.target.fonts}{,/**}"
-		"!#{path.join Config.target.root, Config.target.static, Config.target.images}{,/**}"
+		"!#{path.join Config.target.root, Config.target.static, Config.target.fonts}{,/**}"
+		"!#{path.join Config.target.root, Config.target.static, Config.target.docs}{,/**}"
 	]
 
 	debug 'pages: > sources', sources
