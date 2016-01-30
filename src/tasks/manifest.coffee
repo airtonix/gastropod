@@ -23,7 +23,6 @@ Manifest = require '../core/assets/manifest'
 
 #
 # Constants
-logger = new Logger('manifest')
 sources =
 	static: path.join(Config.target.root,
 			  		  Config.target.static,
@@ -68,40 +67,35 @@ Manifest.option 'root', path.join Config.target.root, Config.target.static
 Urls = Config.context.site.urls
 
 
-manifestFactory = (source)->
-	(done)->
+manifestFactory = (name, source)->
+	logPrefix = "Manifest[#{name}]"
+	logger = new Logger(logPrefix)
+	handleErrors = ErrorHandler(logPrefix)
+
+	return (done)->
 
 		debug 'source', source
 		debug 'target', target
 		debug "Starting"
-
-
 		debug "current manifest contains #{Object.keys(Manifest.db).length} objects"
-		
-		vinyl = vinylPaths()
+		fingerprinter = Plugins.fingerprint()
 
-		return new Q (resolve, reject)->
+		return gulp.src source
+			.pipe logger.incoming()
+			.pipe Plugins.plumber handleErrors
+			.pipe Plugins.if Config.fingerprint, fingerprinter.revision()
+			.pipe Plugins.tap (file, tap)->
+				debug "Deleting:file", file.revOrigPath
+				del.sync([file.revOrigPath])
+				return
+			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
+			.pipe logger.outgoing()
+			.pipe gulp.dest target
+			# .pipe Plugins.if Config.fingerprint, fingerprinter.manifestFile()
+			# .pipe gulp.dest target
+			.on 'finish', -> debug "Finished"
 
-			return gulp.src source
-				.pipe logger.incoming()
-				.pipe Plugins.plumber ErrorHandler('manifest')
-				.pipe vinyl
-				.pipe Plugins.if Config.fingerprint, Plugins.fingerprint.revision()
-				.pipe Plugins.tap (file, tap)->
-					debug "Deleting:file", file.revOrigPath
-					del.sync([file.revOrigPath])
-					return
-				.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
-				.pipe logger.outgoing()
-				.pipe gulp.dest target
-				# .pipe Plugins.if Config.fingerprint, Plugins.fingerprint.manifestFile()
-				# .pipe gulp.dest target
-				.on 'finish', ->
-					debug "Finished"
-					resolve()
-				.on 'error', reject
-
-gulp.task 'manifest', manifestFactory(sources.static)
-gulp.task 'manifest:scripts', manifestFactory(sources.scripts)
-gulp.task 'manifest:styles', manifestFactory(sources.styles)
-gulp.task 'manifest:copy', manifestFactory(sources.copy)
+gulp.task 'manifest', manifestFactory('all', sources.static)
+gulp.task 'manifest:scripts', manifestFactory('scripts', sources.scripts)
+gulp.task 'manifest:styles', manifestFactory('styles', sources.styles)
+gulp.task 'manifest:copy', manifestFactory('copy', sources.copy)
