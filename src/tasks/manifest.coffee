@@ -24,9 +24,12 @@ Manifest = require '../core/assets/manifest'
 #
 # Constants
 sources =
+	root: path.join(Config.target.root,
+					Config.target.static)
+
 	static: path.join(Config.target.root,
-			  		  Config.target.static,
-			  		  Config.filters.all)
+					Config.target.static,
+					Config.filters.all)
 
 	styles: path.join(Config.target.root,
 					  Config.target.static,
@@ -78,22 +81,23 @@ manifestFactory = (name, source)->
 		debug 'target', target
 		debug "Starting"
 		debug "current manifest contains #{Object.keys(Manifest.db).length} objects"
-		fingerprinter = Plugins.fingerprint()
 
-		return gulp.src source
+
+		fingerprinter = Plugins.fingerprint()
+		vinyl = vinylPaths()
+
+		return gulp.src source, base: sources.root
 			.pipe logger.incoming()
+			.pipe vinyl
 			.pipe Plugins.plumber handleErrors
 			.pipe Plugins.if Config.fingerprint, fingerprinter.revision()
-			.pipe Plugins.tap (file, tap)->
-				debug "Deleting:file", file.revOrigPath
-				del.sync([file.revOrigPath])
-				return
 			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
-			# .pipe Plugins.if Config.fingerprint, fingerprinter.manifestFile()
-			# .pipe gulp.dest target
 			.on 'finish', -> debug "Finished"
+			.on 'end', ->
+				debug "deleting originals:", vinyl.paths
+				return del(vinyl.paths)
 
 gulp.task 'manifest', manifestFactory('all', sources.static)
 gulp.task 'manifest:scripts', manifestFactory('scripts', sources.scripts)

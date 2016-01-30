@@ -113,11 +113,8 @@ gulp.task 'clean:docs', (done)->
 gulp.task 'clean:pages', (done)->
 	sources = [
 		path.join(Config.target.root, Config.target.pages, Config.filters.all)
-		"!#{path.join Config.target.root, Config.target.static, Config.target.styles}{,/**}"
-		"!#{path.join Config.target.root, Config.target.static, Config.target.scripts}{,/**}"
-		"!#{path.join Config.target.root, Config.target.static, Config.target.fonts}{,/**}"
-		"!#{path.join Config.target.root, Config.target.static, Config.target.fonts}{,/**}"
-		"!#{path.join Config.target.root, Config.target.static, Config.target.docs}{,/**}"
+		"!#{path.join Config.target.root, Config.target.static}"
+		"!#{path.join Config.target.root, Config.target.static}/**"
 	]
 
 	debug 'pages: > sources', sources
