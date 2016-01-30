@@ -32,19 +32,19 @@ class Logger
 		Logger.spawn "#{@name}/{name}"
 
 	through: (level, itemTpl="<%= file.relative %>", collectionTpl="<%= count %> items.")->
-		@level = level
-		@itemTpl = _.template itemTpl
-		@collectionTpl = _.template collectionTpl
+		level = level
+		itemTpl = _.template itemTpl
+		collectionTpl = _.template collectionTpl
 		count = 0
 
 		item = (file, enc, done)=>
 			count++
 			file.size = prettyBytes String(file.contents).length
-			@msg util.colors.grey @itemTpl file: file
+			@msg util.colors.grey itemTpl file: file
 			done(null, file)
 
 		end = (done)=>
-			@msg util.colors.grey @collectionTpl count: count
+			@msg util.colors.grey collectionTpl count: count
 			count = null
 			done()
 
