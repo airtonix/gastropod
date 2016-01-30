@@ -26,8 +26,12 @@
 			"path": "/home/zjiricek/Projects/mine/gastropod-task-sass"
 		},
 		{
-			"name": "ADDON-docs",
+			"name": "ADDON-documentation",
 			"path": "/home/zjiricek/Projects/mine/gastropod-task-docs"
+		},
+		{
+			"name": "ADDON-mocha",
+			"path": "/home/zjiricek/Projects/mine/gastropod-task-mocha"
 		}
 	]
 }

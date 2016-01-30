@@ -10,7 +10,6 @@ path = require 'path'
 debug = require('debug')('gastropod/tasks/clean')
 gulp = require 'gulp'
 del = require 'del'
-vinylPaths = require 'vinyl-paths'
 _ = require 'lodash'
 Q = require 'bluebird'
 
@@ -32,13 +31,12 @@ gulp.task 'clean:scripts', (done)->
 	debug 'scripts: > sources', sources
 	debug "Starting: Scripts"
 
-	return new Q (resolve, reject)->
-		del(sources)
-			.then (paths)->
-				debug 'Finished: clean:scripts'
-			.then( ()=> resolve())
-			.catch(reject)
-		return
+	return del(sources)
+		.then (paths)->
+			debug "Finished: clean:scripts #{paths.length} files"
+			( debug("> Cleaned #{file}") for file in paths)
+		.catch (err)->
+			debug 'Error: clean:scripts', err
 
 gulp.task 'clean:styles', (done)->
 	sources = []
@@ -50,13 +48,16 @@ gulp.task 'clean:styles', (done)->
 	debug 'styles: > sources', sources
 	debug "Starting: styles"
 
-	return new Q (resolve, reject)->
-		del(sources)
-			.then (paths)->
-				debug 'Finished: clean:styles'
-			.then(resolve)
-			.catch(reject)
-		return
+	# return new Q (resolve, reject)->
+	del(sources)
+		.then (paths)->
+			debug "Finished: clean:styles #{paths.length} files"
+			( debug("> Cleaned #{file}") for file in paths)
+			done()
+		.catch (err)->
+			debug 'Error: clean:styles', err
+			done(err)
+	return
 
 
 gulp.task 'clean:copies', (done)->
@@ -79,9 +80,12 @@ gulp.task 'clean:copies', (done)->
 	return new Q (resolve, reject)->
 		del(sources)
 			.then (paths)->
-				debug 'Finished: clean:copies'
-			.then(resolve)
-			.catch(reject)
+				debug "Finished: clean:copies #{paths.length} files"
+				resolve()
+				return
+			.catch (err)->
+				debug 'Error: clean:copies', err
+				reject(err)
 		return
 
 gulp.task 'clean:docs', (done)->
@@ -97,9 +101,12 @@ gulp.task 'clean:docs', (done)->
 	return new Q (resolve, reject)->
 		del(sources)
 			.then (paths)->
-				debug 'Finished: clean:documentation'
-			.then(resolve)
-			.catch(reject)
+				debug "Finished: clean:documentation #{paths.length} files"
+				resolve()
+				return
+			.catch (err)->
+				debug 'Error: clean:documentation', err
+				reject(err)
 		return
 
 
@@ -119,8 +126,12 @@ gulp.task 'clean:pages', (done)->
 	return new Q (resolve, reject)->
 		del(sources)
 			.then (paths)->
-				debug 'Finished: clean:pages'
-			.then(resolve)
-			.catch(reject)
+				debug "Finished: clean:pages #{paths.length} files"
+				( debug("> Cleaned #{file}") for file in paths)
+				resolve()
+				return
+			.catch (err)->
+				debug 'Error: clean:pages', err
+				reject(err)
 		return
 
