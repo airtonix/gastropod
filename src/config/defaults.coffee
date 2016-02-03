@@ -15,6 +15,7 @@ defaultPipeline =
 	styles: []
 	copy: ['copy:extras']
 	docs: ['docjs']
+	deploy: []
 
 ###*
  * Filters to dictate what files to operate on
