@@ -27,6 +27,7 @@ debug 'watch paths created'
 gulp.task 'reload-config', (done)->
 	debug 'Reloading Config'
 	{Config} = requireUncached('../config')
+	done()
 
 gulp.task 'watch', [
 		'watch:scripts'
