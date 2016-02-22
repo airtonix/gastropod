@@ -48,7 +48,6 @@ gulp.task 'clean:styles', (done)->
 	debug 'styles: > sources', sources
 	debug "Starting: styles"
 
-	# return new Q (resolve, reject)->
 	del(sources)
 		.then (paths)->
 			debug "Finished: clean:styles #{paths.length} files"
@@ -116,6 +115,13 @@ gulp.task 'clean:pages', (done)->
 		"!#{path.join Config.target.root, Config.target.static}"
 		"!#{path.join Config.target.root, Config.target.static}/**"
 	]
+
+	for bit in Config.plugins.copy
+		debug 'Ignoring copy paths:', bit
+
+		sources.push "!#{path.join Config.target.root, bit}"
+		sources.push "!#{path.join Config.target.root, bit}/**"
+
 
 	debug 'pages: > sources', sources
 	debug "Starting: pages"

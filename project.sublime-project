@@ -16,22 +16,6 @@
 		{
 			"name": "Tests",
 			"path": "test"
-		},
-		{
-			"name": "ADDON-webpack",
-			"path": "/home/zjiricek/Projects/mine/gastropod-task-webpack"
-		},
-		{
-			"name": "ADDON-sass",
-			"path": "/home/zjiricek/Projects/mine/gastropod-task-sass"
-		},
-		{
-			"name": "ADDON-documentation",
-			"path": "/home/zjiricek/Projects/mine/gastropod-task-docs"
-		},
-		{
-			"name": "ADDON-mocha",
-			"path": "/home/zjiricek/Projects/mine/gastropod-task-mocha"
 		}
 	]
 }

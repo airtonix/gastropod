@@ -48,15 +48,6 @@ sources =
 			  					 Config.filters.all)
 		return parts
 
-	all: path.join(Config.target.root, Config.target.static, Config.filters.all)
-
-
-sources.all = [
-	sources.copy
-	sources.scripts
-	sources.styles
-]
-
 
 target = path.join(Config.target.root, Config.target.static)
 

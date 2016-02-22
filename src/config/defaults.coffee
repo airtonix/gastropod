@@ -29,6 +29,9 @@ defaultFilters =
 		all: '**/**.{js,coffee,litcoffee}'
 		modules: '**/{app,*-module,main}.{js,coffee,litcoffee}'
 	patterns: '**/*.html'
+	tests:
+		e2e: '**/*.e2e.{js,coffee}'
+		unit: '**/*.unit.{js,coffee}'
 
 ###*
  * List of targets for various jobs
@@ -57,6 +60,7 @@ defaultSource =
 	styles: './styles'
 	scripts: './scripts'
 	pages: './patterns/pages'
+	tests: './tests'
 	patterns: [
 		'./src/patterns',
 	]
