@@ -100,6 +100,7 @@
     "shimbro": "0.0.11",
     "slug": "^0.9.1",
     "stream-end": "^0.1.0",
+    "stream-browserify": "^2.0.1",
     "swig": "^1.4.2",
     "through-pipes": "0.0.4",
     "through2": "^2.0.0",
@@ -113,6 +114,6 @@
     "zeninjector": "^0.1.12"
   },
   "devDependencies": {
-    "mocha": "^2.3.3"
+    "mocha": "^2.4.2"
   }
 }
