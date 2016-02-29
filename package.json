@@ -12,8 +12,8 @@
     "dev": "mocha -R spec --recursive -w",
     "merge-to-master": "git checkout master && git merge develop",
     "merge-to-develop": "git checkout develop && git merge master && rm npm-shrinkwrap.json && git commit -am 'remove npm-shrinkwrap for develop'",
-    "pre-shrinkwrap": "rm npm-shrinkwrap.json",
-    "post-shrinkwrap": "git add npm-shrinkwrap.json && git commit -am 'preversion: recreate shrinkwrap'",
+    "preshrinkwrap": "rm npm-shrinkwrap.json",
+    "postshrinkwrap": "git add npm-shrinkwrap.json && git commit -am 'preversion: recreate shrinkwrap'",
     "push": "git push --all && git push --tags",
     "preversion": "npm run merge-to-master && npm shrinkwrap",
     "postversion": "npm run merge-to-develop && npm run push"
