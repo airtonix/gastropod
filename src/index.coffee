@@ -25,6 +25,7 @@ ConfigStore = require('./config')
 # Gastropod Class
 class Gastropod
 	logging: require './core/logging'
+
 	loadJobs: ->
 		new Q (resolve, reject)->
 			jobs = load({
@@ -75,7 +76,6 @@ class Gastropod
 			.then @loadTasks
 			.finally ->
 				debug 'gulp.tasks', Object.keys(gulp.tasks)
-
 
 	run: (tasks)->
 		if typeof tasks is 'string'

@@ -1,6 +1,6 @@
 {
   "name": "gastropod",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Opinionated patternlab workflow using gulp",
   "main": "index.js",
   "bin": {
@@ -15,7 +15,7 @@
     "preshrinkwrap": "rm npm-shrinkwrap.json",
     "postshrinkwrap": "git add npm-shrinkwrap.json && git commit -am 'preversion: recreate shrinkwrap'",
     "push": "git push --all && git push --tags",
-    "preversion": "npm run merge-to-master && npm run preshrinkwrap && npm shrinkwrap && npm run preshrinkwrap",
+    "preversion": "npm run merge-to-master && npm run preshrinkwrap && npm shrinkwrap && npm run postshrinkwrap",
     "postversion": "npm run merge-to-develop && npm run push"
   },
   "keywords": [
