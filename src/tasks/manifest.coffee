@@ -67,7 +67,8 @@ target = path.join(Config.target.root, Config.target.static)
 # the source of the trigger)
 Manifest.option 'root', path.join Config.target.root, Config.target.static
 
-Urls = Config.context.site.urls
+# @TODO deal with this Context Variable as a Builtin in `core/templates/context`
+Urls = Config.context.Site.urls
 
 
 manifestFactory = (name, source)->

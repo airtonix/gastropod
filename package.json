@@ -95,7 +95,6 @@
     "quip": "^0.1.2",
     "require-all": "^1.1.0",
     "require-uncached": "^1.0.2",
-    "rimraf": "^2.5.1",
     "run-sequence": "^1.1.1",
     "shimbro": "0.0.11",
     "slug": "^0.9.1",
