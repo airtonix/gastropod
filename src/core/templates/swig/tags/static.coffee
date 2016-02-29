@@ -8,11 +8,14 @@ REGEX_EXTERNAL_URL = /^(https?:\/\/|\/\/|#)/
 
 
 module.exports =
+	ext:
+		name: 'debug'
+		obj: debug
+
 	parse: (str, line, parser, types, stack, options)->
 		return true
 
 	compile: (compiler, args, content, parents, options, blockName)->
-
 		"""(function() {
 			var url = #{args[0]};
 			var urls = _ctx.Site && _ctx.Site.urls || null;
@@ -30,6 +33,7 @@ module.exports =
 			}
 
 			if (!url.match(#{REGEX_EXTERNAL_URL})) {
+				_ext.debug('found match ', url);
 
 				if(root.indexOf('/') == 0){
 					root = root.substring(1);
