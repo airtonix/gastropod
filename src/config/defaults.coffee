@@ -83,7 +83,7 @@ defaultCopy = [
  *    the supplied path.
 ###
 defaultContext =
-	site:
+	Site:
 		title:  "Untitled Website"
 		description: "A gastronically developed website"
 		owner:
@@ -97,7 +97,7 @@ defaultContext =
 	###*
 	 * Template context for modules
 	###
-	modules: {
+	Modules: {
 		# analytics:
 		# 	google:
 		# 		code: 'UA-12345678-1'

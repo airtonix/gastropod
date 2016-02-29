@@ -25,6 +25,8 @@ NOOP = ->
 PROJECT_GLOBAL_DATAROOT = path.join(process.cwd(),
 				 				    Config.source.root,
 				 				    Config.source.data)
+
+# @TODO add Context Variable `Site` as a Builtin in `core/templates/context`
 CONTEXT_BUILTINS =
 	Pkg: ()-> PackageJson
 	Manifest: ()-> Manifest.db

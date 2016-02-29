@@ -11,11 +11,11 @@
     "test": "mocha -R spec --recursive",
     "dev": "mocha -R spec --recursive -w",
     "merge-to-master": "git checkout master && git merge develop",
-    "merge-to-develop": "git checkout develop && git merge master",
-    "pre-shrinkwrap": "rm shrinkwrap.json",
-    "post-shrinkwrap": "git commit -am 'preversion: recreate shrinkwrap' ",
+    "merge-to-develop": "git checkout develop && git merge master && rm npm-shrinkwrap.json && git commit -am 'remove npm-shrinkwrap for develop'",
+    "preshrinkwrap": "rm npm-shrinkwrap.json",
+    "postshrinkwrap": "git add npm-shrinkwrap.json && git commit -am 'preversion: recreate shrinkwrap'",
     "push": "git push --all && git push --tags",
-    "preversion": "npm run merge-to-master && npm shrinkwrap",
+    "preversion": "npm run merge-to-master && npm run preshrinkwrap && npm shrinkwrap && npm run preshrinkwrap",
     "postversion": "npm run merge-to-develop && npm run push"
   },
   "keywords": [
@@ -95,7 +95,6 @@
     "quip": "^0.1.2",
     "require-all": "^1.1.0",
     "require-uncached": "^1.0.2",
-    "rimraf": "^2.5.1",
     "run-sequence": "^1.1.1",
     "shimbro": "0.0.11",
     "slug": "^0.9.1",

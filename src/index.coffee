@@ -33,7 +33,6 @@ class Gastropod
 			})
 			resolve(jobs)
 
-
 	loadTasks: ->
 		new Q (resolve, reject)->
 			tasks = load({
@@ -70,6 +69,7 @@ class Gastropod
 	init: (options={})->
 		ConfigStore.init(options)
 		@Config = ConfigStore.build()
+		@Plugins = require './plugins'
 		@loadAddons()
 			.then @loadJobs
 			.then @loadTasks
