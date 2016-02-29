@@ -116,6 +116,11 @@ gulp.task 'clean:pages', (done)->
 		"!#{path.join Config.target.root, Config.target.static}"
 		"!#{path.join Config.target.root, Config.target.static}/**"
 	]
+	for bit in Config.plugins.copy
+		bitPath = path.join Config.target.root, bit.dest
+		debug 'bitPath', bitPath
+		sources.push "!#{bitPath}"
+		sources.push "!#{bitPath}/**"
 
 	debug 'pages: > sources', sources
 	debug "Starting: pages"
@@ -127,8 +132,10 @@ gulp.task 'clean:pages', (done)->
 				( debug("> Cleaned #{file}") for file in paths)
 				resolve()
 				return
+
 			.catch (err)->
 				debug 'Error: clean:pages', err
 				reject(err)
-		return
+				return
 
+		return
