@@ -80,7 +80,7 @@ class Gastropod
 	run: (tasks)->
 		if typeof tasks is 'string'
 			tasks = [tasks, ]
-		run = require 'run-sequence'
+		run = require('run-sequence').use(gulp)
 		debug 'running tasks', tasks
 		run.apply run, tasks
 
