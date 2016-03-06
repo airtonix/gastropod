@@ -37,20 +37,23 @@ defaults =
  * @todo auto reload middleware with nodemon?
 ###
 gulp.task 'server', (done)->
-	done() unless Config.plugins.server
+	console.log Config.plugins.server
 
-	serverConfig = _.defaultsDeep defaults, Config.plugins.server
+	if Config.plugins.server
 
-	debug 'serverConfig', serverConfig
-	try
-		debug 'starting browsersync'
-		Plugins.browsersync.init serverConfig, (err, instance) ->
-			debug 'browsersync running'
-			# access to :
-			# - `instance.app` the Connect Server
-			done()
+		serverConfig = _.defaultsDeep defaults, Config.plugins.server
+		debug 'serverConfig', serverConfig
+		try
+			debug 'starting browsersync'
+			Plugins.browsersync.init serverConfig, (err, instance) ->
+				debug 'browsersync running'
+				# access to :
+				# - `instance.app` the Connect Server
+				done()
 
-	catch err
-		postmortem.prettyPrint err
-		done(err)
+		catch err
+			postmortem.prettyPrint err
+			done(err)
 
+	else
+		done()
