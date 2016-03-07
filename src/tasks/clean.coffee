@@ -31,12 +31,20 @@ gulp.task 'clean:scripts', (done)->
 	debug 'scripts: > sources', sources
 	debug "Starting: Scripts"
 
-	return del(sources)
-		.then (paths)->
-			debug "Finished: clean:scripts #{paths.length} files"
-			( debug("> Cleaned #{file}") for file in paths)
-		.catch (err)->
-			debug 'Error: clean:scripts', err
+	return new Q (resolve, reject)->
+		del(sources)
+			.then (paths)->
+				debug "Finished: clean:scripts #{paths.length} files"
+				( debug("> Cleaned #{file}") for file in paths)
+				resolve()
+				return
+
+			.catch (err)->
+				debug 'Error: clean:scripts', err
+				reject(err)
+				return
+
+		return
 
 gulp.task 'clean:styles', (done)->
 	sources = []
@@ -48,16 +56,20 @@ gulp.task 'clean:styles', (done)->
 	debug 'styles: > sources', sources
 	debug "Starting: styles"
 
-	# return new Q (resolve, reject)->
-	del(sources)
-		.then (paths)->
-			debug "Finished: clean:styles #{paths.length} files"
-			( debug("> Cleaned #{file}") for file in paths)
-			done()
-		.catch (err)->
-			debug 'Error: clean:styles', err
-			done(err)
-	return
+	return new Q (resolve, reject)->
+		del(sources)
+			.then (paths)->
+				debug "Finished: clean:styles #{paths.length} files"
+				( debug("> Cleaned #{file}") for file in paths)
+				resolve()
+				return
+
+			.catch (err)->
+				debug 'Error: clean:styles', err
+				reject(err)
+				return
+
+		return
 
 
 gulp.task 'clean:copies', (done)->
@@ -83,9 +95,11 @@ gulp.task 'clean:copies', (done)->
 				debug "Finished: clean:copies #{paths.length} files"
 				resolve()
 				return
+
 			.catch (err)->
 				debug 'Error: clean:copies', err
 				reject(err)
+				return
 		return
 
 gulp.task 'clean:docs', (done)->
@@ -107,6 +121,7 @@ gulp.task 'clean:docs', (done)->
 			.catch (err)->
 				debug 'Error: clean:documentation', err
 				reject(err)
+				return
 		return
 
 
@@ -116,6 +131,18 @@ gulp.task 'clean:pages', (done)->
 		"!#{path.join Config.target.root, Config.target.static}"
 		"!#{path.join Config.target.root, Config.target.static}/**"
 	]
+	for bit in Config.plugins.copy
+		bitPath = path.join Config.target.root, bit.dest
+		debug 'bitPath', bitPath
+		sources.push "!#{bitPath}"
+		sources.push "!#{bitPath}/**"
+
+	for bit in Config.plugins.copy
+		debug 'Ignoring copy paths:', bit.dest
+
+		sources.push "!#{path.join Config.target.root, bit.dest}"
+		sources.push "!#{path.join Config.target.root, bit.dest}/**"
+
 
 	debug 'pages: > sources', sources
 	debug "Starting: pages"
@@ -127,8 +154,10 @@ gulp.task 'clean:pages', (done)->
 				( debug("> Cleaned #{file}") for file in paths)
 				resolve()
 				return
+
 			.catch (err)->
 				debug 'Error: clean:pages', err
 				reject(err)
-		return
+				return
 
+		return

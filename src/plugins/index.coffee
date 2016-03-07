@@ -1,6 +1,7 @@
 #
 # Framework
 debug = require('debug')('gastropod/plugins')
+gulp = require 'gulp'
 
 #
 # Exportable
@@ -12,7 +13,7 @@ plugins.source = require 'vinyl-source-stream'
 plugins.buffer = require 'vinyl-buffer'
 plugins.globby = require 'globby'
 plugins.transform = require 'vinyl-transform'
-plugins.runsequence = require 'run-sequence'
+plugins.runsequence = require('run-sequence').use(gulp)
 plugins.browsersync = require('browser-sync').create()
 plugins.nghtml2js = require 'browserify-ng-html2js'
 plugins.del = require 'del'

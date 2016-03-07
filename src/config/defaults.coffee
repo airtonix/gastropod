@@ -30,6 +30,9 @@ defaultFilters =
 		all: '**/**.{js,coffee,litcoffee}'
 		modules: '**/{app,*-module,main}.{js,coffee,litcoffee}'
 	patterns: '**/*.html'
+	tests:
+		e2e: '**/*.e2e.{js,coffee}'
+		unit: '**/*.unit.{js,coffee}'
 
 ###*
  * List of targets for various jobs
@@ -58,6 +61,7 @@ defaultSource =
 	styles: './styles'
 	scripts: './scripts'
 	pages: './patterns/pages'
+	tests: './tests'
 	patterns: [
 		'./src/patterns',
 	]
@@ -79,7 +83,7 @@ defaultCopy = [
  *    the supplied path.
 ###
 defaultContext =
-	site:
+	Site:
 		title:  "Untitled Website"
 		description: "A gastronically developed website"
 		owner:
@@ -93,7 +97,7 @@ defaultContext =
 	###*
 	 * Template context for modules
 	###
-	modules: {
+	Modules: {
 		# analytics:
 		# 	google:
 		# 		code: 'UA-12345678-1'

@@ -48,15 +48,6 @@ sources =
 			  					 Config.filters.all)
 		return parts
 
-	all: path.join(Config.target.root, Config.target.static, Config.filters.all)
-
-
-sources.all = [
-	sources.copy
-	sources.scripts
-	sources.styles
-]
-
 
 target = path.join(Config.target.root, Config.target.static)
 
@@ -67,7 +58,8 @@ target = path.join(Config.target.root, Config.target.static)
 # the source of the trigger)
 Manifest.option 'root', path.join Config.target.root, Config.target.static
 
-Urls = Config.context.site.urls
+# @TODO deal with this Context Variable as a Builtin in `core/templates/context`
+Urls = Config.context.Site.urls
 
 
 manifestFactory = (name, source)->
