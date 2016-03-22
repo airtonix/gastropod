@@ -71,6 +71,7 @@ class Gastropod
 		ConfigStore.init(options)
 		@Config = ConfigStore.build()
 		@Plugins = require './plugins'
+		@Logging = require './core/logging'
 		@loadAddons()
 			.then @loadJobs
 			.then @loadTasks

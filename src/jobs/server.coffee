@@ -37,7 +37,6 @@ defaults =
  * @todo auto reload middleware with nodemon?
 ###
 gulp.task 'server', (done)->
-	console.log Config.plugins.server
 
 	if Config.plugins.server
 
