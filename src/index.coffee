@@ -72,6 +72,7 @@ class Gastropod
 		@Config = ConfigStore.build()
 		@Plugins = require './plugins'
 		@Logging = require './core/logging'
+		@Utils = require './core/utils'
 		@loadAddons()
 			.then @loadJobs
 			.then @loadTasks
