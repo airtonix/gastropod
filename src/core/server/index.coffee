@@ -14,30 +14,46 @@ debug = require('debug')('gastropod/core/server')
 
 #
 # Project
-{Config} = require('../config')
-Plugins = require '../plugins'
-{ErrorHandler,Logger} = require '../core/logging'
+{Config} = require('../../config')
+Plugins = require '../../plugins'
+{ErrorHandler,Logger} = require '../logging'
 
 #
 # Exportable
-module.exports = ()->
-	port = process.env.PORT
-	app = express()
-
-	app.set 'staticRoot', path.join(process.cwd(), Config.target.root)
-	app.use serve app.get 'staticRoot'
+module.exports = (config) ->
 
 	async()
+		.then 'app', (next)->
+			app = config.app or express.createServer()
+			next null, app
+
+		.then 'root', (next)->
+			root = path.join process.cwd(), Config.target.root
+			next(null, root)
+
 		.then 'port', (next)->
 			if 'PORT' in Object.keys(process.env)
 				debug 'using defined port', port
 				next null, port
 
+			else if 'port' in config
+				debug 'using configured port', config.port
+				next null, config.port
+
 			else
 				getport next
 
-		.then (next)->
-			app.listen @port, next
+		.then 'middleware', (next)->
+			@app.use serve @root
 
-		.end (err)->
-			util.log "serving #{app.get('staticRoot')}\n\t on http://0.0.0.0:#{@port}"
+			if config.middleware
+				config.middleware.forEach (middleware)=>
+					if middleware.hasOwnProperty(route)
+						@app.use middleware.route, middleware.fn
+					else
+						@app.use middleware
+			next()
+
+		.then (next)->
+			@app.listen @port, next
+

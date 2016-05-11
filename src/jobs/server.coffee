@@ -14,13 +14,14 @@ morgan = require 'morgan'
 errorhandler = require 'errorhandler'
 merge = require 'deepmerge'
 gulp = require 'gulp'
+Q = require 'bluebird'
 
 #
 # Project
 {Config} = require('../config')
-Plugins = require '../plugins'
-
-
+Server = require '../core/server'
+{Logger} = require '../core/logging'
+logger = new Logger 'Server'
 defaults =
 	server:
 		baseDir: path.join process.cwd(), Config.target.root
@@ -30,29 +31,17 @@ defaults =
 			bodyParser.urlencoded extended:false
 		]
 
-###*
- * [description]
- * @return {[type]} [description]
- * @todo mount middleware on `instance.app.use`
- * @todo auto reload middleware with nodemon?
-###
 gulp.task 'server', (done)->
+	return new Q (resolve, reject) =>
+		if not Config.plugins.server
+			resolve()
 
-	if Config.plugins.server
-
-		serverConfig = _.defaultsDeep defaults, Config.plugins.server
-		debug 'serverConfig', serverConfig
 		try
-			debug 'starting browsersync'
-			Plugins.browsersync.init serverConfig, (err, instance) ->
-				debug 'browsersync running'
-				# access to :
-				# - `instance.app` the Connect Server
-				done()
-
+			logger.msg 'Starting'
+			serverConfig = _.defaultsDeep defaults, Config.plugins.server
+			Server serverConfig
+				.end ()->
+					logger.msg "Running: \n\tFrom: thttp://0.0.0.0:#{@port} \n\tRoot: #{@root}"
+					resolve()
 		catch err
-			postmortem.prettyPrint err
-			done(err)
-
-	else
-		done()
+			reject(err)
