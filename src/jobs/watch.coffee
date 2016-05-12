@@ -12,6 +12,8 @@ requireUncached = require 'require-uncached'
 # Project
 {Config} = require('../config')
 Plugins = require '../plugins'
+{Logger} = require '../core/logging'
+logger = new Logger 'Server'
 
 paths =
 	patterns: (path.join(pattern, Config.filters.all) for pattern in Config.source.patterns)
@@ -38,53 +40,53 @@ gulp.task 'watch', [
 	]
 
 gulp.task 'watch:scripts', (done)->
-	debug 'Starting'
+	logger.msg 'Scripts: Starting'
 	gulp.watch paths.scripts, (event)->
-		debug "Scripts: File #{event.path} was #{event.type}"
+		logger.msg "Scripts: File #{event.path} was #{event.type}"
 		if Config.fingerprint
 			Plugins.runsequence 'clean:scripts', 'scripts', 'manifest:scripts', 'pages', 'documentation'
 		else
 			Plugins.runsequence 'scripts'
-	debug "watching scripts: #{paths.scripts}"
+	logger.msg "watching scripts: #{paths.scripts}"
 
 gulp.task 'watch:styles', (done)->
-	debug 'Starting'
+	logger.msg 'Styles: Starting'
 	gulp.watch paths.styles, (event)->
-		debug "Styles: File #{event.path} was #{event.type}"
+		logger.msg "Styles: File #{event.path} was #{event.type}"
 		if Config.fingerprint
 			Plugins.runsequence 'clean:styles', 'styles', 'manifest:styles', 'pages', 'documentation'
 		else
 			Plugins.runsequence 'styles'
-	debug "watching styles: #{paths.styles}"
+	logger.msg "watching styles: #{paths.styles}"
 
 gulp.task 'watch:data', (done)->
-	debug 'Starting'
+	logger.msg 'Data: Starting'
 	gulp.watch paths.data, (event)->
-		debug "Data: File #{event.path} was #{event.type}"
+		logger.msg "Data: File #{event.path} was #{event.type}"
 		Plugins.runsequence 'pages', 'documentation'
-	debug "watching data: #{paths.data}"
+	logger.msg "watching data: #{paths.data}"
 
 gulp.task 'watch:copy', (done)->
-	debug 'Starting'
+	logger.msg 'Copy: Starting'
 	gulp.watch paths.copy, (event)->
-		debug "CopyTasks: File #{event.path} was #{event.type}"
+		logger.msg "CopyTasks: File #{event.path} was #{event.type}"
 		if Config.fingerprint
 			Plugins.runsequence 'clean:copies', 'copy', 'manifest:copy', 'pages', 'documentation'
 		else
 			Plugins.runsequence 'copy'
-	debug "watching copy: #{paths.copy}"
+	logger.msg "watching copy: #{paths.copy}"
 
 gulp.task 'watch:patterns', (done)->
-	debug 'Starting'
+	logger.msg 'Patterns: Starting'
 	gulp.watch paths.patterns, (event)->
-		debug "Patterns: File #{event.path} was #{event.type}"
+		logger.msg "Patterns: File #{event.path} was #{event.type}"
 		Plugins.runsequence 'clean:pages', 'pages', 'documentation'
-	debug "watching patterns: #{paths.patterns}"
+	logger.msg "watching patterns: #{paths.patterns}"
 
 gulp.task 'watch:environments', (done)->
-	debug 'Starting'
+	logger.msg 'Environment: Starting'
 	gulp.watch paths.environments, (event)->
-		debug "Environments: File #{event.path} was #{event.type}"
+		logger.msg "Environments: File #{event.path} was #{event.type}"
 		Plugins.runsequence 'reload-config', 'compile'
-	debug "watching environments: #{paths.environments}"
-	
+	logger.msg "watching environments: #{paths.environments}"
+

@@ -17,6 +17,7 @@ defaultPipeline =
 	docs: []
 	deploy: []
 	tests: []
+	server: ['server:browsersync']
 
 ###*
  * Filters to dictate what files to operate on

@@ -20,6 +20,8 @@ Q = require 'bluebird'
 # Project
 ConfigStore = require('./config')
 {Config} = require('./config')
+{Logger} = require './core/logging'
+
 
 #
 # Gastropod Class
@@ -69,9 +71,9 @@ class Gastropod
 
 	init: (options={})->
 		ConfigStore.init(options)
+		@Logging = require './core/logging'
 		@Config = ConfigStore.build()
 		@Plugins = require './plugins'
-		@Logging = require './core/logging'
 		@Utils = require './core/utils'
 		@loadAddons()
 			.then @loadJobs
