@@ -18,7 +18,6 @@ Q = require 'bluebird'
 
 #
 # Project
-ConfigStore = require('./config')
 {Config} = require('./config')
 {Logger} = require './core/logging'
 
@@ -63,18 +62,13 @@ class Gastropod
 						name = addon.pkg.name
 						dirname = path.dirname(addon.path)
 						debug 'loading', "#{name}@#{dirname}"
-						addons[name] = require(dirname)(gulp, @)
+						addons[name] = require(dirname)
 						debug "initialised:",  name
 					resolve(addons)
 				.catch (err)->
 					reject(err)
 
 	init: (options={})->
-		ConfigStore.init(options)
-		@Logging = require './core/logging'
-		@Config = ConfigStore.build()
-		@Plugins = require './plugins'
-		@Utils = require './core/utils'
 		@loadAddons()
 			.then @loadJobs
 			.then @loadTasks

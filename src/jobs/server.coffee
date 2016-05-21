@@ -24,11 +24,11 @@ Server = require '../core/server'
 Plugins = require '../plugins'
 
 run = Plugins.runsequence
-pipeline = Config.pipeline
+pipeline = Config.Store.pipeline
 logger = new Logger 'Server'
 defaults =
 	server:
-		baseDir: path.join process.cwd(), Config.target.root
+		baseDir: path.join process.cwd(), Config.Store.target.root
 		middleware: [
 			morgan('dev')
 			bodyParser.json()
@@ -43,12 +43,12 @@ gulp.task 'server', (done)->
 
 gulp.task 'server:express', (done)->
 	return new Q (resolve, reject) =>
-		if not Config.plugins.server and Config.plugins.server.express
+		if not Config.Store.plugins.server and Config.Store.plugins.server.express
 			resolve()
 
 		try
 			logger.msg 'Starting'
-			serverConfig = _.defaultsDeep defaults, Config.plugins.server.express
+			serverConfig = _.defaultsDeep defaults, Config.Store.plugins.server.express
 			Server serverConfig
 				.end ()->
 					logger.msg "Running: \n\tFrom: thttp://0.0.0.0:#{@port} \n\tRoot: #{@root}"
@@ -57,14 +57,14 @@ gulp.task 'server:express', (done)->
 			reject(err)
 
 gulp.task 'server:browsersync', (done)->
-	console.log(Config.plugins.server?.browsersync?)
+	console.log(Config.Store.plugins.server?.browsersync?)
 	return new Q (resolve, reject) =>
-		if not Config.plugins.server?.browsersync?
+		if not Config.Store.plugins.server?.browsersync?
 			resolve()
 
 		try
 			logger.msg 'Starting'
-			serverConfig = _.defaultsDeep defaults, Config.plugins.server.browsersync
+			serverConfig = _.defaultsDeep defaults, Config.Store.plugins.server.browsersync
 			Plugins.browsersync.init serverConfig, (err, instance) ->
 				logger.msg 'Running'
 				resolve()

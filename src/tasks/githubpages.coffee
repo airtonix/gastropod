@@ -16,8 +16,8 @@ Plugins = require '../plugins'
 
 
 logger = new Logger('deploy')
-source = path.join(Config.target.root,
-				   Config.filters.all)
+source = path.join(Config.Store.target.root,
+				   Config.Store.filters.all)
 
 
 gulp.task 'deploy:github-pages', (done)->
@@ -27,7 +27,7 @@ gulp.task 'deploy:github-pages', (done)->
 	return gulp.src source
 		.pipe logger.incoming()
 		.pipe Plugins.plumber ErrorHandler('deploy:github-pages')
-		.pipe Plugins.gitPages Config.deploy
+		.pipe Plugins.gitPages Config.Store.deploy
 		.pipe logger.outgoing()
 		.on 'error', (err)-> debug err
 		.on 'finish', ()-> debug "Finished"

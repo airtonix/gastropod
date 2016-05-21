@@ -28,7 +28,7 @@ module.exports = (config) ->
 			next null, app
 
 		.then 'root', (next)->
-			root = path.join process.cwd(), Config.target.root
+			root = path.join process.cwd(), Config.Store.target.root
 			next(null, root)
 
 		.then 'port', (next)->
