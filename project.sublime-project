@@ -17,10 +17,20 @@
 			"name": "Tests",
 			"path": "test"
 		},
-		{"path": "../gastropod-task-sass"},
-		{"path": "../gastropod-task-webpack"},
-		{"path": "../gastropod-task-docs"},
-		{"path": "../gastropod-task-icons"},
-		{"path": "../gastropod-task-mocha"},
+		{
+			"path": "../gastropod-task-sass"
+		},
+		{
+			"path": "../gastropod-task-webpack"
+		},
+		{
+			"path": "../gastropod-task-docs"
+		},
+		{
+			"path": "../gastropod-task-icons"
+		},
+		{
+			"path": "../gastropod-task-karma"
+		}
 	]
 }

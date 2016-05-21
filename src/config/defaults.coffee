@@ -14,8 +14,10 @@ defaultPipeline =
 	scripts: ['browserify']
 	styles: []
 	copy: ['copy:extras']
-	docs: ['docjs']
+	docs: []
 	deploy: []
+	tests: []
+	server: ['server:browsersync']
 
 ###*
  * Filters to dictate what files to operate on
@@ -118,7 +120,7 @@ defaultContext =
  * @type {Object}
 ###
 defaultDeployOptions = {
-	# remoteUrl: 
+	# remoteUrl:
 }
 
 ###*

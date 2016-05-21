@@ -34,8 +34,8 @@ module.exports =
 			if (!url.match(#{REGEX_EXTERNAL_URL})) {
 				_ext.debug('found match for', url);
 
-				if(root.indexOf('/') == 0){
-					root = root.substring(1);
+				if(root.length === 1 && root.indexOf('/') == 0){
+					media = media.substring(1);
 				}
 				if(media.indexOf('/') == 0){
 					media = media.substring(1);

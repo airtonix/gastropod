@@ -81,5 +81,5 @@ exports.Logger = Logger
 exports.ErrorHandler = (name)->
 	name = util.colors.red "[#{name}]"
 	(err)->
-		util.log.apply util.log, name, err
+		util.log.apply util.log, [name, err]
 		@emit 'end'
