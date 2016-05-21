@@ -21,7 +21,7 @@ Manifest = require './manifest'
 ###
 
 module.exports = (fragment, replaceRegExp, newReference, referencedFile)->
-	
+
 	regExp = replaceRegExp
 	root = unixify path.resolve Manifest.options.root
 	refPath = unixify path.resolve referencedFile.path
