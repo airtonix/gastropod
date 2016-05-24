@@ -23,18 +23,18 @@ logger = new Logger('copy')
 
 
 gulp.task 'copy:extras', (done)->
-	debug "Starting", Config.plugins.copy
-	done() unless Config.plugins.copy?
+	debug "Starting", Config.Store.plugins.copy
+	done() unless Config.Store.plugins.copy?
 
 	Stream = Plugins.merge()
 
-	Config.plugins.copy.map (task)->
+	Config.Store.plugins.copy.map (task)->
 		source = path.join(process.cwd(),
-						    Config.source.root,
+						    Config.Store.source.root,
 						    task.src)
 
 		target = path.join(process.cwd(),
-						   Config.target.root,
+						   Config.Store.target.root,
 						   task.dest)
 
 		debug " > source", source

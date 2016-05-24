@@ -23,10 +23,10 @@ Plugins = require '../plugins'
 
 gulp.task 'clean:scripts', (done)->
 	sources = []
-	sources.push path.join(Config.target.root,
-					   Config.target.static,
-					   Config.target.scripts,
-					   Config.filters.all)
+	sources.push path.join(Config.Store.target.root,
+					   Config.Store.target.static,
+					   Config.Store.target.scripts,
+					   Config.Store.filters.all)
 
 	debug 'scripts: > sources', sources
 	debug "Starting: Scripts"
@@ -48,10 +48,10 @@ gulp.task 'clean:scripts', (done)->
 
 gulp.task 'clean:styles', (done)->
 	sources = []
-	sources.push path.join(Config.target.root,
-					   Config.target.static,
-					   Config.target.styles,
-					   Config.filters.all)
+	sources.push path.join(Config.Store.target.root,
+					   Config.Store.target.static,
+					   Config.Store.target.styles,
+					   Config.Store.filters.all)
 
 	debug 'styles: > sources', sources
 	debug "Starting: styles"
@@ -73,17 +73,17 @@ gulp.task 'clean:styles', (done)->
 
 
 gulp.task 'clean:copies', (done)->
-	debug 'enter: copies >', Config.plugins.copy
-	if not Config.plugins.copy
+	debug 'enter: copies >', Config.Store.plugins.copy
+	if not Config.Store.plugins.copy
 		debug 'Nothing to copy!'
 		done()
 	else
 		debug "Starting: copies"
 
-	sources = Config.plugins.copy.map (task)->
+	sources = Config.Store.plugins.copy.map (task)->
 		debug 'building copy source', task.dest
 		source = path.join(process.cwd(),
-						   Config.target.root,
+						   Config.Store.target.root,
 						   task.dest)
 
 		debug "copies: > sources", source
@@ -104,10 +104,10 @@ gulp.task 'clean:copies', (done)->
 
 gulp.task 'clean:docs', (done)->
 	sources = []
-	sources.push path.join(Config.target.root,
-					   Config.target.static,
-					   Config.target.docs,
-					   Config.filters.all)
+	sources.push path.join(Config.Store.target.root,
+					   Config.Store.target.static,
+					   Config.Store.target.docs,
+					   Config.Store.filters.all)
 
 	debug 'documentation: > sources', sources
 	debug "Starting: documentation"
@@ -127,21 +127,21 @@ gulp.task 'clean:docs', (done)->
 
 gulp.task 'clean:pages', (done)->
 	sources = [
-		path.join(Config.target.root, Config.target.pages, Config.filters.all)
-		"!#{path.join Config.target.root, Config.target.static}"
-		"!#{path.join Config.target.root, Config.target.static}/**"
+		path.join(Config.Store.target.root, Config.Store.target.pages, Config.Store.filters.all)
+		"!#{path.join Config.Store.target.root, Config.Store.target.static}"
+		"!#{path.join Config.Store.target.root, Config.Store.target.static}/**"
 	]
-	for bit in Config.plugins.copy
-		bitPath = path.join Config.target.root, bit.dest
+	for bit in Config.Store.plugins.copy
+		bitPath = path.join Config.Store.target.root, bit.dest
 		debug 'bitPath', bitPath
 		sources.push "!#{bitPath}"
 		sources.push "!#{bitPath}/**"
 
-	for bit in Config.plugins.copy
+	for bit in Config.Store.plugins.copy
 		debug 'Ignoring copy paths:', bit.dest
 
-		sources.push "!#{path.join Config.target.root, bit.dest}"
-		sources.push "!#{path.join Config.target.root, bit.dest}/**"
+		sources.push "!#{path.join Config.Store.target.root, bit.dest}"
+		sources.push "!#{path.join Config.Store.target.root, bit.dest}/**"
 
 
 	debug 'pages: > sources', sources

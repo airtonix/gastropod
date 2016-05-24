@@ -5,7 +5,6 @@ debug = require('debug')('gastropod/jobs/default')
 
 #
 # project
-{Config} = require('../config')
 Plugins = require '../plugins'
 
 ###*

@@ -28,16 +28,16 @@ Context	= require '../core/templates/context'
 # Constants
 logger = new Logger('pages:swig')
 
-pages = path.join(Config.source.root,
-			  	  Config.source.pages)
+pages = path.join(Config.Store.source.root,
+			  	  Config.Store.source.pages)
 
 root = path.resolve(process.cwd(),
-			  		Config.source.patterns[0])
+			  		Config.Store.source.patterns[0])
 sources = [
-	path.join(pages, Config.filters.all)
+	path.join(pages, Config.Store.filters.all)
 	'!**/*.coffee'
 ]
-target = path.join Config.target.root, '/'
+target = path.join Config.Store.target.root, '/'
 
 SwigConfig.configure(sources: root)
 
@@ -56,8 +56,8 @@ gulp.task 'swig', (done)->
 			remove: true
 		.pipe Plugins.data Context.export
 		.pipe Plugins.swig SwigConfig
-		.pipe Plugins.if Config.plugins.prettify, Plugins.removeEmptyLines()
-		.pipe Plugins.if Config.plugins.prettify, Plugins.htmlPrettify Config.plugins.prettify
+		.pipe Plugins.if Config.Store.plugins.prettify, Plugins.removeEmptyLines()
+		.pipe Plugins.if Config.Store.plugins.prettify, Plugins.htmlPrettify Config.Store.plugins.prettify
 		.pipe logger.outgoing()
 		.pipe gulp.dest target
 		.pipe Plugins.browsersync.stream()

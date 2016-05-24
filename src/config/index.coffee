@@ -14,36 +14,35 @@ _ = require 'lodash'
 DefaultConfig = require './defaults'
 PackageJson = require(path.join(process.cwd(), 'package.json'))
 
-Config = {}
+Store = {}
 
-class ConfigStore
+add = (data) =>
+	nconf.add 'config', type: 'literal', store: data
 
-	constructor: ()->
-		nconf.use 'memory'
-		nconf.argv()
-		nconf.env match: /^gastropod__(.*)/
+compile = (options={}) =>
 
-	add: (key, value)->
-		debug 'adding', key
-		nconf.add key, type: 'literal', store: value
-
-	build: ->
-		@add 'defaults', DefaultConfig
-		store = nconf.get()
-		debug 'exporting', store
-		return store
-
-	init: (options)->
+	if options.config
 		projectConfigPath = path.resolve(options.config)
-		value = require projectConfigPath
 		try
 			debug 'adding environment: ', projectConfigPath
-			@add 'project', value
+			add(require(projectConfigPath))
+
 		catch err
 			debug 'missing ', projectConfigPath
 
-		module.exports.Config = Config = @build()
-		return
+		module.exports.Store = Store = nconf.get()
+		return Store
 
-module.exports = new ConfigStore()
-module.exports.Config = Config
+
+
+nconf.use 'memory'
+nconf.argv()
+nconf.env match: /^gastropod__(.*)/
+
+add DefaultConfig
+
+module.exports = compile
+module.exports.add = add
+module.exports.Store = Store
+
+

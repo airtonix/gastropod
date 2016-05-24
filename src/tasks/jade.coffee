@@ -23,18 +23,18 @@ Context = require '../core/templates/context'
 #
 # Constants
 logger = new Logger('pages:jade')
-pages = path.join(Config.source.root,
-			  	  Config.source.pages)
+pages = path.join(Config.Store.source.root,
+			  	  Config.Store.source.pages)
 root = path.resolve(process.cwd(),
-			  		Config.source.patterns[0])
+			  		Config.Store.source.patterns[0])
 projectGlobalDataRoot = path.join(process.cwd(),
-				 				  Config.source.root,
-				 				  Config.source.data)
+				 				  Config.Store.source.root,
+				 				  Config.Store.source.data)
 sources = [
-	path.join(pages, Config.filters.all)
+	path.join(pages, Config.Store.filters.all)
 	'!**/*.coffee'
 ]
-target = path.join Config.target.root, '/'
+target = path.join Config.Store.target.root, '/'
 
 
 gulp.task 'jade', (done)->

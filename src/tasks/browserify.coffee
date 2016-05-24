@@ -20,13 +20,13 @@ Plugins = require '../plugins'
 #
 # Constants
 logger = new Logger('scripts:browserify')
-source = path.join(Config.source.root,
-				   Config.source.scripts,
-				   Config.filters.scripts.modules)
-target = path.join(Config.target.root,
-				   Config.target.static,
-				   Config.target.scripts)
-browserifyConfig = Config.plugins.js.browserify
+source = path.join(Config.Store.source.root,
+				   Config.Store.source.scripts,
+				   Config.Store.filters.scripts.modules)
+target = path.join(Config.Store.target.root,
+				   Config.Store.target.static,
+				   Config.Store.target.scripts)
+browserifyConfig = Config.Store.plugins.js.browserify
 transforms = browserifyConfig.transforms
 
 

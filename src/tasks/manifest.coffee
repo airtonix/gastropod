@@ -24,42 +24,42 @@ Manifest = require '../core/assets/manifest'
 #
 # Constants
 sources =
-	root: path.join(Config.target.root,
-					Config.target.static)
+	root: path.join(Config.Store.target.root,
+					Config.Store.target.static)
 
-	static: path.join(Config.target.root,
-					Config.target.static,
-					Config.filters.all)
+	static: path.join(Config.Store.target.root,
+					Config.Store.target.static,
+					Config.Store.filters.all)
 
-	styles: path.join(Config.target.root,
-					  Config.target.static,
-					  Config.target.styles,
-					  Config.filters.styles)
+	styles: path.join(Config.Store.target.root,
+					  Config.Store.target.static,
+					  Config.Store.target.styles,
+					  Config.Store.filters.styles)
 
-	scripts: path.join(Config.target.root,
-					   Config.target.static,
-					   Config.target.scripts,
-					   Config.filters.scripts.all)
+	scripts: path.join(Config.Store.target.root,
+					   Config.Store.target.static,
+					   Config.Store.target.scripts,
+					   Config.Store.filters.scripts.all)
 	copy: do ->
 		parts = []
-		for task in Config.plugins.copy
-			parts.push path.join(Config.target.root,
+		for task in Config.Store.plugins.copy
+			parts.push path.join(Config.Store.target.root,
 							     task.dest,
-			  					 Config.filters.all)
+			  					 Config.Store.filters.all)
 		return parts
 
 
-target = path.join(Config.target.root, Config.target.static)
+target = path.join(Config.Store.target.root, Config.Store.target.static)
 
 
 # set the root for the manifest
 # we want this done each run because
 # the config file may have changed (thus
 # the source of the trigger)
-Manifest.option 'root', path.join Config.target.root, Config.target.static
+Manifest.option 'root', path.join Config.Store.target.root, Config.Store.target.static
 
 # @TODO deal with this Context Variable as a Builtin in `core/templates/context`
-Urls = Config.context.Site.urls
+Urls = Config.Store.context.Site.urls
 
 
 manifestFactory = (name, source)->
@@ -82,8 +82,8 @@ manifestFactory = (name, source)->
 			.pipe logger.incoming()
 			.pipe vinyl
 			.pipe Plugins.plumber handleErrors
-			.pipe Plugins.if Config.fingerprint, fingerprinter.revision()
-			.pipe Plugins.if Config.fingerprint, Plugins.tap Manifest.add
+			.pipe Plugins.if Config.Store.fingerprint, fingerprinter.revision()
+			.pipe Plugins.if Config.Store.fingerprint, Plugins.tap Manifest.add
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
 			.on 'finish', -> debug "Finished"

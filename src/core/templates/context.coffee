@@ -23,8 +23,8 @@ PackageJson = require path.join(process.cwd(), 'package.json')
 # Constants
 NOOP = ->
 PROJECT_GLOBAL_DATAROOT = path.join(process.cwd(),
-				 				    Config.source.root,
-				 				    Config.source.data)
+				 				    Config.Store.source.root,
+				 				    Config.Store.source.data)
 
 # @TODO add Context Variable `Site` as a Builtin in `core/templates/context`
 CONTEXT_BUILTINS =
@@ -59,7 +59,7 @@ class Context
 	export: (file, done)=>
 		debug 'loading data for ', file.path
 		podule = @loadFile(file)
-		data = deepmerge _.clone(@Store), Config.context
+		data = deepmerge _.clone(@Store), Config.Store.context
 		data.Meta = file.meta
 
 		if not podule
@@ -100,7 +100,7 @@ class Context
 			async()
 
 				.then 'Globals', (next)->
-					CollectFiles(PROJECT_GLOBAL_DATAROOT, Config.filters.data, {})
+					CollectFiles(PROJECT_GLOBAL_DATAROOT, Config.Store.filters.data, {})
 						.then (files)->
 							output = {}
 							for file in files

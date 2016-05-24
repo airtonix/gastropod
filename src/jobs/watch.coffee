@@ -16,13 +16,13 @@ Plugins = require '../plugins'
 logger = new Logger 'Server'
 
 paths =
-	patterns: (path.join(pattern, Config.filters.all) for pattern in Config.source.patterns)
-	environments: path.join(process.cwd(), 'config', Config.filters.all)
-	data: path.join(Config.source.root, Config.source.data, Config.filters.all)
-	project: path.join(Config.source.root, Config.filters.all)
-	scripts: path.join(Config.source.root, Config.source.scripts, Config.filters.all)
-	styles: path.join(Config.source.root, Config.source.styles, Config.filters.all)
-	copy: (path.join(Config.source.root, task.src) for task in Config.plugins.copy)
+	patterns: (path.join(pattern, Config.Store.filters.all) for pattern in Config.Store.source.patterns)
+	environments: path.join(process.cwd(), 'config', Config.Store.filters.all)
+	data: path.join(Config.Store.source.root, Config.Store.source.data, Config.Store.filters.all)
+	project: path.join(Config.Store.source.root, Config.Store.filters.all)
+	scripts: path.join(Config.Store.source.root, Config.Store.source.scripts, Config.Store.filters.all)
+	styles: path.join(Config.Store.source.root, Config.Store.source.styles, Config.Store.filters.all)
+	copy: (path.join(Config.Store.source.root, task.src) for task in Config.Store.plugins.copy)
 
 debug 'watch paths created'
 
@@ -43,7 +43,7 @@ gulp.task 'watch:scripts', (done)->
 	logger.msg 'Scripts: Starting'
 	gulp.watch paths.scripts, (event)->
 		logger.msg "Scripts: File #{event.path} was #{event.type}"
-		if Config.fingerprint
+		if Config.Store.fingerprint
 			Plugins.runsequence 'clean:scripts', 'scripts', 'manifest:scripts', 'pages', 'documentation'
 		else
 			Plugins.runsequence 'scripts'
@@ -53,7 +53,7 @@ gulp.task 'watch:styles', (done)->
 	logger.msg 'Styles: Starting'
 	gulp.watch paths.styles, (event)->
 		logger.msg "Styles: File #{event.path} was #{event.type}"
-		if Config.fingerprint
+		if Config.Store.fingerprint
 			Plugins.runsequence 'clean:styles', 'styles', 'manifest:styles', 'pages', 'documentation'
 		else
 			Plugins.runsequence 'styles'
@@ -70,7 +70,7 @@ gulp.task 'watch:copy', (done)->
 	logger.msg 'Copy: Starting'
 	gulp.watch paths.copy, (event)->
 		logger.msg "CopyTasks: File #{event.path} was #{event.type}"
-		if Config.fingerprint
+		if Config.Store.fingerprint
 			Plugins.runsequence 'clean:copies', 'copy', 'manifest:copy', 'pages', 'documentation'
 		else
 			Plugins.runsequence 'copy'

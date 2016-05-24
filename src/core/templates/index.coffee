@@ -9,8 +9,8 @@ debug = require('debug')('gastropod/core/templates')
 {Config} = require '../../config'
 plugins = require '../../plugins'
 
-root = Config.source.patterns[0]
-filter = Config.filters.patterns
+root = Config.Store.source.patterns[0]
+filter = Config.Store.filters.patterns
 ignore = ['pages/**/*']
 
 module.exports = fileMap(filter, root, ignore)
