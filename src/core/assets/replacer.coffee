@@ -9,7 +9,7 @@ unixify = require 'unixify'
 
 #
 # Project
-{Config} = require '../../config'
+Config = require '../../config'
 Manifest = require './manifest'
 
 

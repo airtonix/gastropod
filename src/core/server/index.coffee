@@ -14,7 +14,7 @@ debug = require('debug')('gastropod/core/server')
 
 #
 # Project
-{Config} = require('../../config')
+Config = require('../../config')
 Plugins = require '../../plugins'
 {ErrorHandler,Logger} = require '../logging'
 

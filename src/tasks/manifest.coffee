@@ -15,7 +15,7 @@ through = require 'through2'
 
 #
 # Project
-{Config} = require('../config')
+Config = require('../config')
 Plugins = require '../plugins'
 {ErrorHandler,Logger} = require '../core/logging'
 Manifest = require '../core/assets/manifest'

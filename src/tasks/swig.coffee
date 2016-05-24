@@ -16,7 +16,7 @@ gulp = require 'gulp'
 
 #
 # Project
-{Config} = require('../config')
+Config = require('../config')
 Plugins = require '../plugins'
 {ErrorHandler,Logger} = require '../core/logging'
 Templates = require '../core/templates'

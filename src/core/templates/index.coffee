@@ -6,7 +6,7 @@ debug = require('debug')('gastropod/core/templates')
 #
 # Project
 {fileMap} = require '../utils/files'
-{Config} = require '../../config'
+Config = require '../../config'
 plugins = require '../../plugins'
 
 root = Config.Store.source.patterns[0]

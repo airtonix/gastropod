@@ -10,7 +10,7 @@ _ = require 'lodash'
 
 #
 # Projects
-{Config} = require('../config')
+Config = require('../config')
 Plugins = require '../plugins'
 {ErrorHandler,Logger} = require '../core/logging'
 

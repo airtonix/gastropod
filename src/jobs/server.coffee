@@ -18,7 +18,7 @@ Q = require 'bluebird'
 
 #
 # Project
-{Config} = require('../config')
+Config = require('../config')
 Server = require '../core/server'
 {Logger} = require '../core/logging'
 Plugins = require '../plugins'

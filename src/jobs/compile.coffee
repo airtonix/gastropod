@@ -5,7 +5,7 @@ gulp = require 'gulp'
 
 #
 # Project
-{Config} = require('../config')
+Config = require('../config')
 Plugins = require '../plugins'
 
 #
