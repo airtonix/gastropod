@@ -14,31 +14,56 @@ run = Plugins.runsequence
 pipeline = Config.Store.pipeline
 
 gulp.task 'styles', (done)->
-	tasks = ['clean:styles' ].concat pipeline.styles
+	tasks = []
+
+	if pipeline.styles?
+		tasks.push 'clean:styles'
+		tasks = tasks.concat pipeline.styles
+
 	tasks.push done
 	debug 'running', tasks
 	run.apply run, tasks
 
 gulp.task 'scripts', (done)->
-	tasks = ['clean:scripts' ].concat pipeline.scripts
+	tasks = []
+
+	if pipeline.scripts?
+		tasks.push 'clean:scripts'
+		tasks = tasks.concat pipeline.scripts
+
 	tasks.push done
 	debug 'running', tasks
 	run.apply run, tasks
 
 gulp.task 'copy', (done)->
-	tasks = ['clean:copies' ].concat pipeline.copy
+	tasks = []
+
+	if pipeline.copy?
+		tasks.push 'clean:copies'
+		tasks = tasks.concat pipeline.copy
+
 	tasks.push done
 	debug 'running', tasks
 	run.apply run, tasks
 
 gulp.task 'documentation', (done)->
-	tasks = ['clean:docs' ].concat pipeline.docs
+	tasks = []
+
+	if pipeline.docs?
+		tasks.push 'clean:docs'
+		tasks = tasks.concat pipeline.docs
+
 	tasks.push done
 	debug 'running', tasks
 	run.apply run, tasks
 
 gulp.task 'pages', (done)->
-	tasks = ['clean:pages' ].concat pipeline.templates
+	tasks = []
+
+	if pipeline.templates
+		tasks.push 'clean:pages'
+		tasks = tasks.concat pipeline.templates
+
 	tasks.push done
 	debug 'running', tasks
 	run.apply run, tasks

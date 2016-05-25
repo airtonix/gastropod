@@ -41,13 +41,16 @@ class ManifestService
 		pattern = @pattern()
 		return unixify(filepath).replace(pattern, '$3')
 
+	merge: (data) ->
+		@db = _.merge @db, data
+
 	empty: ->
 		debug 'emptying manifest'
 		@db = {}
 
 	export: () ->
 		debug 'exporting manifest'
-		return JSON.stringify @db, null, 2
+		return JSON.parse(JSON.stringify @db, null, 2)
 
 	add: (logical, actual) =>
 		actualPath = @format(actual)
