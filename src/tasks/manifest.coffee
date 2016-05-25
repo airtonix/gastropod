@@ -83,7 +83,9 @@ manifestFactory = (name, source)->
 			.pipe vinyl
 			.pipe Plugins.plumber handleErrors
 			.pipe Plugins.if Config.Store.fingerprint, fingerprinter.revision()
-			.pipe Plugins.if Config.Store.fingerprint, Plugins.tap Manifest.add
+			.pipe Plugins.if Config.Store.fingerprint, Plugins.tap (file, tap)->
+				Manifest.add file.revPathOriginal or file.path, file.path
+				return
 			.pipe logger.outgoing()
 			.pipe gulp.dest target
 			.on 'finish', -> debug "Finished"
