@@ -10,7 +10,7 @@ nconf = require 'nconf'
 #
 # Constants
 PackageJson = require(path.join(process.cwd(), 'package.json'))
-defaults = require './defaults'
+Defaults = require './defaults'
 
 nconf.use 'memory'
 nconf.argv()
@@ -21,17 +21,15 @@ module.exports.Store = Store = {}
 module.exports = (options={}) ->
 
 	if options.config
-		projectConfigPath = path.resolve(options.config)
-
 		try
+			projectConfigPath = path.resolve(options.config)
 			layer = require(projectConfigPath)
 			nconf.overrides store: layer
 			debug 'added environment: ', projectConfigPath, nconf.get()
-
 		catch err
-			debug 'missing ', projectConfigPath
+			debug err
 
-	nconf.defaults store: defaults
+	nconf.defaults store: Defaults
 	module.exports.Store = Store = nconf.get()
 	return Store
 
