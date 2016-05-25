@@ -9,26 +9,24 @@ nconf = require 'nconf'
 
 #
 # Constants
-PackageJson = require(path.join(process.cwd(), 'package.json'))
 Defaults = require './defaults'
 
 nconf.use 'memory'
 nconf.argv()
 nconf.env match: /^gastropod__(.*)/
 
+layer = (source) ->
+	debug 'Loading Layer: ', source
+	layerPath = path.resolve(source)
+	layerModule = require(layerPath)
+	return layerModule
+
 
 module.exports.Store = Store = {}
-module.exports = (options={}) ->
+module.exports = (options = {}) ->
 
-	if options.config
-		try
-			projectConfigPath = path.resolve(options.config)
-			layer = require(projectConfigPath)
-			nconf.overrides store: layer
-			debug 'added environment: ', projectConfigPath, nconf.get()
-		catch err
-			debug err
-
+	environment = if options.config then layer(options.config) else {}
+	nconf.overrides store: environment
 	nconf.defaults store: Defaults
 	module.exports.Store = Store = nconf.get()
 	return Store
