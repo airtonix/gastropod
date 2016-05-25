@@ -10,7 +10,7 @@ requireUncached = require 'require-uncached'
 
 #
 # Project
-{Config} = require('../config')
+Config = require('../config')
 Plugins = require '../plugins'
 {Logger} = require '../core/logging'
 logger = new Logger 'Server'
@@ -28,7 +28,7 @@ debug 'watch paths created'
 
 gulp.task 'reload-config', (done)->
 	debug 'Reloading Config'
-	{Config} = requireUncached('../config')
+	Config = requireUncached('../config')
 	done()
 
 gulp.task 'watch', [

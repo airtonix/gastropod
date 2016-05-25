@@ -2,6 +2,9 @@
 # Framework
 debug = require('debug')('gastropod/core/templates/tags/static')
 
+# project
+Manifest = require('gastropod/src/core/assets/manifest')
+
 #
 # Constants
 REGEX_EXTERNAL_URL = /^(https?:\/\/|\/\/|#)/
@@ -9,8 +12,8 @@ REGEX_EXTERNAL_URL = /^(https?:\/\/|\/\/|#)/
 
 module.exports =
 	ext:
-		name: 'debug'
-		obj: debug
+		name: 'Manifest'
+		obj: Manifest.db
 
 	parse: (str, line, parser, types, stack, options)->
 		return true
@@ -21,7 +24,7 @@ module.exports =
 			var url = #{args[0]};
 			var urls = _ctx.Site && _ctx.Site.urls || null;
 			var static, manifest, root;
-			var manifest = _ctx.Manifest || {};
+			var manifest = _ext.Manifest;
 
 			if (urls) {
 				static = urls.static || null;
@@ -34,7 +37,6 @@ module.exports =
 			}
 
 			if (!url.match(#{REGEX_EXTERNAL_URL})) {
-				_ext.debug('found match ', url);
 
 				if(root.length === 1 && root.indexOf('/') === 0){
 					root = '';
@@ -48,8 +50,13 @@ module.exports =
 					url = url.substring(1);
 				}
 
-				url = manifest[url] || url;
+				var inManifest = manifest[url] && true;
+				console.log(url, inManifest, manifest);
+
+				url = inManifest && manifest[url] || url;
+
 				_output += [root, static, url].join('/');
+
 			} else {
 				_output += url;
 

@@ -13,7 +13,7 @@ Zeninjector = require 'zeninjector'
 async = require 'async-chainable'
 #
 # Project
-{Config} = require('../../config')
+Config = require('../../config')
 Templates = require './index'
 Manifest = require '../assets/manifest'
 PackageJson = require path.join(process.cwd(), 'package.json')

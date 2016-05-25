@@ -27,7 +27,7 @@ defaultFilters =
 	data: '**/*.{litcoffee,coffee,json,yml}'
 	fonts: '**/*.{otf,ttf,eot,woff}'
 	images: '**/*.{png,jpg,jpeg,gif,bmp,svg,apng}'
-	styles: '**/*.{scss,css}'
+	styles: '**/**.{scss,css}'
 	scripts:
 		all: '**/**.{js,coffee,litcoffee}'
 		modules: '**/{app,*-module,main}.{js,coffee,litcoffee}'

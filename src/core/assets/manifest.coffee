@@ -11,7 +11,7 @@ unixify = require 'unixify'
 
 #
 # Project
-{Config} = require '../../config'
+Config = require '../../config'
 
 
 class ManifestService
@@ -37,25 +37,23 @@ class ManifestService
 		# ^  .* (#{root}) (\\/|\\\\)? (.*)
 		return new RegExp("^.*(#{root})(\\/|\\\\)?(.*)")
 
+	format: (filepath) ->
+		pattern = @pattern()
+		return unixify(filepath).replace(pattern, '$3')
+
 	empty: ->
 		debug 'emptying manifest'
 		@db = {}
 
-	add: (file, tap) =>
-		filePath = unixify(file.path)
-		pattern = @pattern()
+	export: () ->
+		debug 'exporting manifest'
+		return JSON.stringify @db, null, 2
 
-		current = filePath.replace(pattern, '$3')
-		original = current
-
-		if 'revPathOriginal' of file
-			original = unixify(file.revPathOriginal).replace(@pattern(), '$3')
-		if original of @db
-			@db[original] = null
-
-		debug 'manifest.add', original, ' = ', current
-
-		@db[original] = current
+	add: (logical, actual) =>
+		actualPath = @format(actual)
+		logicalPath = @format(if logical then logical else actual)
+		debug 'manifest.add', logicalPath, ' = ', actualPath
+		@db[logicalPath] = actualPath
 		return
 
 #

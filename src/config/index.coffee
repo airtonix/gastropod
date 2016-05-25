@@ -6,32 +6,29 @@ path = require 'path'
 # Framework
 debug = require('debug')('gastropod/config')
 nconf = require 'nconf'
-Q = require 'bluebird'
-_ = require 'lodash'
 
 #
 # Constants
-DefaultConfig = require './defaults'
 PackageJson = require(path.join(process.cwd(), 'package.json'))
+Defaults = require './defaults'
 
 nconf.use 'memory'
 nconf.argv()
 nconf.env match: /^gastropod__(.*)/
 
-module.exports.Store = {}
 
-module.exports = (options = {}) ->
-	nconf.add 'config', type: 'literal', store: DefaultConfig
+module.exports.Store = Store = {}
+module.exports = (options={}) ->
 
-	if options and options.config
-		projectConfigPath = path.resolve(options.config)
+	if options.config
 		try
-			value = require projectConfigPath
-			debug 'adding environment: ', projectConfigPath
-			nconf.add 'config', type: 'literal', store: value
-
+			projectConfigPath = path.resolve(options.config)
+			layer = require(projectConfigPath)
+			nconf.overrides store: layer
+			debug 'added environment: ', projectConfigPath, nconf.get()
 		catch err
-			debug 'missing ', projectConfigPath
+			debug err
 
-	module.exports.Store = nconf.get()
-	return module.exports.Store
+	nconf.defaults store: Defaults
+	module.exports.Store = Store = nconf.get()
+	return Store

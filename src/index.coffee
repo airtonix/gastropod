@@ -18,7 +18,7 @@ Q = require 'bluebird'
 
 #
 # Project
-{Config} = require('./config')
+Config = require('./config')
 {Logger} = require './core/logging'
 
 
@@ -69,6 +69,10 @@ class Gastropod
 					reject(err)
 
 	init: (options={})->
+<<<<<<< HEAD
+=======
+		Config(options)
+>>>>>>> f811066e341e4dc8316b1c2fe91a0e5ae713a6f3
 		@loadAddons()
 			.then @loadJobs
 			.then @loadTasks
