@@ -7,9 +7,6 @@ debug = require('debug')('gastropod/core/templates/tags/media')
 REGEX_EXTERNAL_URL = /^(https?:\/\/|\/\/|#)/
 
 module.exports =
-	ext:
-		name: 'debug'
-		obj: debug
 
 	parse: (str, line, parser, types, stack, options)->
 		return true
@@ -32,8 +29,6 @@ module.exports =
 			}
 
 			if (!url.match(#{REGEX_EXTERNAL_URL})) {
-				_ext.debug('found match for', url);
-
 				if(root.length === 1 && root.indexOf('/') == 0){
 					media = media.substring(1);
 				}
